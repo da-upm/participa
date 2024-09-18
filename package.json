@@ -1,0 +1,24 @@
+{
+  "name": "propuestas",
+  "version": "1.0.0",
+  "description": "Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector",
+  "main": "main.js",
+  "scripts": {
+    "start": "node --watch src/main.js",
+    "dev": "node --watch main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/da-upm/propuestas.git"
+  },
+  "author": "Pablo Fernandez López y Alejandro Alonso López",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/da-upm/propuestas/issues"
+  },
+  "homepage": "https://github.com/da-upm/propuestas#readme",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
