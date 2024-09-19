@@ -4,8 +4,8 @@
   "description": "Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector",
   "main": "main.js",
   "scripts": {
-    "start": "node --watch src/main.js",
-    "dev": "node --watch main.js",
+    "start": "node src/main.js",
+    "dev": "node --watch src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
