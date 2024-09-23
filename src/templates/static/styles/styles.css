@@ -1,0 +1,70 @@
+body {
+    font-family: 'Comfortaa', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, .navbar, .card {
+    font-family: 'Comfortaa', sans-serif;
+}
+
+/* Margin for the proposals container */
+#proposalsContainer .col-lg-4 {
+    padding: 15px;
+}
+
+/* Card style */
+.card {
+    border-radius: 8px;
+}
+
+/* Badge style */
+.badge {
+    font-size: 0.9rem;
+}
+
+/* Navbar custom color */
+.bg-daupm {
+    --bs-bg-opacity: 1;
+    background-color: #003366 !important; /* Using the color scheme of the reference site */
+}
+
+.modal-content {
+    border-radius: 10px;
+}
+
+/* admin-styles.css */
+
+/* Centrar y ajustar la apariencia de las checkboxes */
+.table .form-check-input {
+    display: block;
+    margin: 0 auto;
+    transform: scale(1.2); /* Aumentar el tamaño de la checkbox */
+}
+
+/* Aumentar contraste de las checkboxes */
+.table .form-check-input:checked {
+    background-color: #007bff; /* Color azul para las checkboxes seleccionadas */
+    border-color: #007bff;
+}
+
+/* Cambiar el color de fondo de la columna de checkboxes para mejorar visibilidad */
+.table td:first-child {
+    background-color: #f8f9fa;
+}
+
+/* Centrar contenido de la columna de checkboxes verticalmente */
+.table td {
+    vertical-align: middle;
+}
+
+.table th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Centrar contenido de las columnas "Categoría" y "Acciones" */
+.table td.category-column,
+.table td.actions-column {
+    text-align: center;
+    vertical-align: middle;
+}
+

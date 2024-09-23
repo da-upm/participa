@@ -1,0 +1,96 @@
+<!-- Main Content -->
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="text-center">
+        <h1>Propuestas para el Rector</h1>
+        <p class="lead">Comparte tus ideas para la mejora de nuestra universidad.</p>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proposalModal">Aportar
+            Propuesta</button>
+    </div>
+
+    <!-- Proposal Modal -->
+    <div class="modal fade" id="proposalModal" tabindex="-1" aria-labelledby="proposalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proposalModalLabel">Nueva Propuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="proposalForm">
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Categoría</label>
+                            <select id="category" class="form-select" required>
+                                <option value="">Selecciona una categoría</option>
+                                <option value="Educación">Educación</option>
+                                <option value="Infraestructura">Infraestructura</option>
+                                <option value="Servicios">Servicios</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Título</label>
+                            <input type="text" id="title" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descripción</label>
+                            <textarea id="description" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar detalles de la propuesta -->
+    <div class="modal fade" id="proposalDetailModal" tabindex="-1" aria-labelledby="proposalDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Clase modal-dialog-centered añadida -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="proposalDetailModalLabel">Detalles de la Propuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="proposalTitle"></h4>
+                    <p><span class="badge bg-primary" id="proposalCategory"></span></p>
+                    <p id="proposalDescription"></p>
+                    <p><strong>Apoyos:</strong> <span id="proposalSupports"></span></p>
+                    <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Search and Filter Section -->
+    <div class="mt-5">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchInput"
+                    placeholder="Buscar propuestas por título o palabras clave">
+            </div>
+            <div class="col-md-4">
+                <select id="filterCategory" class="form-select">
+                    <option value="">Filtrar por categoría</option>
+                    <option value="Educación">Educación</option>
+                    <option value="Infraestructura">Infraestructura</option>
+                    <option value="Servicios">Servicios</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button id="clearFilters" class="btn btn-secondary w-100">Limpiar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposals Section -->
+    <div id="proposalsContainer" class="row gy-4">
+        <!-- Placeholder for proposal cards -->
+    </div>
+</div>

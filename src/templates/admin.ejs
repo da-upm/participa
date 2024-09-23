@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista de Administración</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Google Font: Comfortaa -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="https://da.upm.es/wp-content/uploads/2023/06/cropped-00-DAUPM-192x192.png" sizes="192x192">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="https://da.upm.es/wp-content/uploads/2022/08/LOGO-DAUPM_MANCHETA_Neg-1024x198.png"
+                    alt="Logo DAUPM" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Iniciar sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- Botón para generar una nueva propuesta -->
+        <button id="generateNewProposal" class="btn btn-primary mb-4">Generar Nueva Propuesta</button>
+
+        <!-- Filtros y búsqueda -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="adminSearchInput"
+                    placeholder="Buscar propuestas por título o palabras clave">
+            </div>
+            <div class="col-md-4">
+                <select id="adminFilterCategory" class="form-select">
+                    <option value="">Filtrar por categoría</option>
+                    <option value="Educación">Educación</option>
+                    <option value="Infraestructura">Infraestructura</option>
+                    <option value="Servicios">Servicios</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button id="adminClearFilters" class="btn btn-secondary w-100">Limpiar</button>
+            </div>
+        </div>
+
+        <!-- Tabla de propuestas -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Marcar</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="adminProposalsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar detalles de la propuesta -->
+    <div class="modal fade" id="adminProposalDetailModal" tabindex="-1" aria-labelledby="adminProposalDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminProposalDetailModalLabel">Detalles de la Propuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="adminProposalTitle"></h4>
+                    <p><span class="badge bg-primary" id="adminProposalCategory"></span></p>
+                    <p id="adminProposalDescription"></p>
+                    <p><strong>Apoyos:</strong> <span id="adminProposalSupports"></span></p>
+                    <p><strong>Candidatos que apoyan:</strong> <span id="adminProposalSupportingCandidates"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para generar nueva propuesta -->
+    <div class="modal fade" id="createProposalModal" tabindex="-1" aria-labelledby="createProposalModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createProposalModalLabel">Generar Nueva Propuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createProposalForm">
+                        <div class="mb-3">
+                            <label for="newProposalTitle" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="newProposalTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newProposalCategory" class="form-label">Categoría</label>
+                            <select id="newProposalCategory" class="form-select" required>
+                                <option value="Educación">Educación</option>
+                                <option value="Infraestructura">Infraestructura</option>
+                                <option value="Servicios">Servicios</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newProposalDescription" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="newProposalDescription" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Propuesta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    <script src="admin-script.js"></script>
+</body>
+
+</html>
