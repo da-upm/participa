@@ -21,6 +21,14 @@ const proposalSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    isDraft: {
+        type: Boolean,
+        default: true
+    },
+    usersDrafting: {
+        type: [String],
+        default: []
+    },
 });
 
 module.exports = mongoose.model('Proposal', proposalSchema);

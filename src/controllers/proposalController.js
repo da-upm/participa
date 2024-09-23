@@ -79,6 +79,54 @@ const addSupporter = async (req, res) => {
     }
 }
 
+const sendProposalAsDraft = async (req, res) => {
+    try {
+        const proposalData = req.body;
+        proposalData.isDraft = true;
+        proposalData.usersDrafting = [req.query.userId];
+        const newProposal = new proposal(proposalData);
+        newProposal.save();
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const getDraftProposals = async (req, res) => {
+    try {
+        const proposals = await proposal.find({ isDraft: true });
+        res.status(200).json(proposals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const deleteDraftProposal = async (req, res) => {
+    try {
+        await proposal.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Draft proposal deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const approveDraftProposal = async (req, res) => {
+    try {
+        const proposalId = req.params.id;
+        const proposal = await proposal.findById(proposalId)
+        proposal.isDraft = undefined;
+        const usersDrafting = proposal.usersDrafting;
+        usersDrafting.forEach(async (userId) => {
+            const user = await user.findById(userId);
+            user.supportedProposals.push(proposalId);
+            user.save();
+        });
+        proposal.usersDrafting = undefined;
+        proposal.save();
+        res.status(200).json({ message: 'Draft proposal approved' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = {
     createProposal,
@@ -87,4 +135,8 @@ module.exports = {
     getProposalByCategory,
     getProposalsCategories,
     addSupporter,
+    sendProposalAsDraft,
+    getDraftProposals,
+    deleteDraftProposal,
+    approveDraftProposal
 }
