@@ -1,0 +1,32 @@
+
+{
+    "database": {
+        "host": "localhost",
+        "port": 27017,
+        "user": "<username>",
+        "password": "<password>",
+        "dbName": "<dbName>"
+    },
+    "server": {
+        "url": "http://localhost:3000",
+        "path": "/",
+        "port": 3000,
+        "usingProxy": false,
+        "sessionSecret": "<some secure random secret>"
+    },
+    "email": {
+        "host": "<SMTP server>",
+        "port": 587,
+        "ssl": true,
+        "user": "<SMTP user>",
+        "password": "<SMTP pass>"
+    },
+    "sso": {
+        "realm": "<Keycloak realm>",
+        "client": "<client ID",
+        "secret": "<client secret>",
+        "scope": "openid email profile",
+        "wellKnownEndpoint": "<well-known endpoint>",
+        "redirectUris": ["http://localhost:3000/login/callback"]
+    }
+}
