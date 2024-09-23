@@ -1,0 +1,39 @@
+services:
+  web:
+    build: .
+    container_name: electoral-web
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongo:27017/
+    networks:
+      - agartha
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    container_name: electoral-mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - agartha
+
+  # Esto solo es necesario si se quiere tener una interfaz para visualizar la base de datos (por lo que sea)
+  # mongo-express:
+  #   image: mongo-express
+  #   container_name: electoral-mongo-express
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     - ME_CONFIG_MONGODB_URL=mongodb://root:example@mongo:27017/ # mongodb://[username]:[password]@[host]:[port]/ Cambiar por las credenciales de la base de datos
+  #     - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+  #     - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+  #   networks:
+  #     - agartha
+  #   depends_on:
+  #     - mongodb
+
+networks:
+  agartha:
+    external: true
