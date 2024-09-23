@@ -17,6 +17,8 @@ const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
 const userRouter = require('./routes/user');
 
+const loginController = require('./controllers/loginController');
+
 const app = express();
 
 databaseConfig = config.database
@@ -110,19 +112,11 @@ app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (er
 	if (err) { console.log(err); return res.status(500); }
 	if (user) { req.session.userInfo = user; return next(); }
 	console.log(err); return res.status(500);
-})(req, res, next), (req, res) => {
-	return res.redirect('/admin');
-});
-
-/*app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (err, user) => {
-	if (err) { console.log(err); return res.status(500); }
-	if (user) { req.session.userInfo = user; return next(); }
-	console.log(err); return res.status(500);
 })(req, res, next), loginController.handleLogin, (req, res) => {
 	const redirectTo = req.session.referer;
 	req.session.referer = null;
 	return res.redirect(redirectTo || '/');
-});*/
+});
 
 app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
