@@ -7,5 +7,6 @@ router.get('/', proposalController.getProposals);
 router.delete('/:id', proposalController.deleteProposal);
 router.get('/category/:category', proposalController.getProposalByCategory);
 router.get('/categories', proposalController.getProposalsCategories);
+router.post('/:id/support', proposalController.addSupporter);
 
 module.exports = router;

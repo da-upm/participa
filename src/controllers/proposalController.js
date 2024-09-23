@@ -1,4 +1,5 @@
 const proposal = require('../models/proposal');
+const user = require('../models/user');
 
 const createProposal = async (req, res) => {
     try {
@@ -46,11 +47,44 @@ const getProposalsCategories = async (req, res) => {
     }
 }
 
+const addSupporter = async (req, res) => {
+    try {
+        const proposalId = req.params.id;
+        const proposal = await proposal
+            .findById(proposalId)
+            .select('supporters');
+        
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+
+        const userId = req.body.userId;
+        const user = await user
+            .findOne({ _id: userId })
+            .select('supportedProposals');
+        
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.supportedProposals.includes(proposalId)) {
+            return res.status(409).json({ message: 'User already supports this proposal' });
+        }
+        proposal.supporters += 1;
+        user.supportedProposals.push(proposalId);
+        await proposal.save();
+        res.status(200).json("New supporter added on proposal: " + proposalId);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 module.exports = {
     createProposal,
     getProposals,
     deleteProposal,
     getProposalByCategory,
-    getProposalsCategories
+    getProposalsCategories,
+    addSupporter,
 }

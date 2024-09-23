@@ -15,6 +15,7 @@ const config = require('./config.json');
 
 const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
+const userRouter = require('./routes/user');
 
 const app = express();
 
@@ -125,6 +126,7 @@ app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (er
 
 app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
+app.use('/api/users', userRouter);
 
 try {
     mongoose.connect(mongodbURI);
