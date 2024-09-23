@@ -1,13 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const proposalRouter = require('./routes/proposal');
 
 const app = express();
 
-mongodbURI = process.env.MONGODB_URI || 
+mongodbURI = process.env.MONGODB_URI || "whatever";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/proposals', proposalRouter);
 
 mongoose.connect(mongodbURI, (err) => {
     if (err) {

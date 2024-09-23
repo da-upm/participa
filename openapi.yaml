@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: Proposal API
+  version: 1.0.0
+  description: API for managing proposals
+servers:
+- url: http://localhost:3000
+paths:
+  /:
+    post:
+      summary: Create a new proposal
+      operationId: createProposal
+      responses:
+        '200':
+          description: Proposal created successfully
+    get:
+      summary: Get all proposals
+      operationId: getProposals
+      responses:
+        '200':
+          description: A list of proposals
+  /{id}:
+    delete:
+      summary: Delete a proposal by ID
+      operationId: deleteProposal
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Proposal deleted successfully
+  /category/{category}:
+    get:
+      summary: Get proposals by category
+      operationId: getProposalByCategory
+      parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of proposals by category
+  /categories:
+    get:
+      summary: Get all proposal categories
+      operationId: getProposalsCategories
+      responses:
+        '200':
+          description: A list of proposal categories

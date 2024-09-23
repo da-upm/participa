@@ -27,3 +27,30 @@ const deleteProposal = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+
+const getProposalByCategory = async (req, res) => {
+    try {
+        const proposals = await proposal.find({ categories: req.params.category });
+        res.status(200).json(proposals);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+const getProposalsCategories = async (req, res) => {
+    try {
+        const categories = await proposal.distinct('categories');
+        res.status(200).json(categories);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+
+module.exports = {
+    createProposal,
+    getProposals,
+    deleteProposal,
+    getProposalByCategory,
+    getProposalsCategories
+}

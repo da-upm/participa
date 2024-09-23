@@ -13,6 +13,10 @@ const proposalSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    categories: {
+        type: [String],
+        required: true,
+    },
     candidatesSupporters: {
         type: [String],
         default: []

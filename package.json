@@ -21,5 +21,8 @@
   "dependencies": {
     "express": "^4.21.0",
     "mongoose": "^8.6.3"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.13.9"
   }
 }
