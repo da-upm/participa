@@ -14,7 +14,8 @@ const proposalSchema = new mongoose.Schema({
         default: 0
     },
     candidatesSupporters: {
-        type: string,
+        type: [String],
+        default: []
     },
 });
 
