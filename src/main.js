@@ -1,15 +1,15 @@
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const partials = require('express-partials');
-const session = require('express-session');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const helmet = require('helmet');
 const passport = require('passport');
 
 const { Issuer, Strategy } = require('openid-client');
-
-const mongoose = require('mongoose');
 
 const config = require('./config.json');
 
@@ -48,12 +48,17 @@ app.use(partials());
 // Let Express know if we are using a reverse proxy.
 if (config.server.usingProxy) app.set('trust proxy', 1);
 
+
+mongoose.connect(mongodbURI);
+mongoose.Promise = global.Promise;
+const db = mongoose.connection
+
 app.use(session({
 	secret: config.server.sessionSecret,
 	resave: false,
 	proxy: config.server.usingProxy,
 	saveUninitialized: true,
-	//store: sessionStore,
+	store: new MongoStore({ mongoUrl: mongodbURI }),
 	cookie: {
 		// Make the cookies HTTPS-only if this is a production deployment.
 		secure: process.env.NODE_ENV === 'production',
@@ -107,11 +112,11 @@ Issuer.discover(config.sso.wellKnownEndpoint)
 
 app.use(function (req, res, next) {
 	res.setHeader(
-	  'Content-Security-Policy', "default-src 'self'; script-src 'self' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://fonts.googleapis.com; img-src 'self' https://da.upm.es; frame-src 'self'"
+		'Content-Security-Policy', "default-src 'self'; script-src 'self' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://fonts.googleapis.com; img-src 'self' https://da.upm.es; frame-src 'self'"
 	);
-	
+
 	next();
-  });
+});
 
 // Login routes.
 app.get('/login', (req, res, next) => { req.session.referer = req.headers.referer; next(); }, passport.authenticate('oidc', { scope: config.sso.scope }));
@@ -130,16 +135,10 @@ app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
 app.use('/api/users', userRouter);
 
-try {
-    mongoose.connect(mongodbURI);
-    console.log('Connected to database');
 
-    const port = config.server.port || 3000
+const port = config.server.port || 3000
 
-    app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-    });
-} catch(error) {
-    console.log('Error connecting to database', err);
-    throw err;
-}
+app.listen(port, () => {
+	console.log(`Server is running on port ${port}`);
+});
+
