@@ -7,7 +7,6 @@ const studentCodes = ['A', 'W'];
 const pasCodes = ['F', 'L'];
 
 const registerUser = async (userInfo) => {
-	console.log(`Tenemos esto: ${userInfo}`)
 
 
 	try {
@@ -15,10 +14,10 @@ const registerUser = async (userInfo) => {
 			name: userInfo.name,
 			username: userInfo.preferred_username,
 			email: userInfo.email,
-			isAdmin: false,
-			UPMClassifCodes: userInfo.upmClassifCode,
+			isAdmin: false
 		})
 
+		newUser.UPMClasifCodes = userInfo.upmClassifCode
 		await newUser.save();
 
 		return newUser;
