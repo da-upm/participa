@@ -60,7 +60,7 @@ app.use(session({
 		// The cookie shouldn't be valid after 20 minutes of inactivity.
 		maxAge: 20 * 60 * 1000, // milliseconds
 	},
-	sameSite: '',
+	sameSite: 'strict',
 }));
 
 // Use helmet headers to secure our application.
@@ -104,6 +104,14 @@ Issuer.discover(config.sso.wellKnownEndpoint)
 			}),
 		);
 	});
+
+app.use(function (req, res, next) {
+	res.setHeader(
+	  'Content-Security-Policy', "default-src 'self'; script-src 'self' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net; font-src 'self' https://fonts.googleapis.com; img-src 'self' https://da.upm.es; frame-src 'self'"
+	);
+	
+	next();
+  });
 
 // Login routes.
 app.get('/login', (req, res, next) => { req.session.referer = req.headers.referer; next(); }, passport.authenticate('oidc', { scope: config.sso.scope }));
