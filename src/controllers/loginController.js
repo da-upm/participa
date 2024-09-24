@@ -1,26 +1,24 @@
 /* eslint-disable max-len */
 //const { models } = require('../models');
-const user = require('../models/user');
+const User = require('../models/user');
 
 const pdiCodes = ['D', 'M', 'Q', 'U', 'P', 'C', 'R', 'B'];
 const studentCodes = ['A', 'W'];
 const pasCodes = ['F', 'L'];
 
 const registerUser = async (userInfo) => {
-
-
 	try {
-		const newUser = new user({
+		const user = new User({
 			name: userInfo.name,
 			username: userInfo.preferred_username,
 			email: userInfo.email,
 			isAdmin: false
 		})
 
-		newUser.UPMClasifCodes = userInfo.upmClassifCode
-		await newUser.save();
+		user.UPMClasifCodes = userInfo.upmClassifCode
+		await user.save();
 
-		return newUser;
+		return user;
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -29,7 +27,7 @@ const registerUser = async (userInfo) => {
 
 module.exports.handleLogin = async (req, res, next) => {
 	try {
-		const registeredUser = await user.findOne({username: req.session.userInfo.preferred_username});
+		const registeredUser = await User.findOne({username: req.session.userInfo.preferred_username});
 
 		let savedUser;
 		if (registeredUser) savedUser = registeredUser;
