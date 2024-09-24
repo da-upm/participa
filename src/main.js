@@ -19,6 +19,8 @@ const userRouter = require('./routes/user');
 
 const loginController = require('./controllers/loginController');
 
+const { globalErrorHandler } = require('./errors');
+
 const app = express();
 
 databaseConfig = config.database
@@ -135,6 +137,8 @@ app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
 app.use('/api/users', userRouter);
 
+// The error handler that produces 404/500 HTTP responses.
+app.use(globalErrorHandler);
 
 const port = config.server.port || 3000
 
