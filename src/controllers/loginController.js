@@ -7,14 +7,19 @@ const studentCodes = ['A', 'W'];
 const pasCodes = ['F', 'L'];
 
 const registerUser = async (userInfo) => {
+	console.log(`Tenemos esto: ${userInfo}`)
+
+
 	try {
 		const newUser = new user({
-			name: userInfo.sn,
+			name: userInfo.name,
 			username: userInfo.preferred_username,
 			email: userInfo.email,
 			isAdmin: false,
-			UPMClassifCodes: userInfo.upmClassifCodes,
+			UPMClassifCodes: userInfo.upmClassifCode,
 		})
+
+		await newUser.save();
 
 		return newUser;
 	} catch (error) {

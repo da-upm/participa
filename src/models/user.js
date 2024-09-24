@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
         required: true,
     },
     UPMClasifCodes: {
-        type: String,
+        type: [String],
         required: true,
     },
     email: {
