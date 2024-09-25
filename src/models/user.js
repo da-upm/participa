@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
     },
     supportedProposals: {
-        type: [String],
+        type: [mongoose.Types.ObjectId],
         default: [],
         required: true,
     },

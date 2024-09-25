@@ -29,7 +29,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
+                        <% if (user == null) { %>
                         <a class="nav-link" href="/login">Iniciar sesión</a>
+                        <% } else { %>
+                        <p class="nav-link"><%= user.username %></a>
+                        <% } %>
                     </li>
                 </ul>
             </div>

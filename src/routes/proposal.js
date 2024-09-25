@@ -12,6 +12,7 @@ router.use(middlewares.checkLogin);
 
 router.post('/draft', proposalController.sendProposalAsDraft);
 router.post('/:id/support', proposalController.addSupporter);
+router.delete('/:id/support', proposalController.removeSupporter);
 
 router.use(middlewares.restrictAdmins);
 

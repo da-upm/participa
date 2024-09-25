@@ -62,30 +62,50 @@ const getProposalsCategories = async (req, res) => {
 const addSupporter = async (req, res) => {
     try {
         const proposalId = req.params.id;
-        const proposal = await proposal
-            .findById(proposalId)
+        const proposal = await Proposal
+            .findById(new ObjectId(proposalId))
             .select('supporters');
         
         if (!proposal) {
             return res.status(404).json({ message: 'Proposal not found' });
         }
 
-        const userId = req.body.userId;
-        const user = await user
-            .findOne({ _id: userId })
-            .select('supportedProposals');
-        
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+        const user = req.session.user
 
-        if (user.supportedProposals.includes(proposalId)) {
+        if (user.supportedProposals.includes(proposal.id)) {
             return res.status(409).json({ message: 'User already supports this proposal' });
         }
         proposal.supporters += 1;
-        user.supportedProposals.push(proposalId);
+        user.supportedProposals.push(proposal.id);
         await proposal.save();
-        res.status(200).json("New supporter added on proposal: " + proposalId);
+        await user.save();
+        res.status(200).render('fragments/supportingButton', {layout: false, proposal});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+const removeSupporter = async (req, res) => {
+    try {
+        const proposalId = req.params.id;
+        const proposal = await Proposal
+            .findById(new ObjectId(proposalId))
+            .select('supporters');
+        
+        if (!proposal) {
+            return res.status(404).json({ message: 'Proposal not found' });
+        }
+
+        const user = req.session.user
+
+        if (!user.supportedProposals.includes(proposal.id)) {
+            return res.status(409).json({ message: 'User does not support this proposal' });
+        }
+        proposal.supporters -= 1;
+        user.supportedProposals.pop(proposal.id);
+        await proposal.save();
+        await user.save();
+        res.status(200).render('fragments/supportButton', {layout: false, proposal});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -148,6 +168,7 @@ module.exports = {
     getProposalByCategory,
     getProposalsCategories,
     addSupporter,
+    removeSupporter,
     sendProposalAsDraft,
     getDraftProposals,
     deleteDraftProposal,

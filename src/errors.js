@@ -40,7 +40,14 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 	}
 
 	if (err instanceof UnauthorizedError) {
-		return res.status(401).redirect('/login');
+		res.setHeader(
+			'Hx-Redirect',
+			`/login`
+		);
+		return res.status(401).json({
+			code: 'limited_user',
+			message: 'No tienes permisos para realizar esta acción.',
+		});
 	}
 
 	// Some other unknown error.
