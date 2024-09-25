@@ -1,8 +1,9 @@
 const router = require('express').Router();
 
-router.get('/', (req, res, next) => {
-    res.render('index');
-});
+const viewsController = require('../controllers/viewsController');
+const middlewares = require('../middlewares');
+
+router.get('/', viewsController.getIndex);
 
 router.get('/admin', (req, res, next) => {
     res.render('admin');

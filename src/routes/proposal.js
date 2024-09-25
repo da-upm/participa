@@ -3,18 +3,22 @@ const router = require('express').Router();
 const proposalController = require('../controllers/proposalController');
 const middlewares = require('../middlewares');
 
+router.get('/', proposalController.getProposals);
+router.get('/categories', proposalController.getProposalsCategories);
+router.get('/category/:category', proposalController.getProposalByCategory);
+
 router.use(middlewares.checkLogin);
 
-router.get('/', proposalController.getProposals);
 router.post('/draft', proposalController.sendProposalAsDraft);
-router.get('/draft', proposalController.getDraftProposals);
-router.get('/category/:category', proposalController.getProposalByCategory);
-router.get('/categories', proposalController.getProposalsCategories);
+router.post('/:id/support', proposalController.addSupporter);
+
+router.use(middlewares.restrictAdmins);
 
 router.post('/', proposalController.createProposal);
 router.delete('/:id', proposalController.deleteProposal);
-router.post('/:id/support', proposalController.addSupporter);
-router.delete('/draft/:id', proposalController.deleteDraftProposal);
+
+router.get('/draft', proposalController.getDraftProposals);
 router.post('/draft/:id/accept', proposalController.approveDraftProposal);
+router.delete('/draft/:id', proposalController.deleteDraftProposal);
 
 module.exports = router;

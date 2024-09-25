@@ -1,29 +1,4 @@
 $(document).ready(function() {
-    // Array de propuestas
-    let proposals = [
-        {
-            title: 'Mejora de laboratorios',
-            description: 'Actualizar el equipamiento de los laboratorios de ingeniería para que los estudiantes tengan acceso a la última tecnología en el campo.',
-            category: 'Infraestructura',
-            supports: 50,
-            supportingCandidates: 5
-        },
-        {
-            title: 'Aumento de becas para estudiantes',
-            description: 'Incrementar el número de becas disponibles para los estudiantes con buen rendimiento académico y bajos recursos económicos.',
-            category: 'Educación',
-            supports: 75,
-            supportingCandidates: 8
-        },
-        {
-            title: 'Creación de áreas verdes',
-            description: 'Desarrollar nuevas áreas verdes y espacios de descanso en el campus para mejorar la calidad de vida de los estudiantes y el personal.',
-            category: 'Infraestructura',
-            supports: 40,
-            supportingCandidates: 3
-        }
-    ];
-
     // Renderizar propuestas
     function renderProposals(filteredProposals = proposals) {
         let container = $('#proposalsContainer');
@@ -31,19 +6,19 @@ $(document).ready(function() {
         
         filteredProposals.forEach((proposal, index) => {
             let cardHtml = `
-                <div class="col-lg-4 col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">${proposal.title}</h5>
-                            <p class="card-text">${proposal.description.substring(0, 100)}...</p>
-                            <span class="badge bg-primary">${proposal.category}</span>
-                            <p class="mt-2">Apoyos: ${proposal.supports}</p>
-                            <p>Candidatos que apoyan: ${proposal.supportingCandidates}</p>
-                            <button class="btn btn-link view-more" data-index="${index}">Ver más</button>
-                            <button class="btn btn-success">Apoyar</button>
-                        </div>
-                    </div>
-                </div>`;
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${proposal.title}</h5>
+                                    <p class="card-text">${proposal.description.substring(0, 100)}...</p>
+                                    <span class="badge bg-primary">${proposal.category}</span>
+                                    <p class="mt-2">Apoyos: ${proposal.supports}</p>
+                                    <p>Candidatos que apoyan: ${proposal.supportingCandidates}</p>
+                                    <button class="btn btn-link view-more" data-index="${index}">Ver más</button>
+                                    <button class="btn btn-success">Apoyar</button>
+                                </div>
+                            </div>
+                        </div>`;
             container.append(cardHtml);
         });
 

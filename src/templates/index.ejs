@@ -91,8 +91,33 @@
 
     <!-- Proposals Section -->
     <div id="proposalsContainer" class="row gy-4">
-        <!-- Placeholder for proposal cards -->
+        <% proposals.forEach((proposal, index)=> { %>
+            <div id="<%= proposal._id.toString() %>"  class="col-lg-4 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= proposal.title %>
+                        </h5>
+                        <p class="card-text">
+                            <%= proposal.description.substring(0, 100) %>...
+                        </p>
+                        <% proposal.categories.forEach((category) =>  { %>
+                        <span class="badge bg-primary">
+                            <%= category %>
+                        </span>
+                        <% }) %>
+                        <p class="mt-2">Apoyos: <%= proposal.supporting      %>
+                        </p>
+                        <p>Candidatos que apoyan: <%= proposal.supportingCandidates %>
+                        </p>
+                        <button class="btn btn-link view-more" data-index="<%= index %>">Ver más</button>
+                        <button class="btn btn-success">Apoyar</button>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
     </div>
+
 
     <script src="./js/script.js"></script>
 
