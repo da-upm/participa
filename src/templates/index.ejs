@@ -1,4 +1,3 @@
-<!-- Main Content -->
 <div class="container mt-5">
     <!-- Header Section -->
     <div class="text-center">
@@ -45,26 +44,7 @@
 
     <!-- Modal para mostrar detalles de la propuesta -->
     <div class="modal fade" id="proposalDetailModal" tabindex="-1" aria-labelledby="proposalDetailModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Clase modal-dialog-centered añadida -->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="proposalDetailModalLabel">Detalles de la Propuesta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h4 id="proposalTitle"></h4>
-                    <p><span class="badge bg-primary" id="proposalCategory"></span></p>
-                    <p id="proposalDescription"></p>
-                    <p><strong>Apoyos:</strong> <span id="proposalSupports"></span></p>
-                    <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        aria-hidden="true"></div>
 
 
 
@@ -106,11 +86,11 @@
                             <%= category %>
                         </span>
                         <% }) %>
-                        <p class="mt-2">Apoyos: <%= proposal.supporting      %>
+                        <p class="mt-2">Apoyos: <%= proposal.supporters %>
                         </p>
-                        <p>Candidatos que apoyan: <%= proposal.supportingCandidates %>
+                        <p>Candidatos que apoyan: <%= proposal.candidatesSupporters %>
                         </p>
-                        <button class="btn btn-link view-more" data-index="<%= index %>">Ver más</button>
+                        <button class="btn btn-link view-more" data-index="<%= index %>" hx-get="/api/proposals/<%= proposal._id.toString() %>" hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver más</button>
                         <button class="btn btn-success">Apoyar</button>
                     </div>
                 </div>

@@ -1,9 +1,11 @@
-const proposal = require('../models/proposal');
-const user = require('../models/user');
+const Proposal = require('../models/proposal');
+const User = require('../models/user');
+
+const ObjectId = require('mongoose').Types.ObjectId; 
 
 const createProposal = async (req, res) => {
     try {
-        const newProposal = new proposal(req.body);
+        const newProposal = new Proposal(req.body);
         await newProposal.save();
         res.status(201).json(newProposal);
     } catch (error) {
@@ -13,12 +15,22 @@ const createProposal = async (req, res) => {
 
 const getProposals = async (req, res) => {
     try {
-        const proposals = await proposal.find();
+        const proposals = await Proposal.find();
         res.status(200).json(proposals);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
+
+const getProposal = async (req, res) => {
+    try {
+        const proposal = await Proposal.findById(new ObjectId(req.params.id));
+        res.status(200).render('fragments/proposalDetailModal', {layout: false, proposal});
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 
 const deleteProposal = async (req, res) => {
     try {
@@ -131,6 +143,7 @@ const approveDraftProposal = async (req, res) => {
 module.exports = {
     createProposal,
     getProposals,
+    getProposal,
     deleteProposal,
     getProposalByCategory,
     getProposalsCategories,

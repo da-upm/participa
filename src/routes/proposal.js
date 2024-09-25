@@ -4,6 +4,7 @@ const proposalController = require('../controllers/proposalController');
 const middlewares = require('../middlewares');
 
 router.get('/', proposalController.getProposals);
+router.get('/:id', proposalController.getProposal);
 router.get('/categories', proposalController.getProposalsCategories);
 router.get('/category/:category', proposalController.getProposalByCategory);
 
