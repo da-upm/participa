@@ -71,8 +71,8 @@
 
     <!-- Proposals Section -->
     <div id="proposalsContainer" class="row gy-4">
-        <% proposals.forEach((proposal, index)=> { %>
-            <div id="<%= proposal._id.toString() %>"  class="col-lg-4 col-md-6">
+        <% proposals.forEach((proposal)=> { %>
+            <div id="proposal-card-<%= proposal._id.toString() %>"  class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
@@ -90,13 +90,12 @@
                         </p>
                         <p>Candidatos que apoyan: <%= proposal.candidatesSupporters %>
                         </p>
-                        <button class="btn btn-link view-more" data-index="<%= index %>" hx-get="/api/proposals/<%= proposal._id.toString() %>" hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver más</button>
+                        <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>" hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver más</button>
                         <% if (user?.supportedProposals.includes(proposal.id)) { %>
-                            <button class="btn btn-outline-success" hx-delete="/api/proposals/<%= proposal._id.toString() %>/support" hx-swap="outerHTML">Apoyando</button>
+                            <button class="btn btn-outline-success" hx-delete="/api/proposals/<%= proposal._id.toString() %>/support" hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyando</button>
                         <% } else {  %>
-                            <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support" hx-swap="outerHTML">Apoyar</button>
+                            <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support"  hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyar</button>
                         <% } %>
-
                     </div>
                 </div>
             </div>

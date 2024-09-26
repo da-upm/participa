@@ -31,6 +31,10 @@ h1, h2, h3, h4, h5, h6, p, .navbar, .card {
     border-radius: 10px;
 }
 
+.support-button-spinner {
+    display: none;
+}
+
 /* admin-styles.css */
 
 /* Centrar y ajustar la apariencia de las checkboxes */

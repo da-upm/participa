@@ -63,9 +63,7 @@ const addSupporter = async (req, res) => {
     try {
         const proposalId = req.params.id;
         const proposal = await Proposal
-            .findById(new ObjectId(proposalId))
-            .select('supporters');
-        
+            .findById(new ObjectId(proposalId));        
         if (!proposal) {
             return res.status(404).json({ message: 'Proposal not found' });
         }
@@ -79,7 +77,8 @@ const addSupporter = async (req, res) => {
         user.supportedProposals.push(proposal.id);
         await proposal.save();
         await user.save();
-        res.status(200).render('fragments/supportingButton', {layout: false, proposal});
+        res.locals.user = req.session.user;
+        res.status(200).render('fragments/proposalCard', {layout: false, proposal});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -89,9 +88,7 @@ const removeSupporter = async (req, res) => {
     try {
         const proposalId = req.params.id;
         const proposal = await Proposal
-            .findById(new ObjectId(proposalId))
-            .select('supporters');
-        
+            .findById(new ObjectId(proposalId));
         if (!proposal) {
             return res.status(404).json({ message: 'Proposal not found' });
         }
@@ -105,7 +102,8 @@ const removeSupporter = async (req, res) => {
         user.supportedProposals.pop(proposal.id);
         await proposal.save();
         await user.save();
-        res.status(200).render('fragments/supportButton', {layout: false, proposal});
+        res.locals.user = req.session.user;
+        res.status(200).render('fragments/proposalCard', {layout: false, proposal});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
