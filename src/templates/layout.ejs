@@ -19,7 +19,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-daupm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="./img/LOGO-DAUPM_MANCHETA_Neg-1024x198.png" alt="Logo DAUPM" height="40">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -32,7 +32,7 @@
                         <% if (user == null) { %>
                         <a class="nav-link" href="/login">Iniciar sesión</a>
                         <% } else { %>
-                        <p class="nav-link"><%= user.username %></a>
+                        <a class="nav-link"><%= user.username %></a>
                         <% } %>
                     </li>
                 </ul>
