@@ -109,6 +109,10 @@ const removeSupporter = async (req, res) => {
     }
 }
 
+const getDraftForm = (req, res) => {
+    res.status(200).render('fragments/proposalDraftModal', {layout: false});
+}
+
 const sendProposalAsDraft = async (req, res) => {
     try {
         const proposalData = req.body;
@@ -167,6 +171,7 @@ module.exports = {
     getProposalsCategories,
     addSupporter,
     removeSupporter,
+    getDraftForm,
     sendProposalAsDraft,
     getDraftProposals,
     deleteDraftProposal,

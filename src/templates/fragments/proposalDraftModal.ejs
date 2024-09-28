@@ -1,0 +1,31 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="proposalModalLabel">Nueva Propuesta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="proposalForm">
+                <div class="mb-3">
+                    <label for="category" class="form-label">Categoría</label>
+                    <select id="category" class="form-select" required>
+                        <option value="">Selecciona una categoría</option>
+                        <option value="Educación">Educación</option>
+                        <option value="Infraestructura">Infraestructura</option>
+                        <option value="Servicios">Servicios</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Título</label>
+                    <input type="text" id="title" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descripción</label>
+                    <textarea id="description" class="form-control" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>

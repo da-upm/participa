@@ -3,50 +3,19 @@
     <div class="text-center">
         <h1>Propuestas para el Rector</h1>
         <p class="lead">Comparte tus ideas para la mejora de nuestra universidad.</p>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proposalModal">Aportar
+        <button class="btn btn-primary" hx-get="/api/proposals/draft-form"
+            hx-target="#proposalDraftModal" hx-on::after-request="$('#proposalDraftModal').modal('show')">Aportar
             Propuesta</button>
     </div>
 
     <!-- Proposal Modal -->
-    <div class="modal fade" id="proposalModal" tabindex="-1" aria-labelledby="proposalModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="proposalModalLabel">Nueva Propuesta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="proposalForm">
-                        <div class="mb-3">
-                            <label for="category" class="form-label">Categoría</label>
-                            <select id="category" class="form-select" required>
-                                <option value="">Selecciona una categoría</option>
-                                <option value="Educación">Educación</option>
-                                <option value="Infraestructura">Infraestructura</option>
-                                <option value="Servicios">Servicios</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Título</label>
-                            <input type="text" id="title" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Descripción</label>
-                            <textarea id="description" class="form-control" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="modal modal-lg fade" id="proposalDraftModal" tabindex="-1" aria-labelledby="proposalModalLabel"
+        aria-hidden="true">
     </div>
 
     <!-- Modal para mostrar detalles de la propuesta -->
     <div class="modal fade" id="proposalDetailModal" tabindex="-1" aria-labelledby="proposalDetailModalLabel"
         aria-hidden="true"></div>
-
-
 
     <!-- Search and Filter Section -->
     <div class="mt-5">
@@ -72,7 +41,7 @@
     <!-- Proposals Section -->
     <div id="proposalsContainer" class="row gy-4">
         <% proposals.forEach((proposal)=> { %>
-            <div id="proposal-card-<%= proposal._id.toString() %>"  class="col-lg-4 col-md-6">
+            <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">
@@ -81,21 +50,34 @@
                         <p class="card-text">
                             <%= proposal.description.substring(0, 100) %>...
                         </p>
-                        <% proposal.categories.forEach((category) =>  { %>
-                        <span class="badge bg-primary">
-                            <%= category %>
-                        </span>
-                        <% }) %>
-                        <p class="mt-2">Apoyos: <%= proposal.supporters %>
-                        </p>
-                        <p>Candidatos que apoyan: <%= proposal.candidatesSupporters %>
-                        </p>
-                        <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>" hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver más</button>
-                        <% if (user?.supportedProposals.includes(proposal.id)) { %>
-                            <button class="btn btn-outline-success" hx-delete="/api/proposals/<%= proposal._id.toString() %>/support" hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyando</button>
-                        <% } else {  %>
-                            <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support"  hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyar</button>
-                        <% } %>
+                        <% proposal.categories.forEach((category)=> { %>
+                            <span class="badge bg-primary">
+                                <%= category %>
+                            </span>
+                            <% }) %>
+                                <p class="mt-2">Apoyos: <%= proposal.supporters %>
+                                </p>
+                                <p>Candidatos que apoyan: <%= proposal.candidatesSupporters %>
+                                </p>
+                                <button class="btn btn-link view-more"
+                                    hx-get="/api/proposals/<%= proposal._id.toString() %>"
+                                    hx-target="#proposalDetailModal"
+                                    hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver más</button>
+                                <% if (user?.supportedProposals.includes(proposal.id)) { %>
+                                    <button class="btn btn-outline-success"
+                                        hx-delete="/api/proposals/<%= proposal._id.toString() %>/support"
+                                        hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()"
+                                        hx-target="#proposal-card-<%= proposal._id.toString() %>"><span
+                                            class="spinner-border spinner-border-sm support-button-spinner"
+                                            aria-hidden="true"></span> Apoyando</button>
+                                    <% } else { %>
+                                        <button class="btn btn-success"
+                                            hx-post="/api/proposals/<%= proposal._id.toString() %>/support"
+                                            hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()"
+                                            hx-target="#proposal-card-<%= proposal._id.toString() %>"><span
+                                                class="spinner-border spinner-border-sm support-button-spinner"
+                                                aria-hidden="true"></span> Apoyar</button>
+                                        <% } %>
                     </div>
                 </div>
             </div>
