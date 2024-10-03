@@ -145,18 +145,17 @@ const deleteDraftProposal = async (req, res) => {
 
 const approveDraftProposal = async (req, res) => {
     try {
-        const proposalId = req.params.id;
-        const proposal = await proposal.findById(proposalId)
-        proposal.isDraft = undefined;
-        const usersDrafting = proposal.usersDrafting;
-        usersDrafting.forEach(async (userId) => {
-            const user = await user.findById(userId);
-            user.supportedProposals.push(proposalId);
-            user.save();
-        });
-        proposal.usersDrafting = undefined;
-        proposal.save();
-        res.status(200).json({ message: 'Draft proposal approved' });
+        let userProposing = new Set();
+        let deleteProposals = req.body.deleteProposals;
+         for (let proposalId of deleteProposals) {
+            const proposal = await proposal.findById(proposalId);
+            userProposing.add(proposal.usersDrafting);
+            await proposal.findByIdAndDelete(proposalId);
+        }
+        const newProposal = new proposal(req.body);
+        newProposal.isDraft = false;
+        newProposal.usersDrafting = userProposing;
+        await newProposal.save();
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
