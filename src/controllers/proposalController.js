@@ -125,13 +125,21 @@ const getDraftForm = (req, res) => {
 }
 
 const sendProposalAsDraft = async (req, res) => {
+    console.log(req.body);
     try {
-        const proposalData = req.body;
-        proposalData.isDraft = true;
-        proposalData.usersDrafting = [req.query.userId];
-        const newProposal = new proposal(proposalData);
+        const proposalData = {
+            title: req.body.title,
+            description: req.body.description,
+            categories: [],
+            isDraft: true,
+            usersDrafting: req.session.user.id,
+        }
+        proposalData.categories.concat(req.body.categories);
+
+        const newProposal = new Proposal(proposalData);
         newProposal.save();
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 }

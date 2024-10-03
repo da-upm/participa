@@ -5,11 +5,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form id="proposalForm">
+            <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc">
                 <div class="mb-3">
-                    <label for="category" class="form-label">Categoría</label>
-                    <select id="category" class="form-select" required>
-                        <option value="">Selecciona una categoría</option>
+                    <label for="categories" class="form-label">Categorías</label>
+                    <select id="proposalDraftModalCategory" name="categories" class="form-select selectpicker" multiple
+                        data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
+                        data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
                         <option value="Educación">Educación</option>
                         <option value="Infraestructura">Infraestructura</option>
                         <option value="Servicios">Servicios</option>
@@ -17,11 +18,11 @@
                 </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
-                    <input type="text" id="title" class="form-control" required>
+                    <input type="text" id="proposalDraftModalTitle" name="title" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>
-                    <textarea id="description" class="form-control" rows="10" required></textarea>
+                    <textarea id="proposalDraftModalDescription" name="description" class="form-control" rows="10" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Enviar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
