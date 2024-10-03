@@ -1,10 +1,18 @@
-const proposal = require('../models/proposal');
-const user = require('../models/user');
+const Proposal = require('../models/proposal');
+const User = require('../models/user');
 
 const getIndex = async (req, res, next) => {
     try {
-        const proposals = await proposal.find();
-        res.status(200).render('index', {proposals})
+        const rawProposals = await Proposal.find();
+        const proposals = await Promise.all(
+            rawProposals.map(async (p) => {
+                return {
+                    ...p.toObject(),
+                    supporters: await p.getSupportersCount()
+                };
+            })
+        );
+        res.status(200).render('index', { proposals })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

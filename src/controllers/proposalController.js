@@ -1,7 +1,7 @@
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
-const ObjectId = require('mongoose').Types.ObjectId; 
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const createProposal = async (req, res) => {
     try {
@@ -25,7 +25,7 @@ const getProposals = async (req, res) => {
 const getProposal = async (req, res) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
-        res.status(200).render('fragments/proposalDetailModal', {layout: false, proposal});
+        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -62,23 +62,28 @@ const getProposalsCategories = async (req, res) => {
 const addSupporter = async (req, res) => {
     try {
         const proposalId = req.params.id;
-        const proposal = await Proposal
-            .findById(new ObjectId(proposalId));        
-        if (!proposal) {
+        const rawProposal = await Proposal
+            .findById(new ObjectId(proposalId));
+        if (!rawProposal) {
             return res.status(404).json({ message: 'Proposal not found' });
         }
 
         const user = req.session.user
 
-        if (user.supportedProposals.includes(proposal.id)) {
+        if (user.supportedProposals.includes(rawProposal.id)) {
             return res.status(409).json({ message: 'User already supports this proposal' });
         }
-        proposal.supporters += 1;
-        user.supportedProposals.push(proposal.id);
-        await proposal.save();
+
+        user.supportedProposals.push(rawProposal.id);
         await user.save();
+
+        const proposal = {
+            ...rawProposal.toObject(),
+            supporters: await rawProposal.getSupportersCount()
+        }
+
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', {layout: false, proposal});
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -87,30 +92,36 @@ const addSupporter = async (req, res) => {
 const removeSupporter = async (req, res) => {
     try {
         const proposalId = req.params.id;
-        const proposal = await Proposal
+        const rawProposal = await Proposal
             .findById(new ObjectId(proposalId));
-        if (!proposal) {
+        if (!rawProposal) {
             return res.status(404).json({ message: 'Proposal not found' });
         }
 
         const user = req.session.user
 
-        if (!user.supportedProposals.includes(proposal.id)) {
+        if (!user.supportedProposals.includes(rawProposal.id)) {
             return res.status(409).json({ message: 'User does not support this proposal' });
         }
-        proposal.supporters -= 1;
-        user.supportedProposals.pop(proposal.id);
-        await proposal.save();
+
+        user.supportedProposals.splice(user.supportedProposals.indexOf(new ObjectId(rawProposal.id)), 1);
+        await rawProposal.save();
         await user.save();
+
+        const proposal = {
+            ...rawProposal.toObject(),
+            supporters: await rawProposal.getSupportersCount()
+        }
+
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', {layout: false, proposal});
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
 const getDraftForm = (req, res) => {
-    res.status(200).render('fragments/proposalDraftModal', {layout: false});
+    res.status(200).render('fragments/proposalDraftModal', { layout: false });
 }
 
 const sendProposalAsDraft = async (req, res) => {

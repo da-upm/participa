@@ -9,10 +9,6 @@ const proposalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    supporters: {
-        type: Number,
-        default: 0
-    },
     categories: {
         type: [String],
         required: true,
@@ -30,5 +26,13 @@ const proposalSchema = new mongoose.Schema({
         default: []
     },
 });
+
+// Definir una función en el esquema para obtener el número de supporters
+proposalSchema.methods.getSupportersCount = async function () {
+    const count = await mongoose.model('User').countDocuments({
+        supportedProposals: this._id
+    });
+    return count;
+};
 
 module.exports = mongoose.model('Proposal', proposalSchema);
