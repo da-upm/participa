@@ -18,18 +18,31 @@
             <p id="proposalDescription">
                 <%= proposal.description %>
             </p>
-            <p><strong>Apoyos:</strong> <span id="proposalSupports"><%= proposal.supporters %></span></p>
-            <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates"><%= proposal.candidatesSupporters?.map(c => c) %></span></p>
-            
+            <p><strong>Apoyos:</strong> <span id="proposalSupports">
+                    <%= proposal.supporters %>
+                </span></p>
+            <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates">
+                    <%= proposal.candidatesSupporters?.map(c=> c) %>
+                </span></p>
+
             <div class="text-center justify-content-center">
                 <% if (user?.supportedProposals.includes(proposal.id)) { %>
-                    <button class="btn btn-outline-success" hx-delete="/api/proposals/<%= proposal._id.toString() %>/support" hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyando</button>
-                <% } else {  %>
-                    <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support" hx-on::beforeRequest="$(this).prop('disabled', true); $('.support-button-spinner').show()" hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span> Apoyar</button>
-                <% } %>
+                    <button class="btn btn-outline-success"
+                        hx-delete="/api/proposals/<%= proposal._id.toString() %>/support"
+                        hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
+                        hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span
+                            class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span>
+                        Apoyando</button>
+                    <% } else { %>
+                        <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support"
+                            hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
+                            hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span
+                                class="spinner-border spinner-border-sm support-button-spinner"
+                                aria-hidden="true"></span> Apoyar</button>
+                        <% } %>
             </div>
         </div>
-        
+
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>

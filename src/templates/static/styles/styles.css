@@ -2,7 +2,15 @@ body {
     font-family: 'Comfortaa', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6, p, .navbar, .card {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+.navbar,
+.card {
     font-family: 'Comfortaa', sans-serif;
 }
 
@@ -24,7 +32,8 @@ h1, h2, h3, h4, h5, h6, p, .navbar, .card {
 /* Navbar custom color */
 .bg-daupm {
     --bs-bg-opacity: 1;
-    background-color: #003366 !important; /* Using the color scheme of the reference site */
+    background-color: #003366 !important;
+    /* Using the color scheme of the reference site */
 }
 
 .modal-content {
@@ -35,18 +44,25 @@ h1, h2, h3, h4, h5, h6, p, .navbar, .card {
     display: none;
 }
 
+.bootstrap-select {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
 /* admin-styles.css */
 
 /* Centrar y ajustar la apariencia de las checkboxes */
 .table .form-check-input {
     display: block;
     margin: 0 auto;
-    transform: scale(1.2); /* Aumentar el tamaño de la checkbox */
+    transform: scale(1.2);
+    /* Aumentar el tamaño de la checkbox */
 }
 
 /* Aumentar contraste de las checkboxes */
 .table .form-check-input:checked {
-    background-color: #007bff; /* Color azul para las checkboxes seleccionadas */
+    background-color: #007bff;
+    /* Color azul para las checkboxes seleccionadas */
     border-color: #007bff;
 }
 
@@ -71,4 +87,3 @@ h1, h2, h3, h4, h5, h6, p, .navbar, .card {
     text-align: center;
     vertical-align: middle;
 }
-

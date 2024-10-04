@@ -25,6 +25,8 @@ const getProposals = async (req, res) => {
 const getProposal = async (req, res) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
+        proposal.supporters = await proposal.getSupportersCount();
+
         res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -130,11 +132,10 @@ const sendProposalAsDraft = async (req, res) => {
         const proposalData = {
             title: req.body.title,
             description: req.body.description,
-            categories: [],
+            categories: req.body.categories,
             isDraft: true,
             usersDrafting: req.session.user.id,
         }
-        proposalData.categories.concat(req.body.categories);
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();

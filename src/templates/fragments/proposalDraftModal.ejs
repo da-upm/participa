@@ -8,9 +8,9 @@
             <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc">
                 <div class="mb-3">
                     <label for="categories" class="form-label">Categorías</label>
-                    <select id="proposalDraftModalCategory" name="categories" class="form-select selectpicker" multiple
-                        data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
-                        data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
+                    <select id="proposalDraftModalCategory" name="categories" class="selectpicker" multiple
+                    data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true" 
+                    data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
                         <option value="Educación">Educación</option>
                         <option value="Infraestructura">Infraestructura</option>
                         <option value="Servicios">Servicios</option>
@@ -22,11 +22,18 @@
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>
-                    <textarea id="proposalDraftModalDescription" name="description" class="form-control" rows="10" required></textarea>
+                    <textarea id="proposalDraftModalDescription" name="description" class="form-control" rows="10"
+                        required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Enviar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    $(this).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>

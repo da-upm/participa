@@ -7,6 +7,8 @@
     <title>Propuestas para Rector</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="./styles/styles.css">
     <link rel="icon" href="./img/cropped-00-DAUPM-192x192.png" sizes="192x192">
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
@@ -30,11 +32,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <% if (user == null) { %>
-                        <a class="nav-link" href="/login">Iniciar sesión</a>
-                        <% } else { %>
-                        <a class="nav-link"><%= user.username %></a>
-                        <% } %>
+                        <% if (user==null) { %>
+                            <a class="nav-link" href="/login">Iniciar sesión</a>
+                            <% } else { %>
+                                <a class="nav-link">
+                                    <%= user.name %>
+                                </a>
+                                <% } %>
                     </li>
                 </ul>
             </div>
@@ -45,7 +49,10 @@
     <%- body %>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>
