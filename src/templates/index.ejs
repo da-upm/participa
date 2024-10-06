@@ -21,20 +21,20 @@
     <div class="mt-5">
         <div class="row mb-4">
             <div class="col-md-6">
-                <input type="text" class="form-control" id="searchInput"
+                <input type="text" class="form-control" id="searchInput" name="searchInput"
                     placeholder="Buscar propuestas por título o palabras clave">
             </div>
             <div class="col-md-4">
-                <select id="filterCategory" class="selectpicker" multiple
-                data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true" 
-                data-live-search="true" data-width="100%" title="Filtrar por categoría">
+                <select id="filterCategory" name="filterCategory" class="selectpicker" multiple
+                    data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
+                    data-live-search="true" data-live-search-normalize="true" data-width="100%" title="Filtrar por categoría">
                     <option value="Educación">Educación</option>
                     <option value="Infraestructura">Infraestructura</option>
                     <option value="Servicios">Servicios</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <button id="clearFilters" class="btn btn-secondary w-100">Limpiar</button>
+                <button id="clearFilters" class="btn btn-secondary w-100" onclick="$('#searchInput').val(''); $('#filterCategory').selectpicker('deselectAll')">Limpiar</button>
             </div>
         </div>
     </div>
@@ -84,8 +84,4 @@
             </div>
             <% }) %>
     </div>
-
-
-    <script src="./js/script.js"></script>
-
 </div>

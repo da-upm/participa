@@ -33,7 +33,6 @@ const getProposal = async (req, res) => {
     }
 }
 
-
 const deleteProposal = async (req, res) => {
     try {
         await proposal.findByIdAndDelete(req.params.id);
