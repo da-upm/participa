@@ -23,7 +23,9 @@ const getProposals = async (req, res) => {
     const filterCategories = req.query.categories || [];
 
     // Construir la consulta
-    const query = {};
+    const query = {
+        isDraft: false
+    };
 
     // Si hay categorías en filterCategories, agregarlas a la consulta
     if (filterCategories.length > 0) {

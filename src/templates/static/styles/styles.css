@@ -49,6 +49,16 @@ p,
     border-radius: var(--bs-border-radius);
 }
 
+#searchIndicator{
+    display:none;
+}
+.htmx-request #searchIndicator{
+    display:inline;
+}
+.htmx-request#searchIndicator{
+    display:inline;
+}
+
 /* admin-styles.css */
 
 /* Centrar y ajustar la apariencia de las checkboxes */

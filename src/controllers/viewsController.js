@@ -3,7 +3,7 @@ const User = require('../models/user');
 
 const getIndex = async (req, res, next) => {
     try {
-        const rawProposals = await Proposal.find();
+        const rawProposals = await Proposal.find({isDraft: false});
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
