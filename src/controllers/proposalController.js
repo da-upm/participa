@@ -1,3 +1,5 @@
+const sanitizeHtml = require('sanitize-html');
+
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
@@ -168,11 +170,15 @@ const getDraftForm = (req, res) => {
 }
 
 const sendProposalAsDraft = async (req, res) => {
-    console.log(req.body);
+    const sanitizedDescription = sanitizeHtml(req.body.description, {
+        allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
+        allowedAttributes: {}
+    });
+
     try {
         const proposalData = {
-            title: req.body.title,
-            description: req.body.description,
+            title: sanitizeHtml(req.body.title, {allowedTags: [], allowedAttributes: {}}),
+            description: sanitizedDescription,
             categories: req.body.categories,
             isDraft: true,
             usersDrafting: req.session.user.id,

@@ -29,7 +29,8 @@
     "mongoose": "^8.6.3",
     "morgan": "^1.10.0",
     "openid-client": "^5.7.0",
-    "passport": "^0.7.0"
+    "passport": "^0.7.0",
+    "sanitize-html": "^2.13.1"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.13.9"

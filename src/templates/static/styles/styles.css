@@ -59,6 +59,10 @@ p,
     display:inline;
 }
 
+#proposalDraftModalDescription {
+    display: none;
+}
+
 /* admin-styles.css */
 
 /* Centrar y ajustar la apariencia de las checkboxes */
