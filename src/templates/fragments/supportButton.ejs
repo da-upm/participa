@@ -1,0 +1,15 @@
+<% if (user?.supportedProposals.includes(proposal._id.toString())) { %>
+    <button class="btn btn-outline-success" data-bs-dismiss="modal"
+        hx-delete="/api/proposals/<%= proposal._id.toString() %>/support"
+        hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
+        hx-target="#proposal-card-<%= proposal._id.toString() %>" hx-target-error="#toastr-container"><span
+            class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span>
+        Apoyando</button>
+    <% } else { %>
+        <button class="btn btn-success" data-bs-dismiss="modal"
+            hx-post="/api/proposals/<%= proposal._id.toString() %>/support"
+            hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
+            hx-target="#proposal-card-<%= proposal._id.toString() %>" hx-target-error="#toastr-container"><span
+                class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span>
+            Apoyar</button>
+        <% } %>

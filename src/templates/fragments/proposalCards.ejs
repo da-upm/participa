@@ -1,0 +1,5 @@
+<% proposals.forEach((proposal)=> { %>
+    <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
+        <%- include('proposalCard', { proposal }) %>
+    </div>
+<% }) %>

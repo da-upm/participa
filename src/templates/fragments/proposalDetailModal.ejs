@@ -26,20 +26,7 @@
                 </span></p>
 
             <div class="text-center justify-content-center">
-                <% if (user?.supportedProposals.includes(proposal.id)) { %>
-                    <button class="btn btn-outline-success"
-                        hx-delete="/api/proposals/<%= proposal._id.toString() %>/support"
-                        hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
-                        hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span
-                            class="spinner-border spinner-border-sm support-button-spinner" aria-hidden="true"></span>
-                        Apoyando</button>
-                    <% } else { %>
-                        <button class="btn btn-success" hx-post="/api/proposals/<%= proposal._id.toString() %>/support"
-                            hx-on::before-request="$(this).prop('disabled', true); $(this).children('.support-button-spinner').css('display', 'inherit')"
-                            hx-target="#proposal-card-<%= proposal._id.toString() %>" data-bs-dismiss="modal"><span
-                                class="spinner-border spinner-border-sm support-button-spinner"
-                                aria-hidden="true"></span> Apoyar</button>
-                        <% } %>
+                <%- include('supportButton')  %>
             </div>
         </div>
 

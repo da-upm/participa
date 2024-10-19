@@ -59,7 +59,7 @@ const getProposals = async (req, res) => {
             })
         );
 
-        res.status(200).render('fragments/proposalsCards', { layout: false, proposals });
+        res.status(200).render('fragments/proposalCards', { layout: false, proposals });
     } catch (error) {
         console.error("Error en la búsqueda:", error);
         res.status(404).json({ message: error.message });
