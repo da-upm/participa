@@ -110,7 +110,7 @@ const addSupporter = async (req, res) => {
         const rawProposal = await Proposal
             .findById(new ObjectId(proposalId));
         if (!rawProposal) {
-            console.error(`Propuesta ${proposalId} para el usuario ${req.session.user.id}.`)
+            console.error(`No se encuentra propuesta ${proposalId} para el usuario ${req.session.user.id}.`)
             req.toastr.error("Propuesta no encontrada.");
             return res.status(409).render('fragments/toastr', { layout: false, req: req });
         }
@@ -146,13 +146,17 @@ const removeSupporter = async (req, res) => {
         const rawProposal = await Proposal
             .findById(new ObjectId(proposalId));
         if (!rawProposal) {
-            return res.status(404).json({ message: 'Proposal not found' });
+            console.error(`No se encuentra propuesta ${proposalId} para el usuario ${req.session.user.id}.`)
+            req.toastr.error("Propuesta no encontrada.");
+            return res.status(409).render('fragments/toastr', { layout: false, req: req });
         }
 
         const user = req.session.user
 
         if (!user.supportedProposals.includes(rawProposal.id)) {
-            return res.status(409).json({ message: 'User does not support this proposal' });
+            console.warn(`El usuario ${req.session.user.id} no apoya la propuesta ${proposalId}.`)
+            req.toastr.warning("No estás apoyando esta propuesta.");
+            return res.status(409).render('fragments/toastr', { layout: false, req: req });
         }
 
         user.supportedProposals.splice(user.supportedProposals.indexOf(new ObjectId(rawProposal.id)), 1);
@@ -167,7 +171,9 @@ const removeSupporter = async (req, res) => {
         res.locals.user = req.session.user;
         res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error(error.message)
+        req.toastr.error("Por favor, inténtalo más tarde", 'Ha ocurrido un error inesperado.');
+        return res.status(500).render('fragments/toastr', { layout: false, req: req });
     }
 }
 
@@ -183,7 +189,7 @@ const sendProposalAsDraft = async (req, res) => {
 
     try {
         const proposalData = {
-            title: sanitizeHtml(req.body.title, {allowedTags: [], allowedAttributes: {}}),
+            title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
             description: sanitizedDescription,
             categories: req.body.categories,
             isDraft: true,
