@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const helmet = require('helmet');
 const passport = require('passport');
+const flash = require('connect-flash');
+const toastr = require('express-toastr');
 
 const { Issuer, Strategy } = require('openid-client');
 
@@ -112,6 +114,15 @@ Issuer.discover(config.sso.wellKnownEndpoint)
 		);
 	});
 
+app.use(flash());
+app.use(toastr());
+
+app.use(function (req, res, next)
+{
+    res.locals.toasts = req.toastr.render()
+    next()
+});
+
 // Login routes.
 app.get('/login', (req, res, next) => { req.session.referer = req.headers.referer; next(); }, passport.authenticate('oidc', { scope: config.sso.scope }));
 
@@ -122,6 +133,7 @@ app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (er
 })(req, res, next), loginController.handleLogin, (req, res) => {
 	const redirectTo = req.session.referer;
 	req.session.referer = null;
+	req.toastr.success('Successfully logged in.', "You're in!");
 	return res.redirect(redirectTo || '/');
 });
 
@@ -129,7 +141,7 @@ app.use(function (req, res, next) {
 	res.locals.user = req.session.user;
 	res.setHeader(
 		'Content-Security-Policy',
-		`default-src 'self' *.upm.es; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' 'unsafe-inline' data: https://da.upm.es;`
+		`default-src 'self' *.upm.es; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' 'unsafe-inline' data: https://da.upm.es;`
 	);
 	next();
 });

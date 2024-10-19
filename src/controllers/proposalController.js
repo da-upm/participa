@@ -110,13 +110,17 @@ const addSupporter = async (req, res) => {
         const rawProposal = await Proposal
             .findById(new ObjectId(proposalId));
         if (!rawProposal) {
-            return res.status(404).json({ message: 'Proposal not found' });
+            console.error(`Propuesta ${proposalId} para el usuario ${req.session.user.id}.`)
+            req.toastr.error("Propuesta no encontrada.");
+            return res.status(409).render('fragments/toastr', { layout: false, req: req });
         }
 
         const user = req.session.user
 
         if (user.supportedProposals.includes(rawProposal.id)) {
-            return res.status(409).json({ message: 'User already supports this proposal' });
+            console.warn(`El usuario ${req.session.user.id} ya apoya la propuesta ${proposalId}.`)
+            req.toastr.warning("Ya estás apoyando esta propuesta.");
+            return res.status(409).render('fragments/toastr', { layout: false, req: req });
         }
 
         user.supportedProposals.push(rawProposal.id);
@@ -130,7 +134,9 @@ const addSupporter = async (req, res) => {
         res.locals.user = req.session.user;
         res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error(error.message)
+        req.toastr.error("Por favor, inténtalo más tarde", 'Ha ocurrido un error inesperado.');
+        return res.status(500).render('fragments/toastr', { layout: false, req: req });
     }
 }
 
