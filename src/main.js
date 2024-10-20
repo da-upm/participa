@@ -133,7 +133,6 @@ app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (er
 })(req, res, next), loginController.handleLogin, (req, res) => {
 	const redirectTo = req.session.referer;
 	req.session.referer = null;
-	req.toastr.success('Successfully logged in.', "You're in!");
 	return res.redirect(redirectTo || '/');
 });
 
