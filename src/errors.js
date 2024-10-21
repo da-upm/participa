@@ -26,10 +26,25 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 	}
 
 	if (err instanceof LimitedUserError) {
-		return res.status(403).json({
-			code: 'limited_user',
-			message: 'No tienes permisos para realizar esta acción.',
-		});
+		console.warn(`El usuario ${req.session.user.id} ha intentado realizar una acción no autorizada.`)
+		req.toastr.error("No tienes permisos para realizar esta acción.", '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		  });
+		res.setHeader(
+			'Hx-Redirect',
+			`/`
+		);
+		return res.status(403).redirect('/');
 	}
 
 	if (err instanceof NotFoundError) {
@@ -40,10 +55,27 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 	}
 
 	if (err instanceof UnauthorizedError) {
+		req.toastr.warning("Necesitas estar autenticado para realizar esta acción.", '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		  });
 		res.setHeader(
 			'Hx-Redirect',
 			`/login`
 		);
+		/*return res.status(401).json({
+			code: 'limited_user',
+			message: 'No tienes permisos para realizar esta acción.',
+		});*/
 		return res.status(401).json({
 			code: 'limited_user',
 			message: 'No tienes permisos para realizar esta acción.',

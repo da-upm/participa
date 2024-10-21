@@ -79,17 +79,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((user, done) => {
-	console.log('-----------------------------');
-	console.log('Serialize user');
-	console.log(user);
-	console.log('-----------------------------');
+	//console.log('-----------------------------');
+	//console.log('Serialize user');
+	//console.log(user);
+	//console.log('-----------------------------');
 	done(null, user);
 });
 passport.deserializeUser((user, done) => {
-	console.log('-----------------------------');
-	console.log('Deserialize user');
-	console.log(user);
-	console.log('-----------------------------');
+	//console.log('-----------------------------');
+	//console.log('Deserialize user');
+	//console.log(user);
+	//console.log('-----------------------------');
 	done(null, user);
 });
 
@@ -105,8 +105,8 @@ Issuer.discover(config.sso.wellKnownEndpoint)
 		passport.use(
 			'oidc',
 			new Strategy({ client: keycloak, passReqToCallback: true }, (req, tokenSet, userinfo, done) => {
-				console.log('tokenSet', tokenSet);
-				console.log('userinfo', userinfo);
+				//console.log('tokenSet', tokenSet);
+				//console.log('userinfo', userinfo);
 				req.session.tokenSet = tokenSet;
 				req.session.userinfo = userinfo;
 				return done(null, tokenSet.claims());

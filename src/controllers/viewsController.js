@@ -3,7 +3,7 @@ const User = require('../models/user');
 
 const getIndex = async (req, res, next) => {
     try {
-        const rawProposals = await Proposal.find({isDraft: false});
+        const rawProposals = await Proposal.find({ isDraft: false });
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
@@ -18,6 +18,11 @@ const getIndex = async (req, res, next) => {
     }
 }
 
+const getAdmin = async (req, res, next) => {
+    res.status(200).render('admin');
+}
+
 module.exports = {
-    getIndex
+    getIndex,
+    getAdmin
 }
