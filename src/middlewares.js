@@ -40,6 +40,6 @@ module.exports.checkLogin = (
 
 // Rejects queries that aren't from administrators.
 module.exports.restrictAdmins = (req, res, next) => {
-    if (!req.session.user.admin) return next(new LimitedUserError());
+    if (!req.session.user.isAdmin) return next(new LimitedUserError());
     return next();
 };

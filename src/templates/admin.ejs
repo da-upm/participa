@@ -32,7 +32,11 @@
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
-            <tbody id="adminProposalsTableBody"></tbody>
+            <tbody id="adminProposalsTableBody">
+                <% proposals.forEach((proposal)=> { %>
+                    <%- include('fragments/admin/proposalRow', { proposal }) %>
+                <% }) %>
+            </tbody>
         </table>
     </div>
 </div>
@@ -93,5 +97,3 @@
         </div>
     </div>
 </div>
-
-<script src="./js/admin-script.js"></script>

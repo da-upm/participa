@@ -95,9 +95,8 @@ p,
     vertical-align: middle;
 }
 
-/* Centrar contenido de las columnas "Categoría" y "Acciones" */
-.table td.category-column,
-.table td.actions-column {
+/* Centrar contenido de las columnas */
+.table td{
     text-align: center;
     vertical-align: middle;
 }
