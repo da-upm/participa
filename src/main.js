@@ -18,6 +18,7 @@ const config = require('./config.json');
 const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
 const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
 
 const loginController = require('./controllers/loginController');
 
@@ -148,6 +149,7 @@ app.use(function (req, res, next) {
 app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
 app.use('/api/users', userRouter);
+app.use('/api/admin', adminRouter);
 
 // The error handler that produces 404/500 HTTP responses.
 app.use(globalErrorHandler);

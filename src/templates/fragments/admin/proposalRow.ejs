@@ -8,7 +8,7 @@
             <%= category %>
                 <% }) %>
     <td class="actions-column">
-        <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
+        <button class="btn btn-link view-more" hx-get="/api/admin/proposals/<%= proposal._id.toString() %>"
             hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
             más</button>
     </td>

@@ -1,0 +1,30 @@
+<div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="proposalDetailModalLabel">Detalles de la Propuesta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <h4 id="proposalTitle">
+                <%= proposal.title %>
+            </h4>
+            <p>
+                <span class="badge bg-danger">
+                    BORRADOR
+                </span>
+                <% proposal.categories.forEach((category)=> { %>
+                    <span class="badge bg-primary">
+                        <%= category %>
+                    </span>
+                    <% }) %>
+            </p>
+            <p id="proposalDescription">
+                <%= proposal.description %>
+            </p>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+    </div>
+</div>
