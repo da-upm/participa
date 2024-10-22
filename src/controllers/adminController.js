@@ -5,22 +5,54 @@ const User = require('../models/user');
 
 const ObjectId = require('mongoose').Types.ObjectId;
 
+// Función para eliminar acentos
+function normalizeString(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 const getProposals = async (req, res) => {
+    const searchQuery = normalizeString(req.query.search) || '';
+    const filterCategories = req.query.categories || [];
+
+    // Construir la consulta
+    const query = {
+        isDraft: true
+    };
+
+    // Si hay categorías en filterCategories, agregarlas a la consulta
+    if (filterCategories.length > 0) {
+        query.categories = { $in: filterCategories };
+    }
+
     try {
-        const rawProposals = await Proposal.find({ isDraft: true });
+        // Buscar todos los documentos, luego filtrar manualmente
+        const rawProposals = await Proposal.find(query);
+
+        // Normalizar los títulos y descripciones antes de hacer la comparación
+        const filteredProposals = rawProposals.filter(p => {
+            const normalizedTitle = normalizeString(p.title.toLowerCase());
+            const normalizedDescription = normalizeString(p.description.toLowerCase());
+
+            return (
+                normalizedTitle.includes(searchQuery.toLowerCase()) ||
+                normalizedDescription.includes(searchQuery.toLowerCase())
+            );
+        });
+
+        // Obtener supporters usando async/await
         const proposals = await Promise.all(
-            rawProposals.map(async (p) => {
+            filteredProposals.map(async (p) => {
                 return {
                     ...p.toObject(),
-                    supporters: await p.getSupportersCount()
+                    supporters: await p.getSupportersCount(),
                 };
             })
         );
-        res.status(200).render('admin', { proposals })
+
+        res.status(200).render('fragments/admin/proposalRows', { layout: false, proposals });
     } catch (error) {
-        console.error(`No se encuentran propuestas ${proposalId} para el usuario ${req.session.user.id}.`)
-        req.toastr.error("No se han encontrado propuestas.");
-        res.status(404).render('fragments/toastr', { layout: false, req: req });
+        console.error("Error en la búsqueda:", error);
+        res.status(404).json({ message: error.message });
     }
 }
 

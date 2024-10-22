@@ -1,0 +1,5 @@
+<% proposals.forEach((proposal)=> { %>
+    <tr id="proposal-row-<%= proposal._id.toString() %>">
+        <%- include('proposalRow', { proposal }) %>
+    </tr>
+<% }) %>

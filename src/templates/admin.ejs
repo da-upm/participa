@@ -7,23 +7,32 @@
         aria-hidden="true">
     </div>
 
-    <!-- Filtros y búsqueda -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <input type="text" class="form-control" id="adminSearchInput"
-                placeholder="Buscar propuestas por título o palabras clave">
-        </div>
-        <div class="col-md-4">
-            <select id="adminFilterCategory" class="form-select">
-                <option value="">Filtrar por categoría</option>
-                <option value="Educación">Educación</option>
-                <option value="Infraestructura">Infraestructura</option>
-                <option value="Servicios">Servicios</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <button id="adminClearFilters" class="btn btn-secondary w-100">Limpiar</button>
-        </div>
+    <!-- Search and Filter Section -->
+    <div class="mt-5">
+        <form hx-get="/api/admin/proposals"
+            hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
+            hx-target="#adminProposalsTableBody" hx-params="*" hx-indicator="#searchIndicator"
+            onkeydown="if (event.keyCode === 13) event.preventDefault();">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="searchInput" name="search"
+                        placeholder="Buscar propuestas por título o palabras clave">
+                </div>
+                <div class="col-md-4">
+                    <select id="filterCategory" name="categories" class="selectpicker" multiple
+                        data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
+                        data-live-search="true" data-live-search-normalize="true" data-width="100%"
+                        title="Filtrar por categoría">
+                        <option value="Educación">Educación</option>
+                        <option value="Infraestructuras">Infraestructuras</option>
+                        <option value="Servicios">Servicios</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="clearFilters" class="btn btn-secondary w-100"
+                        onclick="$('#searchInput').val(''); $('#filterCategory').selectpicker('deselectAll')">Limpiar</button>
+                </div>
+        </form>
     </div>
 
     <!-- Tabla de propuestas -->
@@ -33,14 +42,19 @@
                 <tr>
                     <th scope="col">Marcar</th>
                     <th scope="col">Título</th>
-                    <th scope="col">Categoría</th>
+                    <th scope="col">Categorías</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody id="adminProposalsTableBody">
-                <% proposals.forEach((proposal)=> { %>
-                    <%- include('fragments/admin/proposalRow', { proposal }) %>
-                <% }) %>
+                <%- include('fragments/admin/proposalRows', { proposals }) %>
+                    <!-- Search indicator -->
+                    <div class="d-flex justify-content-center">
+                        <div id="searchIndicator" class="spinner-border text-primary" style="width: 5rem; height: 5rem;"
+                            role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
             </tbody>
         </table>
     </div>
