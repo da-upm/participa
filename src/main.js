@@ -125,7 +125,7 @@ app.use(function (req, res, next)
 });
 
 // Login routes.
-app.get('/login', (req, res, next) => { req.session.referer = req.headers.referer; next(); }, passport.authenticate('oidc', { scope: config.sso.scope }));
+app.get('/login', passport.authenticate('oidc', { scope: config.sso.scope }));
 
 app.get('/login/callback', (req, res, next) => passport.authenticate('oidc', (err, user) => {
 	if (err) { console.log(err); return res.status(500); }

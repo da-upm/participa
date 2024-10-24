@@ -1,13 +1,13 @@
-class BadRequestError extends Error {}
+class BadRequestError extends Error { }
 module.exports.BadRequestError = BadRequestError;
 
-class LimitedUserError extends Error {}
+class LimitedUserError extends Error { }
 module.exports.LimitedUserError = LimitedUserError;
 
-class NotFoundError extends Error {}
+class NotFoundError extends Error { }
 module.exports.NotFoundError = NotFoundError;
 
-class UnauthorizedError extends Error {}
+class UnauthorizedError extends Error { }
 module.exports.UnauthorizedError = UnauthorizedError;
 
 // The global error handler.
@@ -39,7 +39,7 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"hideEasing": "linear",
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
-		  });
+		});
 		res.setHeader(
 			'Hx-Redirect',
 			`/`
@@ -67,17 +67,18 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"hideEasing": "linear",
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
-		  });
+		});
 		res.setHeader(
 			'Hx-Redirect',
 			`/login`
 		);
-		if (!req.xhr) return res.status(401).redirect('/login');
-
-		return res.status(401).json({
+		if (req.xhr) return res.status(401).json({
 			code: 'limited_user',
 			message: 'No tienes permisos para realizar esta acción.',
 		})
+
+		req.session.referer = req.path;
+		return res.status(401).redirect('/login');
 	}
 
 	// Some other unknown error.
