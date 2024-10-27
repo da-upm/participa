@@ -151,6 +151,8 @@ app.use('/api/proposals', proposalRouter);
 app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
 
+app.use('*', (req, res, next) => {res.status(404).render('notFound')});
+
 // The error handler that produces 404/500 HTTP responses.
 app.use(globalErrorHandler);
 

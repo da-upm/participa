@@ -16,8 +16,7 @@ const getIndex = async (req, res, next) => {
         );
 
         const categories = await helpers.retrieveCategories();
-        if (categories === null) res.status(500).redirect('/error');
-        
+                
         res.status(200).render('index', { proposals, categories })
     } catch (error) {
         res.status(404).json({ message: error.message });
@@ -37,8 +36,7 @@ const getAdmin = async (req, res, next) => {
         );
 
         const categories = await helpers.retrieveCategories();
-        if (categories === null) res.status(500).redirect('/error');
-
+        
         res.status(200).render('admin', { proposals, categories })
     } catch (error) {
         res.status(404).json({ message: error.message });

@@ -21,7 +21,7 @@ router.use(middlewares.restrictAdmins);
 //router.delete('/draft/:id([a-f,0-9]{24})', proposalController.deleteDraftProposal);
 //router.get('/draft', proposalController.getDraftProposals);
 
-router.post('/', proposalController.createProposal);
-router.delete('/:id([a-f,0-9]{24})', proposalController.deleteProposal);
+//router.post('/', proposalController.createProposal);
+//router.delete('/:id([a-f,0-9]{24})', proposalController.deleteProposal);
 
 module.exports = router;

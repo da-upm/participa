@@ -15,19 +15,13 @@ module.exports.UnauthorizedError = UnauthorizedError;
 // an error handler.
 // eslint-disable-next-line no-unused-vars
 module.exports.globalErrorHandler = (err, req, res, next) => {
-	if (err instanceof BadRequestError
-		// Error type for SQL queries that introduce duplicate values on keys
-		// that should be unique.
-		|| err.code === 'ER_DUP_ENTRY') {
-		return res.status(400).json({
-			code: 'bad_request',
-			message: 'Petición mal formada.',
-		});
-	}
+	res.setHeader(
+		'Hx-Retarget',
+		`#toastr-container`
+	)
 
-	if (err instanceof LimitedUserError) {
-		console.warn(`El usuario ${req.session.user.id} ha intentado realizar una acción no autorizada.`)
-		req.toastr.error("No tienes permisos para realizar esta acción.", '', {
+	if (err instanceof BadRequestError) {
+		req.toastr.error(err.message, '', {
 			"closeButton": true,
 			"progressBar": true,
 			"positionClass": "toast-bottom-right",
@@ -40,18 +34,11 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
 		});
-		res.setHeader(
-			'Hx-Redirect',
-			`/`
-		);
-		return res.status(403).redirect('/');
-	}
-
-	if (err instanceof NotFoundError) {
-		return res.status(404).json({
-			code: 'not_found',
-			message: 'Página no encontrada.',
-		});
+		if (!req.xhr) return res.status(400).json({
+			code: 'bad_request',
+			message: err.message,
+		})
+		return res.status(400).render('fragments/toastr', { layout: false, req: req });
 	}
 
 	if (err instanceof UnauthorizedError) {
@@ -81,10 +68,66 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 		return res.status(401).redirect('/login');
 	}
 
+	if (err instanceof LimitedUserError) {
+		console.warn(`El usuario ${req.session.user.id} ha intentado realizar una acción no autorizada.`)
+		req.toastr.error("No tienes permisos para realizar esta acción.", '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		});
+		res.setHeader(
+			'Hx-Redirect',
+			`/`
+		);
+		return res.status(403).redirect('/');
+	}
+
+	if (err instanceof NotFoundError) {
+		req.toastr.error(err.message, '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		});
+		if (!req.xhr) return res.status(404).json({
+			code: 'not_found',
+			message: err.message,
+		})
+		return res.status(404).render('fragments/toastr', { layout: false, req: req });
+	}
+
 	// Some other unknown error.
-	res.status(500).json({
-		code: 'internal_server_error',
-		message: 'Error interno del servidor.',
+	req.toastr.error(err.message, '', {
+		"closeButton": true,
+		"progressBar": true,
+		"positionClass": "toast-bottom-right",
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "5000",
+		"extendedTimeOut": "1000",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
 	});
-	return next(err); // Let it pass the middleware so Sentry can catch it.
+	if (!req.xhr) return res.status(500).json({
+		code: 'internal_server_error',
+		message: err.message,
+	})
+	return res.status(500).render('fragments/toastr', { layout: false, req: req });
 };

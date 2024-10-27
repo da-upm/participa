@@ -1,12 +1,14 @@
 const sanitizeHtml = require('sanitize-html');
 const ObjectId = require('mongoose').Types.ObjectId;
 
+const { BadRequestError, NotFoundError } = require('../errors');
+
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
 const helpers = require('../helpers');
 
-const createProposal = async (req, res) => {
+/*const createProposal = async (req, res) => {
     try {
         const newProposal = new Proposal(req.body);
         await newProposal.save();
@@ -14,9 +16,9 @@ const createProposal = async (req, res) => {
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+}*/
 
-const getProposals = async (req, res) => {
+const getProposals = async (req, res, next) => {
     const searchQuery = helpers.normalizeString(req.query.search) || '';
     const filterCategories = req.query.categories || [];
 
@@ -56,34 +58,34 @@ const getProposals = async (req, res) => {
         );
 
         const categories = await helpers.retrieveCategories();
-        if (categories === null) res.status(500).redirect('/error');
-
+        
         res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories });
     } catch (error) {
-        console.error("Error en la búsqueda:", error);
-        res.status(404).json({ message: error.message });
+        console.error("Error en proposals/getProposals:", error);
+        return next(new Error("Ha ocurrido un error al realizar la búsqueda."));
     }
 }
 
-const getProposal = async (req, res) => {
+const getProposal = async (req, res, next) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
 
         res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        console.error("Error en proposal/getProposal:", error);
+        return next(new Error("Ha ocurrido un error al obtener la propuesta."));
     }
 }
 
-const deleteProposal = async (req, res) => {
+/*const deleteProposal = async (req, res) => {
     try {
         await proposal.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Proposal deleted' });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
-}
+}*/
 
 /* const getProposalByCategory = async (req, res) => {
     try {
@@ -103,7 +105,7 @@ const deleteProposal = async (req, res) => {
     }
 }*/
 
-const addSupporter = async (req, res) => {
+const addSupporter = async (req, res, next) => {
     try {
         const proposalId = req.params.id;
         const rawProposal = await Proposal
@@ -130,16 +132,17 @@ const addSupporter = async (req, res) => {
             supporters: await rawProposal.getSupportersCount()
         }
 
+        const categories = await helpers.retrieveCategories();
+        
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
     } catch (error) {
-        console.error(error.message)
-        req.toastr.error("Por favor, inténtalo más tarde", 'Ha ocurrido un error inesperado.');
-        return res.status(500).render('fragments/toastr', { layout: false, req: req });
+        console.error('Error en proposal/addSupporter: ' + error.message);
+        return next(new Error("Ha ocurrido un error al apoyar la propuesta."));
     }
 }
 
-const removeSupporter = async (req, res) => {
+const removeSupporter = async (req, res, next) => {
     try {
         const proposalId = req.params.id;
         const rawProposal = await Proposal
@@ -167,50 +170,56 @@ const removeSupporter = async (req, res) => {
             supporters: await rawProposal.getSupportersCount()
         }
 
+        const categories = await helpers.retrieveCategories();
+        
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
     } catch (error) {
-        console.error(error.message)
-        req.toastr.error("Por favor, inténtalo más tarde", 'Ha ocurrido un error inesperado.');
-        return res.status(500).render('fragments/toastr', { layout: false, req: req });
+        console.error('Error en proposal/removeSuporter: ' + error.message);
+        return next(new Error("Ha ocurrido un error al retirar el apoyo a la propuesta."));
     }
 }
 
-const getDraftForm = async (req, res) => {
-    const categories = await helpers.retrieveCategories();
-    if (categories === null) res.status(500).redirect('/error');
+const getDraftForm = async (req, res, next) => {
+    try {
+        const categories = await helpers.retrieveCategories();
+        
+        res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
 
-    res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
+    } catch (error) {
+        console.error('Error en proposal/getDraftForm: ' + error.message);
+        return next(new Error("Ha ocurrido un error al obtener el formulario."));
+    }
+
 }
 
 const sendProposalAsDraft = async (req, res) => {
     try {
         if (!req.body.title || req.body.title.trim() === "") {
+            console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin título.`)
-            req.toastr.error("Tu propuesta debe contener un título.");
-            return res.status(400).render('fragments/toastr', { layout: false, req: req });
+            return next(new BadRequestError("La propuesta debe contener un título."));
         }
-    
+
         if (!req.body.description || req.body.description.trim() === "") {
+            console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin descripción.`)
-            req.toastr.error("Tu propuesta debe contener una descripción.");
-            return res.status(400).render('fragments/toastr', { layout: false, req: req });
-        }   
-    
+            return next(new BadRequestError("La propuesta debe contener una descripción."));
+        }
+
         const sanitizedDescription = sanitizeHtml(req.body.description, {
             allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
             allowedAttributes: {}
         });
 
         const categories = await helpers.retrieveCategories();
-        if (categories === null) res.status(500).redirect('/error');
-
+        
         const fileteredCategories = req.body.categories.filter(category => categories.hasOwnProperty(category));
 
         if (fileteredCategories.length < 1) {
+            console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin categorías o con categorías inválidas: ${req.body.categories}.`)
-            req.toastr.error("Debes seleccionar al menos una categoría de las disponibles.");
-            return res.status(400).render('fragments/toastr', { layout: false, req: req });
+            return next(new BadRequestError("La propuesta debe contener al menos una categoría de las disponibles."));
         }
 
         const proposalData = {
@@ -224,8 +233,8 @@ const sendProposalAsDraft = async (req, res) => {
         const newProposal = new Proposal(proposalData);
         newProposal.save();
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
+        console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
+        return next(new Error("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 
@@ -266,10 +275,10 @@ const sendProposalAsDraft = async (req, res) => {
 }*/
 
 module.exports = {
-    createProposal,
+    //createProposal,
     getProposals,
     getProposal,
-    deleteProposal,
+    //deleteProposal,
     //getProposalByCategory,
     //getProposalsCategories,
     addSupporter,

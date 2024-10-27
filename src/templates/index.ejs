@@ -4,7 +4,7 @@
         <h1>Propuestas para el Rector</h1>
         <p class="lead">Comparte tus ideas para la mejora de nuestra universidad.</p>
         <button class="btn btn-primary" hx-get="/api/proposals/draft-form" hx-target="#proposalDraftModal"
-            hx-on::after-request="$('#proposalDraftModal').modal('show');">Aportar
+            hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show');">Aportar
             Propuesta</button>
     </div>
 

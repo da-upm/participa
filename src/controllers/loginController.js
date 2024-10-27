@@ -20,8 +20,8 @@ const registerUser = async (userInfo) => {
 
 		return user;
 	} catch (error) {
-		console.log(error);
-		return null;
+		console.error('Error en login/registerUser: ' + error.message);
+        return next(new Error("Ha ocurrido un error al registrar al usuario."));
 	}
 };
 
@@ -39,7 +39,7 @@ module.exports.handleLogin = async (req, res, next) => {
 
 		return next();
 	} catch (error) {
-		console.log(error);
-		return res.status(500).json({ message: 'Error al recuperar el usuario.' });
+		console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
+        return next(new Error("Ha ocurrido un error al recuperar al usuario."));
 	}
 };
