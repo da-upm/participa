@@ -6,9 +6,9 @@
         <p class="card-text">
             <%= proposal.description.substring(0, 100) %>...
         </p>
-        <% proposal.categories.forEach((category)=> { %>
+        <% proposal.categories.forEach((categoryId)=> { %>
             <span class="badge bg-primary">
-                <%= category %>
+                <%= categories[categoryId] %>
             </span>
             <% }) %>
                 <p class="mt-2">Apoyos: <%= proposal.supporters %>

@@ -3,8 +3,8 @@
     <%= proposal.title %>
 </td>
 <td class="category-column">
-    <% proposal.categories.forEach((category, index)=> { %>
-        <%= category %><%- index !== proposal.categories.length -1 ? ',' : '' %>
+    <% proposal.categories.forEach((categoryId, index)=> { %>
+        <%= categories[categoryId] %><%- index !== proposal.categories.length -1 ? ',' : '' %>
             <% }) %>
 <td class="actions-column">
     <button class="btn btn-link view-more" hx-get="/api/admin/proposals/<%= proposal._id.toString() %>"

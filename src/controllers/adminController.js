@@ -3,6 +3,8 @@ const sanitizeHtml = require('sanitize-html');
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
+const helpers = require('../helpers');
+
 const ObjectId = require('mongoose').Types.ObjectId;
 
 // Función para eliminar acentos
@@ -49,7 +51,10 @@ const getProposals = async (req, res) => {
             })
         );
 
-        res.status(200).render('fragments/admin/proposalRows', { layout: false, proposals });
+        const categories = await helpers.retrieveCategories();
+        if (categories === null) res.status(500).redirect('/error');
+
+        res.status(200).render('fragments/admin/proposalRows', { layout: false, proposals, categories });
     } catch (error) {
         console.error("Error en la búsqueda:", error);
         res.status(404).json({ message: error.message });
@@ -69,7 +74,39 @@ const getProposal = async (req, res) => {
     }
 }
 
+const getProposalForm = async (req, res) => {
+    const categories = await helpers.retrieveCategories();
+    if (categories === null) res.status(500).redirect('/error');
+
+    res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
+}
+
+const sendProposal = async (req, res) => {
+    const sanitizedDescription = sanitizeHtml(req.body.description, {
+        allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
+        allowedAttributes: {}
+    });
+
+    try {
+        const proposalData = {
+            title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
+            description: sanitizedDescription,
+            categories: req.body.categories,
+            isDraft: false,
+            usersDrafting: req.session.user.id,
+        }
+
+        const newProposal = new Proposal(proposalData);
+        newProposal.save();
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getProposals,
-    getProposal
+    getProposal,
+    getProposalForm,
+    sendProposal
 }

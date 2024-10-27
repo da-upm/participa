@@ -1,6 +1,8 @@
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
+const helpers = require('../helpers');
+
 const getIndex = async (req, res, next) => {
     try {
         const rawProposals = await Proposal.find({ isDraft: false });
@@ -12,7 +14,11 @@ const getIndex = async (req, res, next) => {
                 };
             })
         );
-        res.status(200).render('index', { proposals })
+
+        const categories = await helpers.retrieveCategories();
+        if (categories === null) res.status(500).redirect('/error');
+        
+        res.status(200).render('index', { proposals, categories })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -29,7 +35,11 @@ const getAdmin = async (req, res, next) => {
                 };
             })
         );
-        res.status(200).render('admin', { proposals })
+
+        const categories = await helpers.retrieveCategories();
+        if (categories === null) res.status(500).redirect('/error');
+
+        res.status(200).render('admin', { proposals, categories })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }}

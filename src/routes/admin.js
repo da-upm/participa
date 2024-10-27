@@ -9,4 +9,7 @@ router.use(middlewares.restrictAdmins);
 router.get('/proposals', adminController.getProposals);
 router.get('/proposals/:id([a-f,0-9]{24})', adminController.getProposal);
 
+router.get('/proposal-form', adminController.getProposalForm);
+router.post('/proposals', adminController.sendProposal);
+
 module.exports = router;

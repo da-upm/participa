@@ -1,14 +1,10 @@
 const sanitizeHtml = require('sanitize-html');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
 
-const ObjectId = require('mongoose').Types.ObjectId;
-
-// Función para eliminar acentos
-function normalizeString(str) {
-    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+const helpers = require('../helpers');
 
 const createProposal = async (req, res) => {
     try {
@@ -21,7 +17,7 @@ const createProposal = async (req, res) => {
 }
 
 const getProposals = async (req, res) => {
-    const searchQuery = normalizeString(req.query.search) || '';
+    const searchQuery = helpers.normalizeString(req.query.search) || '';
     const filterCategories = req.query.categories || [];
 
     // Construir la consulta
@@ -40,8 +36,8 @@ const getProposals = async (req, res) => {
 
         // Normalizar los títulos y descripciones antes de hacer la comparación
         const filteredProposals = rawProposals.filter(p => {
-            const normalizedTitle = normalizeString(p.title.toLowerCase());
-            const normalizedDescription = normalizeString(p.description.toLowerCase());
+            const normalizedTitle = helpers.normalizeString(p.title.toLowerCase());
+            const normalizedDescription = helpers.normalizeString(p.description.toLowerCase());
 
             return (
                 normalizedTitle.includes(searchQuery.toLowerCase()) ||
@@ -59,7 +55,10 @@ const getProposals = async (req, res) => {
             })
         );
 
-        res.status(200).render('fragments/proposalCards', { layout: false, proposals });
+        const categories = await helpers.retrieveCategories();
+        if (categories === null) res.status(500).redirect('/error');
+
+        res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories });
     } catch (error) {
         console.error("Error en la búsqueda:", error);
         res.status(404).json({ message: error.message });
@@ -86,23 +85,23 @@ const deleteProposal = async (req, res) => {
     }
 }
 
-const getProposalByCategory = async (req, res) => {
+/* const getProposalByCategory = async (req, res) => {
     try {
         const proposals = await proposal.find({ categories: req.params.category });
         res.status(200).json(proposals);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
-}
+} */
 
-const getProposalsCategories = async (req, res) => {
+/*const getProposalsCategories = async (req, res) => {
     try {
         const categories = await proposal.distinct('categories');
         res.status(200).json(categories);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
-}
+}*/
 
 const addSupporter = async (req, res) => {
     try {
@@ -177,21 +176,47 @@ const removeSupporter = async (req, res) => {
     }
 }
 
-const getDraftForm = (req, res) => {
-    res.status(200).render('fragments/proposalDraftModal', { layout: false });
+const getDraftForm = async (req, res) => {
+    const categories = await helpers.retrieveCategories();
+    if (categories === null) res.status(500).redirect('/error');
+
+    res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
 }
 
 const sendProposalAsDraft = async (req, res) => {
-    const sanitizedDescription = sanitizeHtml(req.body.description, {
-        allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
-        allowedAttributes: {}
-    });
-
     try {
+        if (!req.body.title || req.body.title.trim() === "") {
+            console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin título.`)
+            req.toastr.error("Tu propuesta debe contener un título.");
+            return res.status(400).render('fragments/toastr', { layout: false, req: req });
+        }
+    
+        if (!req.body.description || req.body.description.trim() === "") {
+            console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin descripción.`)
+            req.toastr.error("Tu propuesta debe contener una descripción.");
+            return res.status(400).render('fragments/toastr', { layout: false, req: req });
+        }   
+    
+        const sanitizedDescription = sanitizeHtml(req.body.description, {
+            allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
+            allowedAttributes: {}
+        });
+
+        const categories = await helpers.retrieveCategories();
+        if (categories === null) res.status(500).redirect('/error');
+
+        const fileteredCategories = req.body.categories.filter(category => categories.hasOwnProperty(category));
+
+        if (fileteredCategories.length < 1) {
+            console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin categorías o con categorías inválidas: ${req.body.categories}.`)
+            req.toastr.error("Debes seleccionar al menos una categoría de las disponibles.");
+            return res.status(400).render('fragments/toastr', { layout: false, req: req });
+        }
+
         const proposalData = {
             title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
             description: sanitizedDescription,
-            categories: req.body.categories,
+            categories: fileteredCategories,
             isDraft: true,
             usersDrafting: req.session.user.id,
         }
@@ -204,25 +229,25 @@ const sendProposalAsDraft = async (req, res) => {
     }
 }
 
-const getDraftProposals = async (req, res) => {
+/*const getDraftProposals = async (req, res) => {
     try {
         const proposals = await proposal.find({ isDraft: true });
         res.status(200).json(proposals);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+}*/
 
-const deleteDraftProposal = async (req, res) => {
+/*const deleteDraftProposal = async (req, res) => {
     try {
         await proposal.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Draft proposal deleted' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+}*/
 
-const approveDraftProposal = async (req, res) => {
+/*const approveDraftProposal = async (req, res) => {
     try {
         let userProposing = new Set();
         let deleteProposals = req.body.deleteProposals;
@@ -238,20 +263,20 @@ const approveDraftProposal = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-}
+}*/
 
 module.exports = {
     createProposal,
     getProposals,
     getProposal,
     deleteProposal,
-    getProposalByCategory,
-    getProposalsCategories,
+    //getProposalByCategory,
+    //getProposalsCategories,
     addSupporter,
     removeSupporter,
     getDraftForm,
     sendProposalAsDraft,
-    getDraftProposals,
-    deleteDraftProposal,
-    approveDraftProposal
+    //getDraftProposals,
+    //deleteDraftProposal,
+    //approveDraftProposal
 }

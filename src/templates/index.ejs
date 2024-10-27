@@ -29,18 +29,11 @@
                         placeholder="Buscar propuestas por título o palabras clave">
                 </div>
                 <div class="col-md-4">
-                    <select id="filterCategory" name="categories" class="selectpicker" multiple
-                        data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
-                        data-live-search="true" data-live-search-normalize="true" data-width="100%"
-                        title="Filtrar por categoría">
-                        <option value="Educación">Educación</option>
-                        <option value="Infraestructuras">Infraestructuras</option>
-                        <option value="Servicios">Servicios</option>
-                    </select>
+                    <%- include('fragments/categoriesSelector.ejs', { categories }) %>
                 </div>
                 <div class="col-md-2">
                     <button type="button" id="clearFilters" class="btn btn-secondary w-100"
-                        onclick="$('#searchInput').val(''); $('#filterCategory').selectpicker('deselectAll')">Limpiar</button>
+                        onclick="$('#searchInput').val(''); $('#proposalDraftModalCategory').selectpicker('deselectAll')">Limpiar</button>
                 </div>
         </form>
     </div>
@@ -54,6 +47,6 @@
 
     <!-- Proposals Section -->
     <div id="proposalsContainer" class="row gy-4 mb-5">
-        <%- include('fragments/proposalCards', { proposals }) %>
+        <%- include('fragments/proposalCards', { proposals, categories }) %>
     </div>
 </div>

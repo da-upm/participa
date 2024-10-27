@@ -5,24 +5,20 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc" hx-target="#proposalDraftModal" hx-swap="delete" hx-on::before-request="$('#proposalDraftModal').modal('hide')">
+            <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc" hx-target="#proposalDraftModal"
+                hx-swap="delete" hx-on::before-request="$('#proposalDraftModal').modal('hide')">
                 <div class="mb-3">
                     <label for="categories" class="form-label">Categorías</label>
-                    <select id="proposalDraftModalCategory" name="categories" class="selectpicker" multiple
-                        data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
-                        data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
-                        <option value="Educación">Educación</option>
-                        <option value="Infraestructura">Infraestructura</option>
-                        <option value="Servicios">Servicios</option>
-                    </select>
+                    <%- include('categoriesSelector.ejs', { categories }) %>
                 </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
-                    <input type="text" id="proposalDraftModalTitle" name="title" class="form-control" required>
+                    <input type="text" id="proposalDraftModalTitle" name="title" class="form-control" required
+                        value="<%= typeof draftProposals !== 'undefined' && draftProposals.length > 0 ? draftProposals.map((proposal, index) => `${proposal.title}${index !== draftProposals.length -1 ? '//' : ''}`).join('') : '' %>">
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>
-                    <textarea id="proposalDraftModalDescription" name="description" required></textarea>
+                    <textarea id="proposalDraftModalDescription" name="description" required ><%= typeof draftProposals !== 'undefined' && draftProposals.length > 0 ? draftProposals.map((proposal, index) => `${proposal.description}${index !== draftProposals.length -1 ? '\n//\n' : ''}`).join('') : '' %></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Enviar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
