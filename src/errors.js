@@ -112,6 +112,8 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 	}
 
 	// Some other unknown error.
+	console.error(err.message);
+	if (!req.xhr) return res.status(500).redirect('/error');
 	req.toastr.error(err.message, '', {
 		"closeButton": true,
 		"progressBar": true,
@@ -125,9 +127,5 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 		"showMethod": "fadeIn",
 		"hideMethod": "fadeOut"
 	});
-	if (!req.xhr) return res.status(500).json({
-		code: 'internal_server_error',
-		message: err.message,
-	})
 	return res.status(500).render('fragments/toastr', { layout: false, req: req });
 };

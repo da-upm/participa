@@ -10,7 +10,7 @@ const helpers = require('../helpers');
 
 
 const getProposals = async (req, res) => {
-    const searchQuery = normalizeString(req.query.search) || '';
+    const searchQuery = helpers.normalizeString(req.query.search) || '';
     const filterCategories = req.query.categories || [];
 
     // Construir la consulta
@@ -29,8 +29,8 @@ const getProposals = async (req, res) => {
 
         // Normalizar los títulos y descripciones antes de hacer la comparación
         const filteredProposals = rawProposals.filter(p => {
-            const normalizedTitle = normalizeString(p.title.toLowerCase());
-            const normalizedDescription = normalizeString(p.description.toLowerCase());
+            const normalizedTitle = helpers.normalizeString(p.title.toLowerCase());
+            const normalizedDescription = helpers.normalizeString(p.description.toLowerCase());
 
             return (
                 normalizedTitle.includes(searchQuery.toLowerCase()) ||

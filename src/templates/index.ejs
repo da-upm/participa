@@ -23,18 +23,7 @@
         <form hx-get="/api/proposals"
             hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
             hx-target="#proposalsContainer" hx-params="*" hx-indicator="#searchIndicator" onkeydown="if (event.keyCode === 13) event.preventDefault();">
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <input type="text" class="form-control" id="searchInput" name="search"
-                        placeholder="Buscar propuestas por título o palabras clave">
-                </div>
-                <div class="col-md-4">
-                    <%- include('fragments/categoriesSelector.ejs', { categories }) %>
-                </div>
-                <div class="col-md-2">
-                    <button type="button" id="clearFilters" class="btn btn-secondary w-100"
-                        onclick="$('#searchInput').val(''); $('#proposalDraftModalCategory').selectpicker('deselectAll')">Limpiar</button>
-                </div>
+            <%- include('fragments/searchAndFilterSection', { categories }) %>
         </form>
     </div>
 

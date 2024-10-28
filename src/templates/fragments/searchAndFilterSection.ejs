@@ -1,0 +1,13 @@
+<div class="row mb-4">
+    <div class="col-md-6">
+        <input type="text" class="form-control" id="searchInput" name="search"
+            placeholder="Buscar propuestas por título o palabras clave">
+    </div>
+    <div class="col-md-4">
+        <%- include('categoriesSelector', { categories }) %>
+    </div>
+    <div class="col-md-2">
+        <button type="button" id="clearFilters" class="btn btn-secondary w-100"
+            onclick="$('#searchInput').val(''); $('#categoriesSelector').selectpicker('deselectAll')">Limpiar</button>
+    </div>
+</div>
