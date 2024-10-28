@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
 const ObjectId = require('mongoose').Types.ObjectId;
 
-const { BadRequestError, NotFoundError } = require('../errors');
+const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
 
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
@@ -10,20 +10,23 @@ const helpers = require('../helpers');
 
 
 const getProposals = async (req, res) => {
-    const searchQuery = helpers.normalizeString(req.query.search) || '';
-    const filterCategories = req.query.categories || [];
-
-    // Construir la consulta
-    const query = {
-        isDraft: true
-    };
-
-    // Si hay categorías en filterCategories, agregarlas a la consulta
-    if (filterCategories.length > 0) {
-        query.categories = { $in: filterCategories };
-    }
-
     try {
+        const categories = await helpers.retrieveCategories();
+
+        const searchQuery = helpers.normalizeString(req.query.search) || '';
+        const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
+        const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
+        
+        // Construir la consulta
+        const query = {
+            isDraft: true
+        };
+
+        // Si hay categorías en filteredCategories, agregarlas a la consulta
+        if (filteredCategories.length > 0) {
+            query.categories = { $in: filteredCategories };
+        }
+
         // Buscar todos los documentos, luego filtrar manualmente
         const rawProposals = await Proposal.find(query);
 
@@ -47,13 +50,11 @@ const getProposals = async (req, res) => {
                 };
             })
         );
-
-        const categories = await helpers.retrieveCategories();
-
+        
         res.status(200).render('fragments/admin/proposalRows', { layout: false, proposals, categories });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
-        return next(new Error("Ha ocurrido un error al realizar la búsqueda."));
+        return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
     }
 }
 
@@ -65,7 +66,7 @@ const getProposal = async (req, res) => {
         res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
-        return next(new Error("Ha ocurrido un error al realizar la búsqueda."));
+        return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
     }
 }
 
@@ -77,7 +78,7 @@ const getProposalForm = async (req, res) => {
 
     } catch (error) {
         console.error("Error admin/getProposalFrom:", error);
-        return next(new Error("Ha ocurrido un error al obtener el formulario."));
+        return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));
     }
 }
 
@@ -122,7 +123,7 @@ const sendProposal = async (req, res) => {
         newProposal.save();
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new Error("Ha ocurrido un error al enviar la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 

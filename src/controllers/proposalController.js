@@ -1,7 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
 const ObjectId = require('mongoose').Types.ObjectId;
 
-const { BadRequestError, NotFoundError } = require('../errors');
+const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
 
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
@@ -19,20 +19,23 @@ const helpers = require('../helpers');
 }*/
 
 const getProposals = async (req, res, next) => {
-    const searchQuery = helpers.normalizeString(req.query.search) || '';
-    const filterCategories = req.query.categories || [];
-
-    // Construir la consulta
-    const query = {
-        isDraft: false
-    };
-
-    // Si hay categorías en filterCategories, agregarlas a la consulta
-    if (filterCategories.length > 0) {
-        query.categories = { $in: filterCategories };
-    }
-
     try {
+        const categories = await helpers.retrieveCategories();
+
+        const searchQuery = helpers.normalizeString(req.query.search) || '';
+        const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
+        const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
+        
+        // Construir la consulta
+        const query = {
+            isDraft: false
+        };
+
+        // Si hay categorías en filteredCategories, agregarlas a la consulta
+        if (filteredCategories.length > 0) {
+            query.categories = { $in: filteredCategories };
+        }
+
         // Buscar todos los documentos, luego filtrar manualmente
         const rawProposals = await Proposal.find(query);
 
@@ -56,13 +59,11 @@ const getProposals = async (req, res, next) => {
                 };
             })
         );
-
-        const categories = await helpers.retrieveCategories();
         
         res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories });
     } catch (error) {
         console.error("Error en proposals/getProposals:", error);
-        return next(new Error("Ha ocurrido un error al realizar la búsqueda."));
+        return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
     }
 }
 
@@ -74,7 +75,7 @@ const getProposal = async (req, res, next) => {
         res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         console.error("Error en proposal/getProposal:", error);
-        return next(new Error("Ha ocurrido un error al obtener la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al obtener la propuesta."));
     }
 }
 
@@ -87,7 +88,7 @@ const getProposal = async (req, res, next) => {
     }
 }*/
 
-/* const getProposalByCategory = async (req, res) => {
+/*const getProposalByCategory = async (req, res) => {
     try {
         const proposals = await proposal.find({ categories: req.params.category });
         res.status(200).json(proposals);
@@ -138,7 +139,7 @@ const addSupporter = async (req, res, next) => {
         res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
     } catch (error) {
         console.error('Error en proposal/addSupporter: ' + error.message);
-        return next(new Error("Ha ocurrido un error al apoyar la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al apoyar la propuesta."));
     }
 }
 
@@ -176,7 +177,7 @@ const removeSupporter = async (req, res, next) => {
         res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
     } catch (error) {
         console.error('Error en proposal/removeSuporter: ' + error.message);
-        return next(new Error("Ha ocurrido un error al retirar el apoyo a la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al retirar el apoyo a la propuesta."));
     }
 }
 
@@ -188,7 +189,7 @@ const getDraftForm = async (req, res, next) => {
 
     } catch (error) {
         console.error('Error en proposal/getDraftForm: ' + error.message);
-        return next(new Error("Ha ocurrido un error al obtener el formulario."));
+        return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));
     }
 
 }
@@ -234,7 +235,7 @@ const sendProposalAsDraft = async (req, res) => {
         newProposal.save();
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new Error("Ha ocurrido un error al enviar la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 

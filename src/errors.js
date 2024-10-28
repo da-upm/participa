@@ -4,11 +4,14 @@ module.exports.BadRequestError = BadRequestError;
 class LimitedUserError extends Error { }
 module.exports.LimitedUserError = LimitedUserError;
 
+class UnauthorizedError extends Error { }
+module.exports.UnauthorizedError = UnauthorizedError;
+
 class NotFoundError extends Error { }
 module.exports.NotFoundError = NotFoundError;
 
-class UnauthorizedError extends Error { }
-module.exports.UnauthorizedError = UnauthorizedError;
+class InternalServerError extends Error { }
+module.exports.InternalServerError = InternalServerError;
 
 // The global error handler.
 // Express requires the 4 arguments to be present in order to identify this as
@@ -111,10 +114,29 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 		return res.status(404).render('fragments/toastr', { layout: false, req: req });
 	}
 
+	if (err instanceof InternalServerError) {
+		console.error(err.message);
+		if (!req.xhr) return res.status(500).redirect('/error');
+		req.toastr.error(err.message, '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		});
+		return res.status(500).render('fragments/toastr', { layout: false, req: req });
+		}
+
 	// Some other unknown error.
-	console.error(err.message);
+	console.error("Error inesperado: " + err.message);
 	if (!req.xhr) return res.status(500).redirect('/error');
-	req.toastr.error(err.message, '', {
+	req.toastr.error("Ha ocurrido un error inesperado.", '', {
 		"closeButton": true,
 		"progressBar": true,
 		"positionClass": "toast-bottom-right",

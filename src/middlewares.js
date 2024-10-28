@@ -1,4 +1,4 @@
-const { UnauthorizedError, LimitedUserError } = require('./errors');
+const { UnauthorizedError, LimitedUserError, InternalServerError } = require('./errors');
 const User = require('./models/user');
 
 function checkLogin(req, res, next) {
@@ -6,7 +6,7 @@ function checkLogin(req, res, next) {
     console.log(req.session.user)
     User.findOne({ username: req.session.userInfo.preferred_username })
         .then((user) => {
-            if (!user) throw new Error('El objeto usuario está vacío.');
+            if (!user) throw new InternalServerError('El objeto usuario está vacío.');
             req.session.user = user;
             return next();
         })

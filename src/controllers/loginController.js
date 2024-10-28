@@ -2,6 +2,8 @@
 //const { models } = require('../models');
 const User = require('../models/user');
 
+const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
+
 const pdiCodes = ['D', 'M', 'Q', 'U', 'P', 'C', 'R', 'B'];
 const studentCodes = ['A', 'W'];
 const pasCodes = ['F', 'L'];
@@ -21,7 +23,7 @@ const registerUser = async (userInfo) => {
 		return user;
 	} catch (error) {
 		console.error('Error en login/registerUser: ' + error.message);
-        return next(new Error("Ha ocurrido un error al registrar al usuario."));
+        return next(new InternalServerError("Ha ocurrido un error al registrar al usuario."));
 	}
 };
 
@@ -40,6 +42,6 @@ module.exports.handleLogin = async (req, res, next) => {
 		return next();
 	} catch (error) {
 		console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new Error("Ha ocurrido un error al recuperar al usuario."));
+        return next(new InternalServerError("Ha ocurrido un error al recuperar al usuario."));
 	}
 };
