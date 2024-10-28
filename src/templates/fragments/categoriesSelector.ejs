@@ -1,8 +1,10 @@
 <select id="categoriesSelector" name="categories" class="selectpicker" multiple data-select-all-text="Seleccionar todo"
-    data-deselect-all-text="Eliminar selección" data-selected-text-format="count > 2" data-style="form-control" data-actions-box="true"
-    data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
+    data-deselect-all-text="Eliminar selección" data-selected-text-format="count > 2" data-style="form-control"
+    data-actions-box="true" data-live-search="true" data-width="100%" title="Selecciona una o varias categorías">
     <% for (const [id, name] of Object.entries(categories)) { %>
-        <option value="<%= id %>"><%= name %></option>
+        <option value="<%= id %>" 
+            <%= typeof draftProposals !== 'undefined' && draftProposals.some((proposal) => proposal.categories.includes(id)) ? 'selected' : '' %>>
+            <%= name %>
+        </option>
     <% } %>
-
 </select>

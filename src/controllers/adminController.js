@@ -9,7 +9,7 @@ const User = require('../models/user');
 const helpers = require('../helpers');
 
 
-const getProposals = async (req, res) => {
+const getProposals = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
 
@@ -58,7 +58,7 @@ const getProposals = async (req, res) => {
     }
 }
 
-const getProposal = async (req, res) => {
+const getProposal = async (req, res, next) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
@@ -70,19 +70,30 @@ const getProposal = async (req, res) => {
     }
 }
 
-const getProposalForm = async (req, res) => {
+const getProposalForm = async (req, res, next) => {
     try {
+        const { proposalIds } = req.query;
+        
+        // Busca las propuestas que coincidan con los IDs proporcionados
+        const draftProposals = await Proposal.find({ _id: { $in: proposalIds } });
+
         const categories = await helpers.retrieveCategories();
 
-        res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
+        // Renderiza la vista del modal con las propuestas y categorías encontradas
+        res.status(200).render('fragments/proposalDraftModal', { 
+            layout: false, 
+            categories, 
+            draftProposals 
+        });
 
     } catch (error) {
-        console.error("Error admin/getProposalFrom:", error);
+        console.error("Error admin/getProposalForm:", error);
         return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));
     }
-}
+};
 
-const sendProposal = async (req, res) => {
+
+const sendProposal = async (req, res, next) => {
     try {
         if (!req.body.title || req.body.title.trim() === "") {
             console.error('Error en sendProposalAsDraft:');

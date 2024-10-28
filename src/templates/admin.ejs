@@ -1,11 +1,31 @@
 <div class="container mt-5">
-    <!-- Botón para generar una nueva propuesta -->
-    <button id="generateNewProposal" class="btn btn-primary mb-4">Generar Nueva Propuesta</button>
+
+    <!-- Header Section -->
+    <div class="text-center">
+        <h1>Gestión de propuestas</h1>
+        <p class="lead">Selecciona una o varias propuestas para su publicación.</p>
+    </div>
 
     <!-- Proposal Details Modal -->
     <div class="modal fade" id="proposalDetailModal" tabindex="-1" aria-labelledby="proposalDetailModalLabel"
         aria-hidden="true">
     </div>
+
+    <!-- Proposal Draft Modal -->
+    <div class="modal fade" id="proposalDraftModal" tabindex="-1" aria-labelledby="createProposalModalLabel"
+        aria-hidden="true">
+    </div>
+
+    <!-- Botón para generar una nueva propuesta -->
+    <button type="button" id="generateNewProposal" class="btn btn-primary mb-4" 
+        hx-get="/api/admin/draft-form"
+        hx-trigger="click"
+        hx-include=".proposal-checkbox:checked"
+        hx-params="*"
+        hx-target="#proposalDraftModal"
+        hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show')">
+    Generar Nueva Propuesta
+</button>
 
     <!-- Search and Filter Section -->
     <div class="mt-5">
@@ -40,61 +60,5 @@
             </tbody>
         </table>
     </div>
-</div>
 
-<!-- Modal para mostrar detalles de la propuesta -->
-<div class="modal fade" id="adminProposalDetailModal" tabindex="-1" aria-labelledby="adminProposalDetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="adminProposalDetailModalLabel">Detalles de la Propuesta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h4 id="adminProposalTitle"></h4>
-                <p><span class="badge bg-primary" id="adminProposalCategory"></span></p>
-                <p id="adminProposalDescription"></p>
-                <p><strong>Apoyos:</strong> <span id="adminProposalSupports"></span></p>
-                <p><strong>Candidatos que apoyan:</strong> <span id="adminProposalSupportingCandidates"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para generar nueva propuesta -->
-<div class="modal fade" id="createProposalModal" tabindex="-1" aria-labelledby="createProposalModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createProposalModalLabel">Generar Nueva Propuesta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createProposalForm">
-                    <div class="mb-3">
-                        <label for="newProposalTitle" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="newProposalTitle" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newProposalCategory" class="form-label">Categoría</label>
-                        <select id="newProposalCategory" class="form-select" required>
-                            <option value="Educación">Educación</option>
-                            <option value="Infraestructura">Infraestructura</option>
-                            <option value="Servicios">Servicios</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="newProposalDescription" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="newProposalDescription" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar Propuesta</button>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>

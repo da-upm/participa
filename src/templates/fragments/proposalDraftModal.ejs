@@ -14,7 +14,7 @@
                 <div class="mb-3">
                     <label for="title" class="form-label">Título</label>
                     <input type="text" id="proposalDraftModalTitle" name="title" class="form-control" required
-                        value="<%= typeof draftProposals !== 'undefined' && draftProposals.length > 0 ? draftProposals.map((proposal, index) => `${proposal.title}${index !== draftProposals.length -1 ? '//' : ''}`).join('') : '' %>">
+                        value="<%= typeof draftProposals !== 'undefined' && draftProposals.length > 0 ? draftProposals.map((proposal, index) => `${proposal.title}${index !== draftProposals.length -1 ? ' // ' : ''}`).join('') : '' %>">
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Descripción</label>

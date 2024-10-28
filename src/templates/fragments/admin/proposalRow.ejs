@@ -1,4 +1,4 @@
-<td><input type="checkbox" class="form-check-input" data-index="${index}"></td>
+<td><input type="checkbox" class="form-check-input proposal-checkbox" name="proposalIds" value=<%= proposal._id.toString() %>></td>
 <td>
     <%= proposal.title %>
 </td>
@@ -8,6 +8,6 @@
             <% }) %>
 <td class="actions-column">
     <button class="btn btn-link view-more" hx-get="/api/admin/proposals/<%= proposal._id.toString() %>"
-        hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
+        hx-target="#proposalDetailModal" hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDetailModal').modal('show')">Ver
         más</button>
 </td>
