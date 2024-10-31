@@ -19,13 +19,21 @@ const proposalSchema = new mongoose.Schema({
     },
     isDraft: {
         type: Boolean,
+        required: true,
         default: true
     },
     usersDrafting: {
         type: [String],
         default: []
     },
-});
+    olderVersions: {
+        type: [Object],
+        default: []
+    }
+},
+    {
+        timestamps: true
+    });
 
 // Definir una función en el esquema para obtener el número de supporters
 proposalSchema.methods.getSupportersCount = async function () {

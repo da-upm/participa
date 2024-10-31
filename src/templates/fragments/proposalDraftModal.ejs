@@ -7,6 +7,11 @@
         <div class="modal-body">
             <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc" hx-target="#proposalDraftModal"
                 hx-swap="delete" hx-on::before-request="$('#proposalDraftModal').modal('hide')">
+                <% if(typeof draftProposals !== 'undefined' && draftProposals.length > 0) { %>
+                    <% draftProposals.forEach((proposal) => { %>
+                        <input type="hidden" name="draftIds" value="<%= proposal._id.toString() %>">
+                    <% }) %>
+                <% } %>
                 <div class="mb-3">
                     <label for="categories" class="form-label">Categorías</label>
                     <%- include('categoriesSelector.ejs', { categories }) %>

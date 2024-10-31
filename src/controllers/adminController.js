@@ -16,7 +16,7 @@ const getProposals = async (req, res, next) => {
         const searchQuery = helpers.normalizeString(req.query.search) || '';
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
-        
+
         // Construir la consulta
         const query = {
             isDraft: true
@@ -50,7 +50,7 @@ const getProposals = async (req, res, next) => {
                 };
             })
         );
-        
+
         res.status(200).render('fragments/admin/proposalRows', { layout: false, proposals, categories });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
@@ -73,17 +73,17 @@ const getProposal = async (req, res, next) => {
 const getProposalForm = async (req, res, next) => {
     try {
         const { proposalIds } = req.query;
-        
+
         // Busca las propuestas que coincidan con los IDs proporcionados
         const draftProposals = await Proposal.find({ _id: { $in: proposalIds } });
 
         const categories = await helpers.retrieveCategories();
 
         // Renderiza la vista del modal con las propuestas y categorías encontradas
-        res.status(200).render('fragments/proposalDraftModal', { 
-            layout: false, 
-            categories, 
-            draftProposals 
+        res.status(200).render('fragments/proposalDraftModal', {
+            layout: false,
+            categories,
+            draftProposals
         });
 
     } catch (error) {
@@ -91,7 +91,6 @@ const getProposalForm = async (req, res, next) => {
         return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));
     }
 };
-
 
 const sendProposal = async (req, res, next) => {
     try {
@@ -107,13 +106,16 @@ const sendProposal = async (req, res, next) => {
             return next(new BadRequestError("La propuesta debe contener una descripción."));
         }
 
+        // Busca las propuestas que coincidan con los IDs proporcionados
+        const draftProposals = await Proposal.find({ _id: { $in: proposalIds } });
+
         const sanitizedDescription = sanitizeHtml(req.body.description, {
             allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
             allowedAttributes: {}
         });
 
         const categories = await helpers.retrieveCategories();
-        
+
         const fileteredCategories = req.body.categories.filter(category => categories.hasOwnProperty(category));
 
         if (fileteredCategories.length < 1) {
@@ -127,11 +129,13 @@ const sendProposal = async (req, res, next) => {
             description: sanitizedDescription,
             categories: fileteredCategories,
             isDraft: false,
-            usersDrafting: req.session.user.id,
+            usersDrafting: draftProposals.reduce((authors, draft) => draft.usersDrafting),
+            olderVersions: draftProposals,
         }
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();
+
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
         return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
