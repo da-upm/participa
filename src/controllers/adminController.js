@@ -83,7 +83,8 @@ const getProposalForm = async (req, res, next) => {
         res.status(200).render('fragments/proposalDraftModal', {
             layout: false,
             categories,
-            draftProposals
+            draftProposals, 
+            admin: true
         });
 
     } catch (error) {
@@ -107,7 +108,7 @@ const sendProposal = async (req, res, next) => {
         }
 
         // Busca las propuestas que coincidan con los IDs proporcionados
-        const draftProposals = await Proposal.find({ _id: { $in: proposalIds } });
+        const draftProposals = await Proposal.find({ _id: { $in: req.body.draftIds } });
 
         const sanitizedDescription = sanitizeHtml(req.body.description, {
             allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
@@ -132,21 +133,23 @@ const sendProposal = async (req, res, next) => {
             usersDrafting: draftProposals.reduce((authors, draft) => authors.concat(draft.usersDrafting), []),
             olderVersions: draftProposals,
         }
+
+        const newProposal = new Proposal(proposalData);
+        newProposal.save();
+
         for (const user of proposalData.usersDrafting) {
             const userDocument = await User.findById(user);
-            userDocument.supportedProposals.push(newProposal);
+            userDocument.supportedProposals.push(newProposal._id.toString());
             try {
                 await userDocument.save();
             } catch (error) {
                 return next(new InternalServerError("Ha ocurrido un error al guardar la propuesta al usuario."));
             }
             // Enviar notificación
-            helpers.sendDraftApprovedMail(userDocument.email, `Tu propuesta "${newProposal.title}" ha sido aceptada.`);
+            helpers.sendDraftApprovedMail(userDocument.email, `Tu propuesta "${proposalData.title}" ha sido aceptada.`);
         }
 
-        const newProposal = new Proposal(proposalData);
-        newProposal.save();
-
+        
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
         return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
