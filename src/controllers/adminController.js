@@ -129,8 +129,19 @@ const sendProposal = async (req, res, next) => {
             description: sanitizedDescription,
             categories: fileteredCategories,
             isDraft: false,
-            usersDrafting: draftProposals.reduce((authors, draft) => draft.usersDrafting),
+            usersDrafting: draftProposals.reduce((authors, draft) => authors.concat(draft.usersDrafting), []),
             olderVersions: draftProposals,
+        }
+        for (const user of proposalData.usersDrafting) {
+            const userDocument = await User.findById(user);
+            userDocument.supportedProposals.push(newProposal);
+            try {
+                await userDocument.save();
+            } catch (error) {
+                return next(new InternalServerError("Ha ocurrido un error al guardar la propuesta al usuario."));
+            }
+            // Enviar notificación
+            helpers.sendDraftApprovedMail(userDocument.email, `Tu propuesta "${newProposal.title}" ha sido aceptada.`);
         }
 
         const newProposal = new Proposal(proposalData);
