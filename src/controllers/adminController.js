@@ -85,7 +85,7 @@ const getProposalForm = async (req, res, next) => {
         res.status(200).render('fragments/proposalDraftModal', {
             layout: false,
             categories,
-            draftProposals, 
+            draftProposals,
             admin: true
         });
 
@@ -150,13 +150,92 @@ const sendProposal = async (req, res, next) => {
                 return next(new InternalServerError("Ha ocurrido un error al guardar la propuesta al usuario."));
             }
             // Enviar notificación
-            helpers.sendDraftApprovedMail(userDocument.email, `Tu propuesta "${proposalData.title}" ha sido aceptada.`);
+            helpers.sendDraftApprovedMail(userDocument.email, `
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Confirmación de Propuesta Aceptada</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            color: #333;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .container {
+                            width: 100%;
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: #ffffff;
+                            padding: 20px;
+                            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        }
+                        .header {
+                            text-align: center;
+                            padding: 20px;
+                            background-color: #0072c6;
+                            color: #ffffff;
+                        }
+                        .header h1 {
+                            margin: 0;
+                        }
+                        .content {
+                            padding: 20px;
+                        }
+                        .footer {
+                            text-align: center;
+                            padding: 20px;
+                            background-color: #0072c6;
+                            color: #ffffff;
+                        }
+                        .footer img {
+                            max-width: 200px;
+                            margin-top: 10px;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            margin-top: 20px;
+                            background-color: #0072c6;
+                            color: #ffffff;
+                            text-decoration: none;
+                            border-radius: 5px;
+                        }
+                        .button:hover {
+                            background-color: #005b9a;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>¡Propuesta Aceptada!</h1>
+                        </div>
+                        <div class="content">
+                            <p>Estimado/a ${userDocument.name},</p>
+                            <p>Nos complace informarte que tu propuesta ha sido <strong>aceptada</strong>. Agradecemos tu interés y participación en el proceso, y estamos emocionados de trabajar en conjunto para llevarla a cabo.</p>
+                            <p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
+                        </div>
+                        <div class="footer">
+                            <p>Atentamente,<br>Delegación de Alumnos UPM</p>
+                            <img src="" alt="Delegación de Alumnos">
+                        </div>
+                    </div>
+                </body>
+                </html>`
+            );
+
+            req.toastr.success("Propuesta enviada correctamente.", `¡Propuesta ${newProposal.title} enviada!`);
+            return res.status(200).render('fragments/toastr', { layout: false, req: req });
         }
 
-        
     } catch (error) {
-        console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
+        console.error('Error en proposal/sendProposal: ' + error.message);
+        req.toastr.error("Ha ocurrido un error al enviar la propuesta.", "Error al enviar la propuesta");
+        return res.status(500).render('fragments/toastr', { layout: false, req: req }).next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 

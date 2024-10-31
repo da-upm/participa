@@ -196,7 +196,7 @@ const getDraftForm = async (req, res, next) => {
 
 }
 
-const sendProposalAsDraft = async (req, res) => {
+const sendProposalAsDraft = async (req, res, next) => {
     try {
         if (!req.body.title || req.body.title.trim() === "") {
             console.error('Error en sendProposalAsDraft:');
@@ -237,9 +237,12 @@ const sendProposalAsDraft = async (req, res) => {
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();
+        req.toastr.success("Propuesta enviada correctamente.", `¡Propuesta ${newProposal.title} enviada!`);
+        return res.status(200).render('fragments/toastr', { layout: false, req: req });
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
+        req.toastr.error("Ha ocurrido un error al enviar la propuesta.", "Error al enviar la propuesta");
+        return res.status(500).render('fragments/toastr', { layout: false, req: req }).next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 
