@@ -12,9 +12,9 @@
                 <span class="badge bg-danger">
                     BORRADOR
                 </span>
-                <% proposal.categories.forEach((category)=> { %>
+                <% proposal.categories.forEach((categoryId)=> { %>
                     <span class="badge bg-primary">
-                        <%= category %>
+                        <%= categories[categoryId] %>
                     </span>
                     <% }) %>
             </p>

@@ -9,9 +9,9 @@
                 <%= proposal.title %>
             </h4>
             <p>
-                <% proposal.categories.forEach((category)=> { %>
+                <% proposal.categories.forEach((categoryId)=> { %>
                     <span class="badge bg-primary">
-                        <%= category %>
+                        <%= categories[categoryId] %>
                     </span>
                     <% }) %>
             </p>

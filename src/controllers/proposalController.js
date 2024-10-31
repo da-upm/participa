@@ -72,7 +72,9 @@ const getProposal = async (req, res, next) => {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
 
-        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
+        const categories = await helpers.retrieveCategories();
+
+        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal, categories });
     } catch (error) {
         console.error("Error en proposal/getProposal:", error);
         return next(new InternalServerError("Ha ocurrido un error al obtener la propuesta."));
@@ -185,7 +187,7 @@ const getDraftForm = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
         
-        res.status(200).render('fragments/proposalDraftModal', { layout: false, categories });
+        res.status(200).render('fragments/proposalDraftModal', { layout: false, categories, admin:false });
 
     } catch (error) {
         console.error('Error en proposal/getDraftForm: ' + error.message);
@@ -215,7 +217,9 @@ const sendProposalAsDraft = async (req, res) => {
 
         const categories = await helpers.retrieveCategories();
         
-        const fileteredCategories = req.body.categories.filter(category => categories.hasOwnProperty(category));
+        const receivedCategories = typeof req.body.categories === 'object' ? req.body.categories : [req.body.categories]
+
+        const filteredCategories = receivedCategories.filter(category => categories.hasOwnProperty(category));
 
         if (fileteredCategories.length < 1) {
             console.error('Error en sendProposalAsDraft:');

@@ -63,7 +63,9 @@ const getProposal = async (req, res, next) => {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
 
-        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal });
+        const categories = await helpers.retrieveCategories();
+
+        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal, categories });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
         return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
@@ -117,9 +119,11 @@ const sendProposal = async (req, res, next) => {
 
         const categories = await helpers.retrieveCategories();
 
-        const fileteredCategories = req.body.categories.filter(category => categories.hasOwnProperty(category));
+        const receivedCategories = typeof req.body.categories === 'object' ? req.body.categories : [req.body.categories]
 
-        if (fileteredCategories.length < 1) {
+        const filteredCategories = receivedCategories.filter(category => categories.hasOwnProperty(category));
+
+        if (filteredCategories.length < 1) {
             console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin categorías o con categorías inválidas: ${req.body.categories}.`)
             return next(new BadRequestError("La propuesta debe contener al menos una categoría de las disponibles."));
@@ -128,7 +132,7 @@ const sendProposal = async (req, res, next) => {
         const proposalData = {
             title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
             description: sanitizedDescription,
-            categories: fileteredCategories,
+            categories: filteredCategories,
             isDraft: false,
             usersDrafting: draftProposals.reduce((authors, draft) => authors.concat(draft.usersDrafting), []),
             olderVersions: draftProposals,
