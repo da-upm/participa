@@ -1,5 +1,5 @@
-<form id="proposalForm" hx-post="/api/admin/proposals" hx-ext="json-enc" hx-target="#proposalDraftModal"
-    hx-swap="delete" hx-on::before-request="$('#proposalDraftModal').modal('hide')">
+<form id="proposalForm" hx-post="/api/admin/proposals" hx-ext="json-enc" hx-target="#toastr-container"
+    hx-on::before-request="$('#proposalDraftModal').modal('hide')">
     <% if(typeof draftProposals !=='undefined' && draftProposals.length> 0) { %>
         <% draftProposals.forEach((proposal)=> { %>
             <input type="hidden" name="draftIds" value="<%= proposal._id.toString() %>">

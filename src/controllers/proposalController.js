@@ -221,7 +221,7 @@ const sendProposalAsDraft = async (req, res, next) => {
 
         const filteredCategories = receivedCategories.filter(category => categories.hasOwnProperty(category));
 
-        if (fileteredCategories.length < 1) {
+        if (filteredCategories.length < 1) {
             console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin categorías o con categorías inválidas: ${req.body.categories}.`)
             return next(new BadRequestError("La propuesta debe contener al menos una categoría de las disponibles."));
@@ -230,19 +230,19 @@ const sendProposalAsDraft = async (req, res, next) => {
         const proposalData = {
             title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
             description: sanitizedDescription,
-            categories: fileteredCategories,
+            categories: filteredCategories,
             isDraft: true,
             usersDrafting: req.session.user.id,
         }
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();
-        req.toastr.success("Propuesta enviada correctamente.", `¡Propuesta ${newProposal.title} enviada!`);
+        req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente`);
         return res.status(200).render('fragments/toastr', { layout: false, req: req });
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
         req.toastr.error("Ha ocurrido un error al enviar la propuesta.", "Error al enviar la propuesta");
-        return res.status(500).render('fragments/toastr', { layout: false, req: req }).next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 

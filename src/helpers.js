@@ -30,17 +30,15 @@ const smtpTransport = nodemailer.createTransport({
 });
 
 module.exports.sendDraftApprovedMail = async (to, htmlBody) => {
+	const mailOptions = {
+		from: `Delegación de Alumnos UPM <${config.email.user}>`,
+		to,
+		subject: 'Tu propuesta se ha publicado',
+		html: htmlBody,
+	};
 	try {
-		const mailOptions = {
-			from: `Delegación de Alumnos UPM <${config.email.user}>`,
-			to,
-			subject: 'Tu propuesta se ha publicado',
-			html: htmlBody,
-		};
 		await smtpTransport.sendMail(mailOptions);
-		return true;
 	} catch (error) {
-		console.log(error);
-		return false;
+		throw new Error(`Error al enviar email: ${error.message}`);
 	}
 };

@@ -97,6 +97,7 @@ const getProposalForm = async (req, res, next) => {
 
 const sendProposal = async (req, res, next) => {
     try {
+        // Comprobar y sanitizar los datos de entrada
         if (!req.body.title || req.body.title.trim() === "") {
             console.error('Error en sendProposalAsDraft:');
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin título.`)
@@ -108,9 +109,6 @@ const sendProposal = async (req, res, next) => {
             console.error(`El usuario ${req.session.user.id} ha intentado enviar una propuesta sin descripción.`)
             return next(new BadRequestError("La propuesta debe contener una descripción."));
         }
-
-        // Busca las propuestas que coincidan con los IDs proporcionados
-        const draftProposals = await Proposal.find({ _id: { $in: req.body.draftIds } });
 
         const sanitizedDescription = sanitizeHtml(req.body.description, {
             allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
@@ -129,113 +127,80 @@ const sendProposal = async (req, res, next) => {
             return next(new BadRequestError("La propuesta debe contener al menos una categoría de las disponibles."));
         }
 
+        // Busca las propuestas que coincidan con los IDs proporcionados
+        const draftProposals = await Proposal.find({ _id: { $in: req.body.draftIds } });
+
+        // Recopilar todas las versiones anteriores de las propuestas de borrador
+        const olderVersions = draftProposals.reduce((versions, draft) => {
+            if (draft.olderVersions && draft.olderVersions.length > 0) {
+            versions.push(...draft.olderVersions.map(version => {
+                const { olderVersions, ...rest } = version.toObject();
+                return rest;
+            }));
+            }
+            const { olderVersions, ...rest } = draft.toObject();
+            versions.push(rest);
+            return versions;
+        }, []);
+
         const proposalData = {
             title: sanitizeHtml(req.body.title, { allowedTags: [], allowedAttributes: {} }),
             description: sanitizedDescription,
             categories: filteredCategories,
             isDraft: false,
             usersDrafting: draftProposals.reduce((authors, draft) => authors.concat(draft.usersDrafting), []),
-            olderVersions: draftProposals,
+            olderVersions: olderVersions,
         }
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();
 
+        // Eliminar las propuestas de borrador
+        for (const draft of draftProposals) {
+            await Proposal.findByIdAndDelete(draft._id);
+        }
+
         for (const user of proposalData.usersDrafting) {
             const userDocument = await User.findById(user);
             userDocument.supportedProposals.push(newProposal._id.toString());
+
             try {
                 await userDocument.save();
             } catch (error) {
                 return next(new InternalServerError("Ha ocurrido un error al guardar la propuesta al usuario."));
             }
-            // Enviar notificación
-            helpers.sendDraftApprovedMail(userDocument.email, `
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Confirmación de Propuesta Aceptada</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            background-color: #f4f4f4;
-                            color: #333;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .container {
-                            width: 100%;
-                            max-width: 600px;
-                            margin: 0 auto;
-                            background-color: #ffffff;
-                            padding: 20px;
-                            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                        }
-                        .header {
-                            text-align: center;
-                            padding: 20px;
-                            background-color: #0072c6;
-                            color: #ffffff;
-                        }
-                        .header h1 {
-                            margin: 0;
-                        }
-                        .content {
-                            padding: 20px;
-                        }
-                        .footer {
-                            text-align: center;
-                            padding: 20px;
-                            background-color: #0072c6;
-                            color: #ffffff;
-                        }
-                        .footer img {
-                            max-width: 200px;
-                            margin-top: 10px;
-                        }
-                        .button {
-                            display: inline-block;
-                            padding: 10px 20px;
-                            margin-top: 20px;
-                            background-color: #0072c6;
-                            color: #ffffff;
-                            text-decoration: none;
-                            border-radius: 5px;
-                        }
-                        .button:hover {
-                            background-color: #005b9a;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <div class="header">
-                            <h1>¡Propuesta Aceptada!</h1>
-                        </div>
-                        <div class="content">
-                            <p>Estimado/a ${userDocument.name},</p>
-                            <p>Nos complace informarte que tu propuesta ha sido <strong>aceptada</strong>. Agradecemos tu interés y participación en el proceso, y estamos emocionados de trabajar en conjunto para llevarla a cabo.</p>
-                            <p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
-                        </div>
-                        <div class="footer">
-                            <p>Atentamente,<br>Delegación de Alumnos UPM</p>
-                            <img src="" alt="Delegación de Alumnos">
-                        </div>
-                    </div>
-                </body>
-                </html>`
-            );
 
-            req.toastr.success("Propuesta enviada correctamente.", `¡Propuesta ${newProposal.title} enviada!`);
+            // Enviar notificación
+            const emailTemplate = 'emails/draftApproved';
+            const emailData = {
+                name: userDocument.name
+            };
+
+            const emailHtml = await new Promise((resolve, reject) => {
+                res.render(emailTemplate, emailData, (err, html) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(html);
+                    }
+                });
+            });
+
+            try {
+                helpers.sendDraftApprovedMail(userDocument.email, emailHtml);
+            } catch (error) {
+                console.error('Error en proposal/sendProposal: ' + error.message)
+                req.toastr.error("Ha ocurrido un error al enviar el correo de confirmación..");
+            }
+
+            req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente`);
             return res.status(200).render('fragments/toastr', { layout: false, req: req });
         }
 
     } catch (error) {
         console.error('Error en proposal/sendProposal: ' + error.message);
         req.toastr.error("Ha ocurrido un error al enviar la propuesta.", "Error al enviar la propuesta");
-        return res.status(500).render('fragments/toastr', { layout: false, req: req }).next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
+        return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }
 
