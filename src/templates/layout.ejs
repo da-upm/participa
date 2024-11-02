@@ -32,95 +32,113 @@
             <a class="navbar-brand" href="/">
                 <img id="logo" src="./img/logoRector_WH.png" alt="Logo DAUPM">
             </a>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link <%= (page === 'index') ? 'active' : '' %>" aria-current="<%= (page === 'home') ? 'page' : '' %>" href="/">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= (page === 'process') ? 'active' : '' %>" aria-current="<%= (page === 'process') ? 'page' : '' %>" href="/process">Proceso</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= (page === 'dates') ? 'active' : '' %>" aria-current="<%= (page === 'dates') ? 'page' : '' %>" href="/dates">Fechas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= (page === 'candidates') ? 'active' : '' %>" aria-current="<%= (page === 'candidates') ? 'page' : '' %>" href="/candidates">Candidatos</a>
-                </li>
-            </ul>
-        
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <% if (user==null) { %>
-                            <a class="nav-link" href="/login">Iniciar sesión</a>
-                            <% } else { %>
-                                <a class="nav-link">
-                                    <%= user.name %>
-                                </a>
-                                <% } %>
-                    </li>
-                </ul>
-            </div>
+            <% const currentPage=typeof page !=='undefined' ? page : '' ; %>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link <%= (currentPage === 'index') ? 'active' : '' %>"
+                                aria-current="<%= (currentPage === 'index') ? 'page' : '' %>" href="/">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= (currentPage === 'process') ? 'active' : '' %>"
+                                aria-current="<%= (currentPage === 'process') ? 'page' : '' %>"
+                                href="/process">Proceso</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= (currentPage === 'dates') ? 'active' : '' %>"
+                                aria-current="<%= (currentPage === 'dates') ? 'page' : '' %>" href="/dates">Fechas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link <%= (currentPage === 'candidates') ? 'active' : '' %>"
+                                aria-current="<%= (currentPage === 'candidates') ? 'page' : '' %>"
+                                href="/candidates">Candidatos</a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <% if (user==null) { %>
+                                <a class="nav-link" href="/login">Iniciar sesión</a>
+                                <% } else { %>
+                                    <a class="nav-link">
+                                        <%= user.name %>
+                                    </a>
+                                    <% } %>
+                        </li>
+                    </ul>
+                </div>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <%- body %>
+    <div id="main-content" class="container" style="min-height: calc(95vh - var(--nav-height) - var(--footer-height));">
 
-        <div id="toastr-container"><%- toasts %></div>
+        <%- body %>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+    <div id="toastr-container"><%- toasts %></div>
 
-        <footer class="bg-daupm text-white py-4">
-            <div class="container">
-                <div class="row">
-                    <!-- Primera columna -->
-                    <div class="col-md-6 mb-3">
-                        <h5 class="text-uppercase fw-bold">Contacto</h5>
-                        <ul class="list-unstyled">
-                            <li>Delegación de Alumnos UPM</li>
-                            <li>Universidad Politécnica de Madrid</li>
-                            <li><strong>Teléfono:</strong> 91 067 06 28</li>
-                            <li><strong>Email:</strong> <a href="mailto:da@upm.es" class="text-white">da@upm.es</a></li>
-                            <li><strong>Web:</strong> <a href="http://da.upm.es" class="text-white">da.upm.es</a></li>
-                        </ul>
+    <footer class="bg-daupm text-white py-4 mt-auto">
+        <div class="container">
+            <div class="row">
+                <!-- Primera columna -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="text-uppercase fw-bold">Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li>Delegación de Alumnos UPM</li>
+                        <li>Universidad Politécnica de Madrid</li>
+                        <li><strong>Teléfono:</strong> 91 067 06 28</li>
+                        <li><strong>Email:</strong> <a href="mailto:da@upm.es" class="text-white">da@upm.es</a></li>
+                        <li><strong>Web:</strong> <a href="http://da.upm.es" class="text-white">da.upm.es</a></li>
+                    </ul>
 
-                    </div>
-                    <!-- Segunda columna -->
-                    <div class="col-md-6 mb-3">
-                        <h5 class="text-uppercase fw-bold">¡Conoce nuestras RRSS!</h5>
-                        <ul class="list-unstyled">
-                            <li class="me-3">
-                                <a href="https://twitter.com/DelegacionUPM" class="text-white fs-4 link-underline link-underline-opacity-0">
-                                    <i class="bi bi-twitter"></i>
-                                    <p class="d-inline fs-5"> @DelegacionUPM</p>
-                                </a>
-                            </li>
-                            <li class="me-3">
-                                <a href="https://www.instagram.com/delegacionupm/" class="text-white fs-4 link-underline link-underline-opacity-0">
-                                    <i class="bi bi-instagram"></i>
-                                    <p class="d-inline fs-5 "> @delegacionupm</p>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.youtube.com/channel/UCwhhsM-aaZ4bg_Mk_Vjzg0A" class="text-white fs-4 link-underline     link-underline-opacity-0">
-                                    <i class="bi bi-youtube"></i>
-                                    <p class="d-inline fs-5"> Delegación de Alumnos UPM</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
-                <p class="text-light fst-italic">© 2024 Delegación de Alumnos UPM. Todos los derechos reservados.</p>
+                <!-- Segunda columna -->
+                <div class="col-md-6 mb-3">
+                    <h5 class="text-uppercase fw-bold">¡Conoce nuestras RRSS!</h5>
+                    <ul class="list-unstyled">
+                        <li class="me-3">
+                            <a href="https://twitter.com/DelegacionUPM"
+                                class="text-white fs-4 link-underline link-underline-opacity-0">
+                                <i class="bi bi-twitter"></i>
+                                <p class="d-inline fs-5"> @DelegacionUPM</p>
+                            </a>
+                        </li>
+                        <li class="me-3">
+                            <a href="https://www.instagram.com/delegacionupm/"
+                                class="text-white fs-4 link-underline link-underline-opacity-0">
+                                <i class="bi bi-instagram"></i>
+                                <p class="d-inline fs-5 "> @delegacionupm</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCwhhsM-aaZ4bg_Mk_Vjzg0A"
+                                class="text-white fs-4 link-underline     link-underline-opacity-0">
+                                <i class="bi bi-youtube"></i>
+                                <p class="d-inline fs-5"> Delegación de Alumnos UPM</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </footer>
+            <p class="text-light fst-italic">© 2024 Delegación de Alumnos UPM. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+    <script>
+        document.documentElement.style.setProperty('--nav-height', document.querySelector('nav').offsetHeight + 'px');
+        document.documentElement.style.setProperty('--footer-height', document.querySelector('footer').offsetHeight + 'px');
+    </script>
 </body>
 
 </html>
