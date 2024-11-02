@@ -29,10 +29,15 @@ p,
     font-size: 0.9rem;
 }
 
+#logo {
+    margin-bottom: 5px;
+    height: 40px;
+}
+
 /* Navbar custom color */
 .bg-daupm {
     --bs-bg-opacity: 1;
-    background-color: #003366 !important;
+    background-color: #00509B !important;
     /* Using the color scheme of the reference site */
 }
 
