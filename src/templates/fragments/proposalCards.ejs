@@ -1,5 +1,11 @@
-<% proposals.forEach((proposal)=> { %>
-    <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
-        <%- include('proposalCard', { proposal, categories }) %>
+<% if (proposals.length === 0) { %>
+    <div class="col-12 text-center">
+        <h3>No hay propuestas que coincidan con los criterios de búsqueda.</h3>
     </div>
-<% }) %>
+<% } else { %>
+    <% proposals.forEach((proposal) => { %>
+        <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
+            <%- include('proposalCard', { proposal, categories }) %>
+        </div>
+    <% }) %>
+<% } %>

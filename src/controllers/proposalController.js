@@ -22,7 +22,7 @@ const getProposals = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
 
-        const searchQuery = helpers.normalizeString(req.query.search) || '';
+        const searchQuery = helpers.normalizeString(req.query.search || '');
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
         

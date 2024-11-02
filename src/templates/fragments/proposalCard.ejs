@@ -4,7 +4,7 @@
             <%= proposal.title %>
         </h5>
         <p class="card-text">
-            <%= proposal.description.substring(0, 100) %>...
+            <%- proposal.description.substring(0, 100) %>...
         </p>
         <% proposal.categories.forEach((categoryId)=> { %>
             <span class="badge bg-primary">

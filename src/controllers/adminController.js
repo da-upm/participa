@@ -13,7 +13,7 @@ const getProposals = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
 
-        const searchQuery = helpers.normalizeString(req.query.search) || '';
+        const searchQuery = helpers.normalizeString(req.query.search  || '');
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
 
@@ -134,7 +134,7 @@ const sendProposal = async (req, res, next) => {
         const olderVersions = draftProposals.reduce((versions, draft) => {
             if (draft.olderVersions && draft.olderVersions.length > 0) {
             versions.push(...draft.olderVersions.map(version => {
-                const { olderVersions, ...rest } = version.toObject();
+                const { olderVersions, ...rest } = version.toObject ? version.toObject() : version;
                 return rest;
             }));
             }
@@ -198,8 +198,7 @@ const sendProposal = async (req, res, next) => {
         }
 
     } catch (error) {
-        console.error('Error en proposal/sendProposal: ' + error.message);
-        req.toastr.error("Ha ocurrido un error al enviar la propuesta.", "Error al enviar la propuesta");
+        console.error('Error en admin/sendProposal: ' + error.message);
         return next(new InternalServerError("Ha ocurrido un error al enviar la propuesta."));
     }
 }

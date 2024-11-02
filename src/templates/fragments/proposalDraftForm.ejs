@@ -1,5 +1,6 @@
 <form id="proposalForm" hx-post="/api/proposals/draft" hx-ext="json-enc" hx-target="#toastr-container"
-    hx-on::before-request="$('#proposalDraftModal').modal('hide')">
+    hx-on::before-request="$('#proposalDraftModal').modal('hide')"
+    hx-on::after-request="if (event.detail.xhr.status === 200) {htmx.ajax('GET', '/api/proposals', { target: '#proposalsContainer' })};">
     <% if(typeof draftProposals !=='undefined' && draftProposals.length> 0) { %>
         <% draftProposals.forEach((proposal)=> { %>
             <input type="hidden" name="draftIds" value="<%= proposal._id.toString() %>">
@@ -22,3 +23,5 @@
                     <button type="submit" class="btn btn-primary">Enviar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
 </form>
+
+<script src="https://unpkg.com/htmx.org@2.0.3"></script>
