@@ -32,6 +32,10 @@ const getDates = async (req, res, next) => {
     res.status(200).render('dates', {page: 'dates'})
 }
 
+const getCandidates = async (req, res, next) => {
+    res.status(200).render('candidates', {page: 'candidates'})
+}
+
 const getAdmin = async (req, res, next) => {
     try {
         const rawProposals = await Proposal.find({ isDraft: true });
@@ -55,5 +59,6 @@ module.exports = {
     getIndex,
     getProcess,
     getDates,
+    getCandidates,
     getAdmin
 }

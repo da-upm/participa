@@ -6,6 +6,7 @@ const middlewares = require('../middlewares');
 router.get('/', viewsController.getIndex);
 router.get('/process', viewsController.getProcess);
 router.get('/dates', viewsController.getDates);
+router.get('/candidates', viewsController.getCandidates);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
 
 
