@@ -173,11 +173,12 @@ const sendProposal = async (req, res, next) => {
             // Enviar notificación
             const emailTemplate = 'emails/draftApproved';
             const emailData = {
-                name: userDocument.name
+                name: userDocument.name,
+                proposal: newProposal
             };
 
             const emailHtml = await new Promise((resolve, reject) => {
-                res.render(emailTemplate, emailData, (err, html) => {
+                res.render(emailTemplate, { ...emailData, layout: false }, (err, html) => {
                     if (err) {
                         reject(err);
                     } else {

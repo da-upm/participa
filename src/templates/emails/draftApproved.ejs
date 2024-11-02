@@ -7,7 +7,7 @@
     <title>Confirmación de Propuesta Aceptada</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Comfortaa', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
@@ -26,7 +26,7 @@
         .header {
             text-align: center;
             padding: 20px;
-            background-color: #0072c6;
+            background-color: #003366;
             color: #ffffff;
         }
 
@@ -38,10 +38,17 @@
             padding: 20px;
         }
 
+        .details {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
         .footer {
             text-align: center;
             padding: 20px;
-            background-color: #0072c6;
+            background-color: #003366;
             color: #ffffff;
         }
 
@@ -54,14 +61,14 @@
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #0072c6;
+            background-color: #003366;
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
         }
 
         .button:hover {
-            background-color: #005b9a;
+            background-color: #002244;
         }
     </style>
 </head>
@@ -77,9 +84,14 @@
                 participación en el proceso, y estamos emocionados de trabajar en conjunto para llevarla a cabo.</p>
             <p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
         </div>
+        <div class="details">
+            <h2>Detalles de la Propuesta</h2>
+            <p><strong>Título:</strong> <%= proposal.title %></p>
+            <p><strong>Descripción:</strong> <%- proposal.description %></p>
+        </div>
         <div class="footer">
             <p>Atentamente,<br>Delegación de Alumnos UPM</p>
-            <img src="" alt="Delegación de Alumnos">
+            <img src="https://da.upm.es/wp-content/uploads/2022/08/LOGO-DAUPM_MANCHETA_Neg-1024x198.png" alt="Delegación de Alumnos">
         </div>
     </div>
 </body>
