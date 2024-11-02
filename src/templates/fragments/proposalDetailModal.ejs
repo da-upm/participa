@@ -18,15 +18,19 @@
             <p id="proposalDescription">
                 <%- proposal.description %>
             </p>
-            <p><strong>Apoyos:</strong> <span id="proposalSupports">
-                    <%= proposal.supporters %>
-                </span></p>
+            <p><strong>Apoyo: </strong>
+                <span class="badge 
+                <%= proposal.support ? (proposal.support === 'low' ? 'bg-danger' : proposal.support === 'medium' ? 'bg-warning' : 'bg-success') : 'bg-secondary' %>">
+                    <%= proposal.support ? (proposal.support==='low' ? 'Bajo' : proposal.support==='medium' ? 'Medio'
+                        : 'Alto' ) : 'Desconocido' %>
+                </span>
+            </p>
             <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates">
                     <%= proposal.candidatesSupporters?.map(c=> c) %>
                 </span></p>
 
             <div class="text-center justify-content-center">
-                <%- include('supportButton')  %>
+                <%- include('supportButton') %>
             </div>
         </div>
 
