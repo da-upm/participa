@@ -156,7 +156,7 @@ app.use('*', (req, res, next) => {res.status(404).render('notFound')});
 // The error handler that produces 404/500 HTTP responses.
 app.use(globalErrorHandler);
 
-const port = config.server.port || 3000
+const port = process.env.NODE_PORT || config.server.port || 3000;
 
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);

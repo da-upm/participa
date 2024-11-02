@@ -10,10 +10,16 @@ module.exports.normalizeString = (str) => {
 }
 
 
-// Get all categories so it is not necessary to retrieve them for every view.
+// Get all categories so it is not necessary to retrieve them for every controller.
 module.exports.retrieveCategories = async () => {
     const result = await Parameter.findOne({ categories: { $exists: true } });
     return result.categories;
+}
+
+// Get all affiliation codes so it is not necessary to retrieve them for every controller.
+module.exports.retrieveAffiliationCodes = async () => {
+    const result = await Parameter.findOne({ affiliationCodes: { $exists: true } });
+    return result.affiliationCodes;
 }
 
 const smtpTransport = nodemailer.createTransport({

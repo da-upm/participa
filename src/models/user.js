@@ -5,9 +5,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    UPMClasifCodes: {
+    UPMClassifCodes: {
         type: [String],
         required: true,
+    },
+    affiliation: {
+        type: String,
+        enum: ['student', 'pdi', 'ptgas', 'none'],
+        required: true,
+    },
+    centre: {
+        type: [Number],
+        required: true
     },
     email: {
         type: String,

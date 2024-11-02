@@ -1,30 +1,46 @@
 /* eslint-disable max-len */
-//const { models } = require('../models');
 const User = require('../models/user');
+
+const helpers = require('../helpers');
 
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
 
-const pdiCodes = ['D', 'M', 'Q', 'U', 'P', 'C', 'R', 'B'];
-const studentCodes = ['A', 'W'];
-const pasCodes = ['F', 'L'];
-
 const registerUser = async (userInfo) => {
-	try {
+
+		const affiliationCodes = await helpers.retrieveAffiliationCodes();
+
+		console.log('affiliationCodes', affiliationCodes);
+
+		console.log('userInfo', userInfo);
+
 		const user = new User({
 			name: userInfo.name,
 			username: userInfo.preferred_username,
 			email: userInfo.email,
-			isAdmin: false
-		})
+			UPMClassifCodes: userInfo.upmClassifCode,
+			affiliation: 
+			(() => {
+				const employeeTypes = userInfo.employeeType;
+				let affiliation = 'none'; // Default to 'none' if no match is found
 
-		user.UPMClasifCodes = userInfo.upmClassifCode
+				if (employeeTypes.some(type => affiliationCodes.pdi.includes(type))) {
+					affiliation = 'pdi';
+				} else if (employeeTypes.some(type => affiliationCodes.student.includes(type))) {
+					affiliation = 'student';
+				} else if (employeeTypes.some(type => affiliationCodes.ptgas.includes(type))) {
+					affiliation = 'ptgas';
+				}
+
+				return affiliation;
+			})(),
+			centre: userInfo.upmCentre,
+			isAdmin: false
+		});
+
 		await user.save();
 
 		return user;
-	} catch (error) {
-		console.error('Error en login/registerUser: ' + error.message);
-        return next(new InternalServerError("Ha ocurrido un error al registrar al usuario."));
-	}
+
 };
 
 module.exports.handleLogin = async (req, res, next) => {
@@ -33,7 +49,14 @@ module.exports.handleLogin = async (req, res, next) => {
 
 		let savedUser;
 		if (registeredUser) savedUser = registeredUser;
-		else savedUser = await registerUser(req.session.userInfo);
+		else {
+			try {
+				savedUser = await registerUser(req.session.userInfo);
+			} catch (error) {
+				console.error('Error en login/registerUser: ' + error.message);
+				return next(new InternalServerError("Ha ocurrido un error al registrar al usuario."));
+			}
+		}
 
 		if (!savedUser) return res.status(500).json({ message: 'Error al acceder a los datos del usuario.' });
 
@@ -41,7 +64,7 @@ module.exports.handleLogin = async (req, res, next) => {
 
 		return next();
 	} catch (error) {
-		console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
-        return next(new InternalServerError("Ha ocurrido un error al recuperar al usuario."));
+		console.error('Error en login/handleLogin: ' + error.message);
+        return next(new InternalServerError("Ha ocurrido un error al recuperar el usuario."));
 	}
 };
