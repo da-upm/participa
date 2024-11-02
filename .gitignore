@@ -131,3 +131,5 @@ dist
 .pnp.*
 
 config.json
+
+rector.daupm.es

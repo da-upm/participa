@@ -1,0 +1,377 @@
+<div class="container">
+    <div class="box first">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Proceso Electoral</h1>
+                <h2>Ponderaciones de Voto</h2>
+                <hr />
+                <canvas id="chart-area" class="chartjs-render-monitor"></canvas>
+
+                <h3>Rector de la Universidad</h3>
+                <hr />
+                <p>
+                    El/La Rector/a es la <strong>máxima autoridad académica</strong> de la universidad y ostenta su
+                    representación. Ejerce la dirección, gobierno y gestión de la misma, desarrolla las líneas de
+                    actuación aprobadas por los órganos colegiados correspondientes y ejecuta sus acuerdos.
+                </p>
+
+                <hr />
+
+                <h3>¿Cuáles son las funciones del Rector de la Universidad?</h3>
+                <p>
+                    El Rector de la Universidad Politécnica de Madrid desempeña un papel fundamental en la gestión y
+                    desarrollo de la universidad, junto a su equipo rectoral, dirigen y coordinan un conjunto de
+                    funciones que abarcan múltiples áreas clave:
+                </p>
+                <br>
+                <div class="accordion" id="accordion-1">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secOne" aria-expanded="false" aria-controls="secOne">
+                                <div class="accordion-title">
+                                    1- Dirección y Gobierno de la Universidad
+                                </div> 
+                            </button>
+                        </div>
+                        <div id="secOne" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Como máxima autoridad, el Rector representa a la universidad ante organismos públicos,
+                                        privados y en foros internacionales. Actúa como portavoz y embajador de los intereses y
+                                        objetivos institucionales, promoviendo la reputación y el posicionamiento de la UPM en
+                                        el ámbito académico y profesional.</li>
+                                    <li>Supervisa el cumplimiento de los estatutos y garantiza la correcta ejecución de los
+                                        actos administrativos y académicos, que deben estar en conformidad con la normativa
+                                        interna y nacional.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secTwo" aria-expanded="false" aria-controls="secTwo">
+                                <div class="accordion-title">2- Gestión Académica y Aseguramiento de la Calidad</div> 
+                            </button>
+                        </div>
+                        <div id="secTwo" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Entre sus funciones está la supervisión de la oferta académica y la calidad de los
+                                        programas de estudio, incluyendo la aprobación de planes y proyectos académicos, de
+                                        investigación y de formación continua. El Rector también se encarga de impulsar la
+                                        actualización de los programas de estudio para asegurar su relevancia en el contexto
+                                        científico y profesional.</li>
+                                    <li>Promueve y supervisa el cumplimiento de estándares de calidad en la enseñanza y la
+                                        investigación, además de apoyar el proceso de acreditación de títulos y la evaluación
+                                        continua de las actividades académicas y docentes.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secThree" aria-expanded="false" aria-controls="secThree">
+                                    <div class="accordion-title">3- Planificación Estratégica y Presupuestaria</div> 
+                                </button>
+                            </div>
+                            <div id="secThree" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>El Rector participa activamente en la planificación estratégica de la UPM,
+                                            estableciendo junto a los órganos de gobierno (como el Consejo de Gobierno y el
+                                            Claustro Universitario) los objetivos a corto, medio y largo plazo.</li>
+                                        <li>Propone y gestiona el presupuesto anual, asegurando un uso eficiente de los recursos
+                                            financieros y materiales. Además, está involucrado en la administración y optimización
+                                            de los bienes y recursos materiales, incluyendo infraestructura y equipamiento.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secFour" aria-expanded="false" aria-controls="secFour">
+                                    <div class="accordion-title">4- Gestión de Personal y Recursos Humanos</div> 
+                                </button>
+                            </div>
+                            <div id="secFour" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Tiene la autoridad para nombrar y cesar cargos directivos y académicos, así como
+                                            supervisar los procesos de contratación, formación y desarrollo profesional de
+                                            profesores, investigadores y personal administrativo. Este aspecto es crucial para
+                                            fomentar un entorno académico de excelencia y asegurar un equipo cualificado que
+                                            apoye los objetivos estratégicos de la universidad.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secFive" aria-expanded="false" aria-controls="secFive">
+                                    <div class="accordion-title">5- Promoción de la Investigación e Innovación</div>
+                                </button>
+                            </div>
+                            <div id="secFive" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>El Rector tiene la responsabilidad de fomentar y facilitar proyectos de investigación
+                                            que contribuyan al avance de la ciencia, la tecnología y el conocimiento. También se
+                                            encarga de incentivar la colaboración con empresas, gobiernos y otras instituciones
+                                            académicas, favoreciendo la transferencia de tecnología y el desarrollo de patentes e
+                                            innovaciones tecnológicas relevantes para la sociedad.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secSix" aria-expanded="false" aria-controls="secSix">
+                                    <div class="accordion-title">6- Relación y Participación de la Comunidad Universitaria</div>
+                                </button>
+                            </div>
+                            <div id="secSix" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                    <ul>
+                                        <li>Facilita la participación de la comunidad universitaria en la toma de decisiones,
+                                            apoyando la transparencia y el acceso a la información para todos sus miembros. El
+                                            Rector debe promover un ambiente de inclusión, participación y respeto hacia los
+                                            estudiantes y personal de la universidad.</li>
+                                        <li>Atiende las necesidades de los estudiantes, promoviendo iniciativas de apoyo académico
+                                            y bienestar estudiantil, y fomenta un entorno que valore la diversidad y la igualdad de
+                                            oportunidades.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#secSeven" aria-expanded="false" aria-controls="secSeven">
+                                    <div class="accordion-title">7- Extensión Universitaria y Vinculación con la Sociedad</div>
+                                </button>
+                            </div>
+                            <div id="secSeven" class="accordion-collapse collapse" data-bs-parent="#accordion-1">
+                                <div class="accordion-body">
+                                <ul>
+                                    <li>Bajo la dirección del Rector, la UPM desarrolla actividades de extensión universitaria,
+                                        incluyendo programas culturales, sociales y deportivos. Estas iniciativas buscan
+                                        fortalecer el vínculo de la universidad con la comunidad y promover el desarrollo social,
+                                        cultural y económico a través del conocimiento.</li>
+                                    <li>También se incentivan convenios de colaboración con empresas y organizaciones para
+                                        integrar a la UPM en la realidad económica y tecnológica, proporcionando un impacto
+                                        positivo en la sociedad.</li>
+                                </ul>
+                                </div>
+                            </div>
+                        </div> 
+                </div>
+                <br/>
+                <p>
+                    Estas responsabilidades del Rector son ejercidas en conjunto con otros órganos de gobierno, como el
+                    Consejo de Gobierno, que participa en la toma de decisiones, y el Claustro Universitario, que colabora
+                    en aspectos de normatividad y supervisión de los estatutos. La autonomía de la universidad le permite
+                    establecer sus propios reglamentos y procedimientos administrativos para cumplir con sus fines.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h1>Reglamento Electoral</h1>
+                <h2>Título Cuarto - Rector/a</h2>
+                <hr>
+
+                <div class="accordion" id="accordionExample">
+                    <!-- Artículo 49 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading49">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse49" aria-expanded="true" aria-controls="collapse49">
+                                Artículo 49. Derecho de sufragio
+                            </button>
+                        </h2>
+                        <div id="collapse49" class="accordion-collapse collapse show" aria-labelledby="heading49"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    Son titulares del derecho de sufragio activo:<br>
+                                    a) El personal docente e investigador y el personal de administración y servicios de
+                                    la Universidad, que estén en situación de servicio activo, de acuerdo con los
+                                    artículos 131 y 159 de los Estatutos de la Universidad Politécnica de Madrid.<br>
+                                    b) Los alumnos que estén matriculados en algunas de las enseñanzas conducentes a la
+                                    obtención de títulos universitarios oficiales, de acuerdo con el artículo 117 de los
+                                    Estatutos de la Universidad Politécnica de Madrid.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Artículo 50 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading50">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse50" aria-expanded="false" aria-controls="collapse50">
+                                Artículo 50. Administración Electoral
+                            </button>
+                        </h2>
+                        <div id="collapse50" class="accordion-collapse collapse" aria-labelledby="heading50"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    La administración de este proceso electoral corresponde a la Comisión Electoral
+                                    Central.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Artículo 51 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading51">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse51" aria-expanded="false" aria-controls="collapse51">
+                                Artículo 51. Colegios Electorales
+                            </button>
+                        </h2>
+                        <div id="collapse51" class="accordion-collapse collapse" aria-labelledby="heading51"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    1. Se establecerá un Colegio Electoral en cada Escuela y Facultad y otro en
+                                    Rectorado.<br>
+                                    2. La Comisión Electoral Central, previa consulta a las Comisiones Electorales de
+                                    las Escuelas y Facultades, determinará el número y la ubicación de las Mesas
+                                    Electorales en cada uno de los Colegios Electorales.<br>
+                                    3. En todo caso, cada Colegio Electoral dispondrá de al menos una urna para cada uno
+                                    de los siguientes grupos electorales:<br>
+                                    a) Profesores doctores con vinculación permanente a la Universidad<br>
+                                    b) Resto del personal docente e investigador<br>
+                                    c) Estudiantes<br>
+                                    d) Personal de administración y servicios
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Artículo 52 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading52">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse52" aria-expanded="false" aria-controls="collapse52" >
+                            Artículo 52. Convocatoria de elecciones
+                            </button>
+                        </h2>
+                        <div id="collapse52" class="accordion-collapse collapse" aria-labelledby="heading52"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    1. La Mesa del Claustro convocará elecciones a Rector al menos quince días antes de
+                                    la finalización de su mandato, según lo establecido en el artículo 64 de los
+                                    Estatutos de la Universidad Politécnica de Madrid.<br>
+                                    2. La convocatoria establecerá la fecha de la jornada de votación en primera
+                                    vuelta.<br>
+                                    3. El calendario deberá contener, además de lo regulado con carácter general en el
+                                    artículo 19 de este Reglamento, las fechas y plazos de votación en segunda vuelta,
+                                    así como la fecha del sorteo para designar los miembros de las Mesas Electorales
+                                    para la misma.<br>
+                                    4. La convocatoria, la programación electoral y cuantos actos se deriven de las
+                                    mismas, deberán hacerse públicos.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Artículo 57 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading57">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse57" aria-expanded="false" aria-controls="collapse57">
+                                Artículo 57. Escrutinio general
+                            </button>
+                        </h2>
+                        <div id="collapse57" class="accordion-collapse collapse" aria-labelledby="heading57"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    1. La Comisión Electoral Central, una vez recibidos los resultados de las Mesas
+                                    Electorales, realizará de inmediato el escrutinio general, que será público,
+                                    asignando a cada candidato el voto ponderado porcentual que resulte de efectuar las
+                                    siguientes operaciones:<br>
+                                    a) Dividir el número de votos válidos otorgados a cada candidato dentro de cada
+                                    grupo electoral, entre el número de votos válidos emitidos en dicho grupo.<br>
+                                    b) Multiplicar cada uno de los cuatro cocientes anteriores por el porcentaje de
+                                    ponderación del grupo correspondiente y sumar los cuatro valores resultantes.<br>
+                                    2. Los porcentajes de ponderación serán los siguientes:<br>
+                                    a) Profesores doctores con vinculación permanente: 51%<br>
+                                    b) Resto del personal docente e investigador: 16%<br>
+                                    c) Estudiantes: 24%<br>
+                                    d) Personal de administración y servicios: 9%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Artículo 58 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading58">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse58" aria-expanded="false" aria-controls="collapse58">
+                                Artículo 58. Proclamación de candidato electo
+                            </button>
+                        </h2>
+                        <div id="collapse58" class="accordion-collapse collapse" aria-labelledby="heading58"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    La Comisión Electoral Central, una vez seguido lo regulado con carácter general en
+                                    los artículos 30 al 34 del presente Reglamento, y de acuerdo con las bases
+                                    electorales definidas en el art. 53 de este título, procederá a la proclamación
+                                    definitiva del candidato electo, si lo hubiere.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Continúa agregando otros artículos según sea necesario -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    // Configuración y inicialización del gráfico
+    var chartColors = {
+        red: '#da2724',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: '#50A700',
+        blue: '#00509B',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    };
+
+    var config = {
+        type: 'pie',
+        data: {
+            datasets: [{
+                data: [51, 16, 24, 9],
+                backgroundColor: [
+                    chartColors.green,
+                    chartColors.yellow,
+                    chartColors.blue,
+                    chartColors.red
+                ],
+                label: 'Ponderaciones de Voto'
+            }],
+            labels: [
+                'Profesores doctores con vinculación permanente',
+                'Resto del personal docente e investigador',
+                'Estudiantes',
+                'Personal de administración y servicios'
+            ]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                position: 'bottom'
+            }
+        }
+    };
+
+    window.onload = function () {
+        var ctx = document.getElementById('chart-area').getContext('2d');
+        window.myPie = new Chart(ctx, config);
+    };
+</script>

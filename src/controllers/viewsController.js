@@ -18,10 +18,18 @@ const getIndex = async (req, res, next) => {
 
         const categories = await helpers.retrieveCategories();
                 
-        res.status(200).render('index', { proposals, categories })
+        res.status(200).render('index', { proposals, categories, page:'index' })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
+}
+
+const getProcess = async (req, res, next) => {
+        res.status(200).render('process', {page:'process'})
+}
+
+const getDates = async (req, res, next) => {
+    res.status(200).render('dates', {page: 'dates'})
 }
 
 const getAdmin = async (req, res, next) => {
@@ -45,5 +53,7 @@ const getAdmin = async (req, res, next) => {
 
 module.exports = {
     getIndex,
+    getProcess,
+    getDates,
     getAdmin
 }

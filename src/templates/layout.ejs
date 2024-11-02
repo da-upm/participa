@@ -32,6 +32,21 @@
             <a class="navbar-brand" href="/">
                 <img id="logo" src="./img/logoRector_WH.png" alt="Logo DAUPM">
             </a>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link <%= (page === 'index') ? 'active' : '' %>" aria-current="<%= (page === 'home') ? 'page' : '' %>" href="/">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (page === 'process') ? 'active' : '' %>" aria-current="<%= (page === 'process') ? 'page' : '' %>" href="/process">Proceso</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (page === 'dates') ? 'active' : '' %>" aria-current="<%= (page === 'dates') ? 'page' : '' %>" href="/dates">Fechas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (page === 'candidates') ? 'active' : '' %>" aria-current="<%= (page === 'candidates') ? 'page' : '' %>" href="/candidates">Candidatos</a>
+                </li>
+            </ul>
+        
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

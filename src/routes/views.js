@@ -4,6 +4,8 @@ const viewsController = require('../controllers/viewsController');
 const middlewares = require('../middlewares');
 
 router.get('/', viewsController.getIndex);
+router.get('/process', viewsController.getProcess);
+router.get('/dates', viewsController.getDates);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
 
 
