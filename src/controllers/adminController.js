@@ -111,7 +111,7 @@ const sendProposal = async (req, res, next) => {
         }
 
         const sanitizedDescription = sanitizeHtml(req.body.description, {
-            allowedTags: ['b', 'i', 'u', 'ul', 'ol', 'li'],
+            allowedTags: ['p', 'br', 'b', 'i', 'u', 'ul', 'ol', 'li'],
             allowedAttributes: {}
         });
 
