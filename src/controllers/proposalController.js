@@ -56,6 +56,7 @@ const getProposals = async (req, res, next) => {
                 return {
                     ...p.toObject(),
                     supporters: await p.getSupportersCount(),
+                    support: await p.getSupport()
                 };
             })
         );
@@ -71,6 +72,7 @@ const getProposal = async (req, res, next) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
+        proposal.support = await proposal.getSupport();
 
         const categories = await helpers.retrieveCategories();
 
@@ -132,7 +134,8 @@ const addSupporter = async (req, res, next) => {
 
         const proposal = {
             ...rawProposal.toObject(),
-            supporters: await rawProposal.getSupportersCount()
+            supporters: await rawProposal.getSupportersCount(),
+            support: await rawProposal.getSupport()
         }
 
         const categories = await helpers.retrieveCategories();
@@ -170,7 +173,8 @@ const removeSupporter = async (req, res, next) => {
 
         const proposal = {
             ...rawProposal.toObject(),
-            supporters: await rawProposal.getSupportersCount()
+            supporters: await rawProposal.getSupportersCount(),
+            support: await rawProposal.getSupport()
         }
 
         const categories = await helpers.retrieveCategories();

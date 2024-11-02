@@ -11,13 +11,17 @@
                 <%= categories[categoryId] %>
             </span>
             <% }) %>
-                <p class="mt-2">Apoyos: <%= proposal.supporters %>
+                <p class="mt-2">Apoyo:
+                    <span class="badge 
+                        <%= proposal.support ? (proposal.support === 'low' ? 'bg-danger' : proposal.support === 'medium' ? 'bg-warning' : 'bg-success') : 'bg-secondary' %>">
+                        <%= proposal.support ? (proposal.support === 'low' ? 'Bajo' : proposal.support === 'medium' ? 'Medio' : 'Alto') : 'Desconocido' %>
+                    </span>
                 </p>
                 <p>Candidatos que apoyan: <%= proposal.candidatesSupporters %>
                 </p>
                 <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
                     hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
                     más</button>
-                <%- include('supportButton')  %>
+                <%- include('supportButton') %>
     </div>
 </div>

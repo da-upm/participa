@@ -10,7 +10,8 @@ const getIndex = async (req, res, next) => {
             rawProposals.map(async (p) => {
                 return {
                     ...p.toObject(),
-                    supporters: await p.getSupportersCount()
+                    supporters: await p.getSupportersCount(),
+                    support: await p.getSupport()
                 };
             })
         );
