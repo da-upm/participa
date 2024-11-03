@@ -53,6 +53,7 @@ app.use(partials());
 // Let Express know if we are using a reverse proxy.
 if (config.server.usingProxy) app.set('trust proxy', 1);
 
+console.info("Conectando a MongoDB mediante: ", mongodbURI);
 
 mongoose.connect(mongodbURI);
 mongoose.Promise = global.Promise;
