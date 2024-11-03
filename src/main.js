@@ -149,7 +149,7 @@ app.use(function (req, res, next) {
 
 app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
-app.use('/api/users', userRouter);
+//app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
 
 app.use('*', (req, res, next) => {res.status(404).render('notFound')});
