@@ -9,9 +9,9 @@ const registerUser = async (userInfo) => {
 
 		const affiliationCodes = await helpers.retrieveAffiliationCodes();
 
-		console.log('affiliationCodes', affiliationCodes);
-
-		console.log('userInfo', userInfo);
+		if (!userInfo.upmClassifCode && userInfo.employeeType.length === 1 && userInfo.employeeType[0] === '-') {
+			throw new BadRequestError("No es posible iniciar sesión con cuentas institucionales.");
+		}
 
 		const user = new User({
 			name: userInfo.name,
@@ -49,14 +49,7 @@ module.exports.handleLogin = async (req, res, next) => {
 
 		let savedUser;
 		if (registeredUser) savedUser = registeredUser;
-		else {
-			try {
-				savedUser = await registerUser(req.session.userInfo);
-			} catch (error) {
-				console.error('Error en login/registerUser: ' + error.message);
-				return next(new InternalServerError("Ha ocurrido un error al registrar al usuario."));
-			}
-		}
+		else savedUser = await registerUser(req.session.userInfo);
 
 		if (!savedUser) return res.status(500).json({ message: 'Error al acceder a los datos del usuario.' });
 
@@ -65,6 +58,7 @@ module.exports.handleLogin = async (req, res, next) => {
 		return next();
 	} catch (error) {
 		console.error('Error en login/handleLogin: ' + error.message);
+		if (error instanceof BadRequestError) return next(new BadRequestError(error.message));
         return next(new InternalServerError("Ha ocurrido un error al recuperar el usuario."));
 	}
 };

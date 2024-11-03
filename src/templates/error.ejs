@@ -1,6 +1,7 @@
 <div class="container mt-5">
     <div class="text-center">
         <h1>Ha ocurrido un error</h1>
+        <%- (typeof error !== 'undefined' && error.length > 0) ? `<p>Detalles: ${error}</p>` : '' %>
         <p class="lead">Inténtalo de nuevo o ponte en contacto con nosotros en <a href="mailto:da.tic@upm.es">da.tic@upm.es</a> si el problema persiste.</p>
         <a href="/">Volver a Inicio</a>
     </div>

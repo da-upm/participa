@@ -37,10 +37,7 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
 		});
-		if (!req.xhr) return res.status(400).json({
-			code: 'bad_request',
-			message: err.message,
-		})
+		if (!req.xhr) return res.status(400).redirect('/error');
 		return res.status(400).render('fragments/toastr', { layout: false, req: req });
 	}
 
@@ -62,10 +59,7 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			'Hx-Redirect',
 			`/login`
 		);
-		if (req.xhr) return res.status(401).json({
-			code: 'limited_user',
-			message: 'No tienes permisos para realizar esta acción.',
-		})
+		if (req.xhr) return res.status(401).render('fragments/toastr', { layout: false, req: req });
 
 		req.session.referer = req.path;
 		return res.status(401).redirect('/login');
@@ -90,6 +84,7 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			'Hx-Redirect',
 			`/`
 		);
+		
 		return res.status(403).redirect('/');
 	}
 
@@ -107,10 +102,8 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
 		});
-		if (!req.xhr) return res.status(404).json({
-			code: 'not_found',
-			message: err.message,
-		})
+
+		if (!req.xhr) return res.status(404).redirect('/notFound');
 		return res.status(404).render('fragments/toastr', { layout: false, req: req });
 	}
 
@@ -130,6 +123,8 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 			"showMethod": "fadeIn",
 			"hideMethod": "fadeOut"
 		});
+
+		if (!req.xhr) return res.status(500).redirect('/error');
 		return res.status(500).render('fragments/toastr', { layout: false, req: req });
 		}
 
@@ -149,5 +144,7 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 		"showMethod": "fadeIn",
 		"hideMethod": "fadeOut"
 	});
+
+	if (!req.xhr) return res.status(500).redirect('/error');
 	return res.status(500).render('fragments/toastr', { layout: false, req: req });
 };
