@@ -13,7 +13,7 @@
     "url": "git+https://github.com/da-upm/participa.git"
   },
   "author": "Pablo Fernandez López y Alejandro Alonso López",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/da-upm/participa/issues"
   },
