@@ -127,6 +127,13 @@ app.use(function (req, res, next)
     next()
 });
 
+// Middleware to send to res.locals the categories from helpers.retrieveCategories
+app.use(async (req, res, next) => {
+	const categories = await helpers.retrieveCategories();
+	res.locals.categories = categories;
+	next();
+});
+
 // Middleware to send to res.locals the centres from helpers.retrieveCentres
 app.use(async (req, res, next) => {
 	const centres = await helpers.retrieveCentres();

@@ -17,10 +17,8 @@ const getIndex = async (req, res, next) => {
                 };
             })
         );
-
-        const categories = await helpers.retrieveCategories();
                 
-        res.status(200).render('index', { proposals, categories, page:'index' })
+        res.status(200).render('index', { proposals, page:'index' })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -51,10 +49,8 @@ const getAdmin = async (req, res, next) => {
                 };
             })
         );
-
-        const categories = await helpers.retrieveCategories();
         
-        res.status(200).render('admin', { proposals, categories })
+        res.status(200).render('admin', { proposals })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }}

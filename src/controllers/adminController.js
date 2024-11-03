@@ -68,9 +68,7 @@ const getProposal = async (req, res, next) => {
         proposal.affiliations = await proposal.getAffiliationList();
         proposal.centres = await proposal.getCentreList();
 
-        const categories = await helpers.retrieveCategories();
-
-        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal, categories });
+        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
         return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
@@ -84,12 +82,9 @@ const getProposalForm = async (req, res, next) => {
         // Busca las propuestas que coincidan con los IDs proporcionados
         const draftProposals = await Proposal.find({ _id: { $in: proposalIds } });
 
-        const categories = await helpers.retrieveCategories();
-
         // Renderiza la vista del modal con las propuestas y categorías encontradas
         res.status(200).render('fragments/proposalDraftModal', {
             layout: false,
-            categories,
             draftProposals,
             admin: true
         });

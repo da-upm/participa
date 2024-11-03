@@ -68,9 +68,7 @@ const getProposal = async (req, res, next) => {
         proposal.affiliations = await proposal.getAffiliationList();
         proposal.centres = await proposal.getCentreList();
 
-        const categories = await helpers.retrieveCategories();
-
-        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal, categories });
+        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
         console.error("Error en proposal/getProposal:", error);
         return next(new InternalServerError("Ha ocurrido un error al obtener la propuesta."));
@@ -104,11 +102,9 @@ const addSupporter = async (req, res, next) => {
             supporters: await rawProposal.getSupportersCount(),
             support: await rawProposal.getSupport()
         }
-
-        const categories = await helpers.retrieveCategories();
         
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
         console.error('Error en proposal/addSupporter: ' + error.message);
         return next(new InternalServerError("Ha ocurrido un error al apoyar la propuesta."));
@@ -143,11 +139,9 @@ const removeSupporter = async (req, res, next) => {
             supporters: await rawProposal.getSupportersCount(),
             support: await rawProposal.getSupport()
         }
-
-        const categories = await helpers.retrieveCategories();
         
         res.locals.user = req.session.user;
-        res.status(200).render('fragments/proposalCard', { layout: false, proposal, categories });
+        res.status(200).render('fragments/proposalCard', { layout: false, proposal });
     } catch (error) {
         console.error('Error en proposal/removeSuporter: ' + error.message);
         return next(new InternalServerError("Ha ocurrido un error al retirar el apoyo a la propuesta."));
@@ -155,10 +149,8 @@ const removeSupporter = async (req, res, next) => {
 }
 
 const getDraftForm = async (req, res, next) => {
-    try {
-        const categories = await helpers.retrieveCategories();
-        
-        res.status(200).render('fragments/proposalDraftModal', { layout: false, categories, admin:false });
+    try {        
+        res.status(200).render('fragments/proposalDraftModal', { layout: false, admin:false });
 
     } catch (error) {
         console.error('Error en proposal/getDraftForm: ' + error.message);
