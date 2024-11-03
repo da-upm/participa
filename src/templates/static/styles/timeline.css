@@ -112,3 +112,7 @@
     left: 0;
     right: -55.8px;
 }
+
+.btn btn-primary {
+    margin-top: 10px;
+}
