@@ -29,6 +29,16 @@
                     <%= proposal.candidatesSupporters?.map(c=> c) %>
                 </span></p>
 
+                <p><strong>Colectivos que proponen:</strong> <span id="proposalSupportingCandidates">
+                    <%= proposal.affiliations?.map(affiliationId => affiliations[affiliationId]).join(', ') %>
+                </span></p>
+        
+                <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
+                    <%= proposal.centres?.map(c => centres[c]).join(', ') %>
+                </span></p>
+            
+
+
             <div class="text-center justify-content-center">
                 <%- include('supportButton') %>
             </div>

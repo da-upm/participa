@@ -11,7 +11,9 @@ const getIndex = async (req, res, next) => {
                 return {
                     ...p.toObject(),
                     supporters: await p.getSupportersCount(),
-                    support: await p.getSupport()
+                    support: await p.getSupport(),
+                    affiliations: await p.getAffiliationList(),
+                    centres: await p.getCentreList()
                 };
             })
         );
@@ -43,7 +45,9 @@ const getAdmin = async (req, res, next) => {
             rawProposals.map(async (p) => {
                 return {
                     ...p.toObject(),
-                    supporters: await p.getSupportersCount()
+                    supporters: await p.getSupportersCount(),
+                    affiliations: await p.getAffiliationList(),
+                    centres: await p.getCentreList()
                 };
             })
         );

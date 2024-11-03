@@ -58,5 +58,20 @@ proposalSchema.methods.getSupport = async function () {
     }
 };
 
+// Definir una función en el esquema para obtener la lista de parámetros "affiliation" de los usuarios en "usersDrafting".
+proposalSchema.methods.getAffiliationList = async function () {
+    const users = await mongoose.model('User').find({
+        _id: { $in: this.usersDrafting }
+    });
+    return users.map(user => user.affiliation);
+};
+
+// Definir una función en el esquema para obtener la lista de parámetros "centre" no repetidos de los usuarios en "usersDrafting".
+proposalSchema.methods.getCentreList = async function () {
+    const users = await mongoose.model('User').find({
+        _id: { $in: this.usersDrafting }
+    });
+    return [...new Set(users.map(user => user.centre))];
+};
 
 module.exports = mongoose.model('Proposal', proposalSchema);

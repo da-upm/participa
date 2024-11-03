@@ -22,6 +22,17 @@ module.exports.retrieveAffiliationCodes = async () => {
     return result.affiliationCodes;
 }
 
+module.exports.retrieveAffiliations = async () => {
+    const result = await Parameter.findOne({ affiliations: { $exists: true } });
+    return result.affiliations;
+}
+
+module.exports.retrieveCentres = async () => {
+    const result = await Parameter.findOne({ centres: { $exists: true } });
+    return result.centres;
+}
+
+
 const smtpTransport = nodemailer.createTransport({
 	host: config.email.host,
 	port: config.email.port,

@@ -15,6 +15,8 @@ const { Issuer, Strategy } = require('openid-client');
 
 const config = require('./config.json');
 
+const helpers = require('./helpers');
+
 const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
 const userRouter = require('./routes/user');
@@ -123,6 +125,20 @@ app.use(function (req, res, next)
 {
     res.locals.toasts = req.toastr.render()
     next()
+});
+
+// Middleware to send to res.locals the centres from helpers.retrieveCentres
+app.use(async (req, res, next) => {
+	const centres = await helpers.retrieveCentres();
+	res.locals.centres = centres;
+	next();
+});
+
+// Middleware to send to res.locals the affiliations from helpers.retrieveAffiliations
+app.use(async (req, res, next) => {
+	const affiliations = await helpers.retrieveAffiliations();
+	res.locals.affiliations = affiliations;
+	next();
 });
 
 // Login routes.

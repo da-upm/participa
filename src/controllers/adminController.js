@@ -47,6 +47,9 @@ const getProposals = async (req, res, next) => {
                 return {
                     ...p.toObject(),
                     supporters: await p.getSupportersCount(),
+                    support: await p.getSupport(),
+                    affiliations: await p.getAffiliationList(),
+                    centres: await p.getCentreList()
                 };
             })
         );
@@ -62,6 +65,8 @@ const getProposal = async (req, res, next) => {
     try {
         const proposal = await Proposal.findById(new ObjectId(req.params.id));
         proposal.supporters = await proposal.getSupportersCount();
+        proposal.affiliations = await proposal.getAffiliationList();
+        proposal.centres = await proposal.getCentreList();
 
         const categories = await helpers.retrieveCategories();
 
