@@ -194,7 +194,7 @@ const sendProposal = async (req, res, next) => {
                 req.toastr.error("Ha ocurrido un error al enviar el correo de confirmación..");
             }
 
-            req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente`);
+            req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente.`);
             return res.status(200).render('fragments/toastr', { layout: false, req: req });
         }
 
@@ -204,9 +204,73 @@ const sendProposal = async (req, res, next) => {
     }
 }
 
+const getRejectForm = async (req, res, next) => {
+    try {
+        const proposal = await Proposal.findById(new ObjectId(req.query.proposalIds));
+        proposal.affiliations = await proposal.getAffiliationList();
+        proposal.centres = await proposal.getCentreList();
+
+        const proponent = await User.findById(proposal.usersDrafting[0]);
+
+        res.status(200).render('fragments/admin/proposalRejectForm', { layout: false, proposal, proponent });
+    } catch (error) {
+        console.error("Error admin/getRejectForm:", error);
+        return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));
+    }
+};
+
+const rejectProposal = async (req, res, next) => {
+    try {
+        const proposal = await Proposal.findById(new ObjectId(req.params.id));
+        const proponent = await User.findById(proposal.usersDrafting[0]);
+
+        if (!req.query.reason || req.query.reason.trim() === "") {
+            console.error('Error en rejectProposal:');
+            console.error(`El usuario ${req.session.user.id} ha intentado rechazar una propuesta sin motivo.`)
+            return next(new BadRequestError("El rechazo debe contener un motivo."));
+        }
+
+        const sanitizedReason = sanitizeHtml(req.query.reason, {
+            allowedTags: ['p', 'br', 'b', 'i', 'u', 'ul', 'ol', 'li'],
+            allowedAttributes: {}
+        });
+
+
+        // Enviar notificación
+        const emailTemplate = 'emails/draftRejected';
+        const emailData = {
+            name: proponent.name,
+            proposal: proposal,
+            reason: sanitizedReason
+        };
+
+        const emailHtml = await new Promise((resolve, reject) => {
+            res.render(emailTemplate, { ...emailData, layout: false }, (err, html) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(html);
+                }
+            });
+        });
+
+        helpers.sendDraftRejectedMail(proponent.email, emailHtml);
+
+        await Proposal.findByIdAndDelete(proposal._id);
+
+        req.toastr.success(`Propuesta rechazada correctamente.`);
+        return res.status(200).render('fragments/toastr', { layout: false, req: req });
+    } catch (error) {
+        console.error("Error admin/rejectProposal:", error);
+        return next(new InternalServerError("Ha ocurrido un error al rechazar la propuesta."));
+    }
+}
+
 module.exports = {
     getProposals,
     getProposal,
     getProposalForm,
-    sendProposal
+    sendProposal,
+    getRejectForm,
+    rejectProposal
 }

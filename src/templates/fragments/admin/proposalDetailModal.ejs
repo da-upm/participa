@@ -1,10 +1,11 @@
-<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-dialog modal-lg modal-dialog-centered" hx-headers='{"X-Requested-With": "XMLHttpRequest"}'>
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="proposalDetailModalLabel">Detalles de la Propuesta</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+            <input type="hidden" id="proposalId" name="proposalIds" value="<%= proposal._id %>">
             <h4 id="proposalTitle">
                 <%= proposal.title %>
             </h4>
@@ -22,23 +23,31 @@
                 <%- proposal.description %>
             </p>
 
-            <% if (proposal.affiliations && proposal.affiliations.length > 0) { %>
+            <% if (proposal.affiliations && proposal.affiliations.length> 0) { %>
                 <p><strong>Colectivos que proponen:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.affiliations.map(affiliationId => affiliations[affiliationId]).join(', ') %>
-                </span></p>
-            <% } %>
+                        <%= proposal.affiliations.map(affiliationId=> affiliations[affiliationId]).join(', ') %>
+                    </span></p>
+                <% } %>
 
-            <% if (proposal.centres && proposal.centres.length > 0) { %>
-                <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.centres.map(c => centres[c]).join(', ') %>
-                </span></p>
-            <% } %>
+                    <% if (proposal.centres && proposal.centres.length> 0) { %>
+                        <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
+                                <%= proposal.centres.map(c=> centres[c]).join(', ') %>
+                            </span></p>
+                        <% } %>
 
         </div>
 
-        
+        <div class="text-center justify-content-center">
+            <button type="button" class="btn btn-success me-5" hx-get="/api/admin/draft-form" hx-trigger="click" hx-headers='{"X-Requested-With": "XMLHttpRequest"}'
+                hx-include="#proposalId" hx-params="*" hx-target="#proposalDraftModal"
+                hx-on::after-request="if(event.detail.xhr.status === 200) { $('#proposalDetailModal').modal('hide'); $('#proposalDraftModal').modal('show') }">Aprobar</button>
+            <button type="button" class="btn btn-danger ms-5" hx-get="/api/admin/reject-form" hx-trigger="click" hx-headers='{"X-Requested-With": "XMLHttpRequest"}'
+            hx-include="#proposalId" hx-params="*" hx-target="#proposalRejectModal"
+            hx-on::after-request="if(event.detail.xhr.status === 200) { $('#proposalRejectModal').modal('show'); $('#proposalDetailModal').modal('hide'); }">Rechazar</button>
+        </div>
 
-        <div class="modal-footer">
+
+        <div class="modal-footer mt-5">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         </div>
     </div>

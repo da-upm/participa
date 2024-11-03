@@ -59,3 +59,18 @@ module.exports.sendDraftApprovedMail = async (to, htmlBody) => {
 		throw new Error(`Error al enviar email: ${error.message}`);
 	}
 };
+
+module.exports.sendDraftRejectedMail = async (to, htmlBody) => {
+	const mailOptions = {
+		from: `Delegación de Alumnos UPM <${config.email.user}>`,
+		to,
+		subject: 'Tu propuesta ha sido rechazada',
+		html: htmlBody,
+		bcc: 'da.elecciones@upm.es',
+	};
+	try {
+		await smtpTransport.sendMail(mailOptions);
+	} catch (error) {
+		throw new Error(`Error al enviar email: ${error.message}`);
+	}
+};
