@@ -25,17 +25,23 @@
                         : 'Alto' ) : 'Desconocido' %>
                 </span>
             </p>
-            <p><strong>Candidatos que apoyan:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.candidatesSupporters?.map(c=> c) %>
+            <% if (proposal.candidatesSupporters && proposal.candidatesSupporters.length > 0) { %>
+                <p><strong>Candidaturas que apoyan:</strong> <span id="proposalSupportingCandidates">
+                    <%= proposal.candidatesSupporters.map(c => c).join(', ') %>
                 </span></p>
+            <% } %>
 
-                <p><strong>Colectivos que proponen:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.affiliations?.map(affiliationId => affiliations[affiliationId]).join(', ') %>
+            <% if (proposal.affiliations && proposal.affiliations.length > 0) { %>
+                <p><strong>Colectivos que proponen:</strong> <span id="proposalSupportingCandidates"></span>
+                    <%= proposal.affiliations.map(affiliationId => affiliations[affiliationId]).join(', ') %>
                 </span></p>
-        
+            <% } %>
+
+            <% if (proposal.centres && proposal.centres.length > 0) { %>
                 <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.centres?.map(c => centres[c]).join(', ') %>
+                    <%= proposal.centres.map(c => centres[c]).join(', ') %>
                 </span></p>
+            <% } %>
             
 
 

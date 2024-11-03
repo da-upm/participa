@@ -17,15 +17,17 @@
     </div>
 
     <!-- Botón para generar una nueva propuesta -->
-    <button type="button" id="generateNewProposal" class="btn btn-primary mb-4" 
-        hx-get="/api/admin/draft-form"
-        hx-trigger="click"
-        hx-include=".proposal-checkbox:checked"
-        hx-params="*"
-        hx-target="#proposalDraftModal"
-        hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show')">
-    Generar Nueva Propuesta
-</button>
+    <div class="d-flex justify-content-center">
+        <button type="button" id="generateNewProposal" class="btn btn-primary mb-4" 
+            hx-get="/api/admin/draft-form"
+            hx-trigger="click"
+            hx-include=".proposal-checkbox:checked"
+            hx-params="*"
+            hx-target="#proposalDraftModal"
+            hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show')">
+        Generar Nueva Propuesta
+        </button>
+    </div>
 
     <!-- Search and Filter Section -->
     <div class="mt-5">
