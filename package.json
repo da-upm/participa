@@ -1,5 +1,5 @@
 {
-  "name": "propuestas",
+  "name": "participa",
   "version": "1.0.0",
   "description": "Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector",
   "main": "main.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/da-upm/propuestas.git"
+    "url": "git+https://github.com/da-upm/participa.git"
   },
   "author": "Pablo Fernandez López y Alejandro Alonso López",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/da-upm/propuestas/issues"
+    "url": "https://github.com/da-upm/participa/issues"
   },
-  "homepage": "https://github.com/da-upm/propuestas#readme",
+  "homepage": "https://github.com/da-upm/participa#readme",
   "dependencies": {
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
