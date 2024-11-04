@@ -69,10 +69,15 @@ p,
 }
 
 @media (max-width: 767.98px) {
-    button, span.badge {
+    button {
         margin-top: 5px;
     }
 }
+
+span.badge {
+    margin-bottom: 5px;
+}
+
 
 /* admin-styles.css */
 
