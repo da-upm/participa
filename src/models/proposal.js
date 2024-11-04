@@ -71,7 +71,8 @@ proposalSchema.methods.getCentreList = async function () {
     const users = await mongoose.model('User').find({
         _id: { $in: this.usersDrafting }
     });
-    return [...new Set(users.map(user => user.centre))];
+    const centres = users.flatMap(user => user.centre);
+    return [...new Set(centres)];
 };
 
 module.exports = mongoose.model('Proposal', proposalSchema);
