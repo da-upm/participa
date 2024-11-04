@@ -68,6 +68,12 @@ p,
     display: none;
 }
 
+@media (max-width: 767.98px) {
+    button, span.badge {
+        margin-top: 5px;
+    }
+}
+
 /* admin-styles.css */
 
 /* Centrar y ajustar la apariencia de las checkboxes */
