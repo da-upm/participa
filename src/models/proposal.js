@@ -43,18 +43,29 @@ proposalSchema.methods.getSupportersCount = async function () {
     return count;
 };
 
-// Definir una función en el esquema para obtener el grado de apoyo de una propuesta en función de los usuarios que la apoyan con respecto al total de usuarios.
-// Se definirán los grados de apoyo "low", "medium" y "high" en función de los porcentajes 0-25, 25-50 y 50-100 respectivamente.
+// Definir una función en el esquema para obtener el grado de apoyo de una propuesta en función de un ranking de votos.
+// Las propuestas con el mayor número de votos estarán categorizadas como "high", las siguientes como "medium" y las restantes como "low".
 proposalSchema.methods.getSupport = async function () {
-    const totalUsers = await mongoose.model('User').countDocuments();
-    const supporters = await this.getSupportersCount();
-    const percentage = totalUsers === 0 ? 0 : (supporters / totalUsers) * 100;
-    if (percentage === 0 || percentage <= 25) {
-        return 'low';
-    } else if (percentage <= 50) {
+    const proposals = await mongoose.model('Proposal').find();
+    const proposalVotes = await Promise.all(proposals.map(async (proposal) => {
+        const supporters = await proposal.getSupportersCount();
+        return { proposalId: proposal._id, supporters };
+    }));
+
+    proposalVotes.sort((a, b) => b.supporters - a.supporters);
+
+    const totalProposals = proposalVotes.length;
+    const highThreshold = Math.ceil(totalProposals * 0.33);
+    const mediumThreshold = Math.ceil(totalProposals * 0.66);
+
+    const rank = proposalVotes.findIndex(p => p.proposalId.toString() === this._id.toString()) + 1;
+
+    if (rank <= highThreshold) {
+        return 'high';
+    } else if (rank <= mediumThreshold) {
         return 'medium';
     } else {
-        return 'high';
+        return 'low';
     }
 };
 
