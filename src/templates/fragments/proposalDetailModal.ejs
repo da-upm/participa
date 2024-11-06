@@ -20,7 +20,7 @@
             </p>
             <p><strong>Apoyo: </strong>
                 <span class="badge 
-                <%= proposal.support ? (proposal.support === 'low' ? 'bg-danger' : proposal.support === 'medium' ? 'bg-warning' : 'bg-success') : 'bg-secondary' %>">
+                <%= proposal.support ? (proposal.support === 'low' ? 'text-bg-danger' : proposal.support === 'medium' ? 'text-bg-warning' : 'bg-success') : 'text-bg-secondary' %>">
                     <%= proposal.support ? (proposal.support==='low' ? 'Bajo' : proposal.support==='medium' ? 'Medio'
                         : 'Alto' ) : 'Desconocido' %>
                 </span>
@@ -32,9 +32,21 @@
             <% } %>
 
             <% if (proposal.affiliations && proposal.affiliations.length > 0) { %>
-                <p><strong>Colectivos que proponen:</strong> <span id="proposalSupportingCandidates"></span>
-                    <%= proposal.affiliations.map(affiliationId => affiliations[affiliationId]).join(', ') %>
-                </span></p>
+                <p class="mt-2"><b>Colectivos que proponen:</b>
+                    <% 
+                        const uniqueAffiliations = [...new Set(proposal.affiliations)];
+                        uniqueAffiliations.forEach(affiliationId => { 
+                            let badgeClass = '';
+                            if (affiliationId === 'student') badgeClass = 'text-bg-orange';
+                            else if (affiliationId === 'pdi') badgeClass = 'text-bg-brown';
+                            else if (affiliationId === 'ptgas') badgeClass = 'text-bg-purple';
+                            const affiliation = affiliations[affiliationId];
+                    %>
+                        <span class="badge <%= badgeClass %>">
+                            <%= affiliation %>
+                        </span>
+                    <% }); %>
+                </p>
             <% } %>
 
             <% if (proposal.centres && proposal.centres.length > 0) { %>

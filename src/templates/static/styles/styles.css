@@ -72,12 +72,27 @@ p,
     button {
         margin-top: 5px;
     }
+
+    #categoriesSelector {
+        margin-top: .5rem !important;
+    }
 }
 
 span.badge {
     margin-bottom: 5px;
 }
 
+.text-bg-orange {
+    background-color: orangered;
+}
+
+.text-bg-brown {
+    background-color: brown;
+}
+
+.text-bg-purple {
+    background-color: purple;
+}
 
 /* admin-styles.css */
 

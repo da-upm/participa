@@ -11,18 +11,38 @@
                 <%= categories[categoryId] %>
             </span>
             <% }) %>
+                <p class="mt-2"><b>Colectivos que proponen:</b>
+                    <% 
+                        const uniqueAffiliations = [...new Set(proposal.affiliations)];
+                        uniqueAffiliations.forEach(affiliationId => { 
+                            let badgeClass = '';
+                            if (affiliationId === 'student') badgeClass = 'text-bg-orange';
+                            else if (affiliationId === 'pdi') badgeClass = 'text-bg-brown';
+                            else if (affiliationId === 'ptgas') badgeClass = 'text-bg-purple';
+                            const affiliation = affiliations[affiliationId];
+                    %>
+                        <span class="badge <%= badgeClass %>">
+                            <%= affiliation %>
+                        </span>
+                    <% }); %>
+                </p>
                 <p class="mt-2"><b>Apoyo:</b>
-                    <span class="badge 
-                        <%= proposal.support ? (proposal.support === 'low' ? 'bg-danger' : proposal.support === 'medium' ? 'bg-warning' : 'bg-success') : 'bg-secondary' %>">
-                        <%= proposal.support ? (proposal.support === 'low' ? 'Bajo' : proposal.support === 'medium' ? 'Medio' : 'Alto') : 'Desconocido' %>
+                    <span
+                        class="badge 
+                        <%= proposal.support ? (proposal.support === 'low' ? 'text-bg-danger' : proposal.support === 'medium' ? 'text-bg-warning' : 'bg-success') : 'text-bg-secondary' %>">
+                        <%= proposal.support ? (proposal.support==='low' ? 'Bajo' : proposal.support==='medium'
+                            ? 'Medio' : 'Alto' ) : 'Desconocido' %>
                     </span>
                 </p>
-                <% if (proposal.candidatesSupporters && proposal.candidatesSupporters.length > 0) { %>
-                    <p><b>Candidaturas que apoyan:</b> <%= proposal.candidatesSupporters %></p>
-                <% } %>
-                <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
-                    hx-target="#proposalDetailModal" hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
-                    más</button>
-                <%- include('supportButton') %>
+                <% if (proposal.candidatesSupporters && proposal.candidatesSupporters.length> 0) { %>
+                    <p><b>Candidaturas que apoyan:</b>
+                        <%= proposal.candidatesSupporters %>
+                    </p>
+                    <% } %>
+                        <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
+                            hx-target="#proposalDetailModal"
+                            hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
+                            más</button>
+                        <%- include('supportButton') %>
     </div>
 </div>

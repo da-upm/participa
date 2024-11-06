@@ -200,7 +200,7 @@ const sendProposalAsDraft = async (req, res, next) => {
 
         const newProposal = new Proposal(proposalData);
         newProposal.save();
-        req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente`);
+        req.toastr.success(`Propuesta "${newProposal.title}" enviada correctamente para su revisión.`, "Propuesta enviada");
         return res.status(200).render('fragments/toastr', { layout: false, req: req });
     } catch (error) {
         console.error('Error en proposal/sendProposalAsDraft: ' + error.message);
