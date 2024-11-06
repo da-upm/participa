@@ -28,7 +28,7 @@ const getProposals = async (req, res, next) => {
         }
 
         // Buscar todos los documentos, luego filtrar manualmente
-        const rawProposals = await Proposal.find(query);
+        const rawProposals = await Proposal.find(query).sort({ updatedAt: -1 });
 
         // Normalizar los títulos y descripciones antes de hacer la comparación
         const filteredProposals = rawProposals.filter(p => {

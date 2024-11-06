@@ -5,7 +5,7 @@ const helpers = require('../helpers');
 
 const getIndex = async (req, res, next) => {
     try {
-        const rawProposals = await Proposal.find({ isDraft: false });
+        const rawProposals = await Proposal.find({ isDraft: false }).sort({ updatedAt: -1 });
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
@@ -38,7 +38,7 @@ const getCandidates = async (req, res, next) => {
 
 const getAdmin = async (req, res, next) => {
     try {
-        const rawProposals = await Proposal.find({ isDraft: true });
+        const rawProposals = await Proposal.find({ isDraft: true }).sort({ updatedAt: -1 });
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
