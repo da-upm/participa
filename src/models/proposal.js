@@ -74,7 +74,8 @@ proposalSchema.methods.getAffiliationList = async function () {
     const users = await mongoose.model('User').find({
         _id: { $in: this.usersDrafting }
     });
-    return users.map(user => user.affiliation);
+    const affiliations = users.flatMap(user => user.affiliation);
+    return [...new Set(affiliations)];
 };
 
 // Definir una función en el esquema para obtener la lista de parámetros "centre" no repetidos de los usuarios en "usersDrafting".
