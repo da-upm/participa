@@ -1,7 +1,6 @@
 <select id="affiliationSelector" name="affiliations" class="selectpicker" multiple data-select-all-text="Seleccionar todo"
     data-deselect-all-text="Eliminar selección" data-selected-text-format="count > 2" data-style="form-control"
     data-actions-box="true" data-live-search="true" data-width="100%" title="Selecciona uno o varios colectivos">
-    <% console.log(affiliations) %>
     <% for (const [id, name] of Object.entries(affiliations)) { %>
         <option value="<%= id %>"
             <%= typeof draftProposals !== 'undefined' && draftProposals.some((proposal) => proposal.affiliations.includes(id)) ? 'selected' : '' %>>

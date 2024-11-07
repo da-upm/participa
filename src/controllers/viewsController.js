@@ -17,8 +17,10 @@ const getIndex = async (req, res, next) => {
                 };
             })
         );*/
+
+        const publishedProposals = await Proposal.countDocuments({ isDraft: false });
                 
-        res.status(200).render('index', { page:'index' })
+        res.status(200).render('index', { page:'index', publishedProposals });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
