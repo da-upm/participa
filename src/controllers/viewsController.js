@@ -56,8 +56,7 @@ const getAdmin = async (req, res, next) => {
     }}
 
 // Función para obtener las estadísticas: número total de usuarios, número total de propuestas, número de propuestas borrador, número de propuestas publicadas, propuesta con más apoyos, número máximo de apoyos, número medio de apoyos, número de propuestas por centro, número de propuestas por afiliación.
-
-const getStats = async (req, res, next) => {
+const getStats = async (_, res) => {
     try {
         const totalUsers = await User.countDocuments();
         const totalProposals = await Proposal.countDocuments();
@@ -65,24 +64,40 @@ const getStats = async (req, res, next) => {
         const publishedProposals = await Proposal.countDocuments({ isDraft: false });
 
         const proposals = await Proposal.find();
-        const proposalWithMostSupport = proposals.reduce((max, proposal) => proposal.supporters > max.supporters ? proposal : max, proposals[0]);
+        const proposalWithMostSupport = proposals.length ? await proposals.reduce(async (maxPromise, proposal) => {
+            const max = await maxPromise;
+            const supporters = await proposal.getSupportersCount();
+            return supporters > max.supporters ? { proposal, supporters } : max;
+        }, Promise.resolve({ proposal: proposals[0], supporters: await proposals[0].getSupportersCount() })) : null;
         const maxSupport = proposalWithMostSupport ? proposalWithMostSupport.supporters : 0;
-        const averageSupport = proposals.length ? proposals.reduce((sum, proposal) => sum + proposal.supporters, 0) / proposals.length : 0;
+        const averageSupport = proposals.length ? (await Promise.all(proposals.map(p => p.getSupportersCount()))).reduce((sum, supporters) => sum + supporters, 0) / proposals.length : 0;
 
-        const proposalsByCentre = await Proposal.aggregate([
-            { $group: { _id: "$centre", count: { $sum: 1 } } }
-        ]);
+        // proposalsByCentre es un objecto que contiene un mapa de los centros y el número total de propuestas que han sido creadas por cada centro.
+        const proposalsByCentre = await proposals.reduce(async (accPromise, proposal) => {
+            const acc = await accPromise;
+            const centres = await proposal.getCentreList();
+            centres.forEach(centre => {
+                acc[centre] = acc[centre] ? acc[centre] + 1 : 1;
+            });
+            return acc;
+        }, Promise.resolve({}));
 
-        const proposalsByAffiliation = await Proposal.aggregate([
-            { $group: { _id: "$affiliation", count: { $sum: 1 } } }
-        ]);
+        // proposalsByAffiliation es un objecto que contiene un mapa de las afiliaciones y el número total de propuestas que han sido creadas por cada afiliación.
+        const proposalsByAffiliation = await proposals.reduce(async (accPromise, proposal) => {
+            const acc = await accPromise;
+            const affiliations = await proposal.getAffiliationList();
+            affiliations.forEach(affiliation => {
+                acc[affiliation] = acc[affiliation] ? acc[affiliation] + 1 : 1;
+            });
+            return acc;
+        }, Promise.resolve({}));
 
         res.status(200).render('stats', {
             totalUsers,
             totalProposals,
             draftProposals,
             publishedProposals,
-            proposalWithMostSupport,
+            proposalWithMostSupport: proposalWithMostSupport ? proposalWithMostSupport.proposal : null,
             maxSupport,
             averageSupport,
             proposalsByCentre,

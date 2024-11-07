@@ -17,50 +17,66 @@
             <tbody>
                 <tr>
                     <td>Número total de usuarios</td>
-                    <td><%= totalUsers %></td>
+                    <td>
+                        <%= totalUsers %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número total de propuestas</td>
-                    <td><%= totalProposals %></td>
+                    <td>
+                        <%= totalProposals %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número de propuestas borrador</td>
-                    <td><%= draftProposals %></td>
+                    <td>
+                        <%= draftProposals %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número de propuestas publicadas</td>
-                    <td><%= publishedProposals %></td>
+                    <td>
+                        <%= publishedProposals %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Propuesta con más apoyos</td>
-                    <td><%= proposalWithMostSupport ? proposalWithMostSupport.title : 'N/A' %></td>
+                    <td>
+                        <%= proposalWithMostSupport ? proposalWithMostSupport.title : 'N/A' %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número máximo de apoyos</td>
-                    <td><%= maxSupport %></td>
+                    <td>
+                        <%= maxSupport %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número medio de apoyos</td>
-                    <td><%= averageSupport.toFixed(2) %></td>
+                    <td>
+                        <%= averageSupport.toFixed(2) %>
+                    </td>
                 </tr>
                 <tr>
                     <td>Número de propuestas por centro</td>
                     <td>
-                        <ul>
-                            <% proposalsByCentre.forEach(centre => { %>
-                                <li><%= centre._id %>: <%= centre.count %></li>
+                        <% Object.keys(proposalsByCentre).forEach(centreId=> { %>
+                            <span>
+                                <%= centres[centreId] %>: <%= proposalsByCentre[centreId] %>
+                            </span>
+                            <br>
                             <% }) %>
-                        </ul>
                     </td>
                 </tr>
                 <tr>
                     <td>Número de propuestas por afiliación</td>
                     <td>
-                        <ul>
-                            <% proposalsByAffiliation.forEach(affiliation => { %>
-                                <li><%= affiliation._id %>: <%= affiliation.count %></li>
+                        <% Object.keys(proposalsByAffiliation).forEach(affiliationId=> { %>
+                            <span>
+                                <%= affiliations[affiliationId] %>: <%= proposalsByAffiliation[affiliationId] %>
+                            </span>
+                            <br>
                             <% }) %>
-                        </ul>
                     </td>
                 </tr>
             </tbody>

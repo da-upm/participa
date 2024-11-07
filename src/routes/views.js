@@ -11,7 +11,7 @@ router.get('/error', (req, res, next) => res.status(500).render('error'));
 
 
 router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAdmin);
-router.get('/admin/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);
+router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);
 
 
 module.exports = router;
