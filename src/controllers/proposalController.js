@@ -100,7 +100,8 @@ const addSupporter = async (req, res, next) => {
         const proposal = {
             ...rawProposal.toObject(),
             supporters: await rawProposal.getSupportersCount(),
-            support: await rawProposal.getSupport()
+            support: await rawProposal.getSupport(),
+            affiliations: await rawProposal.getAffiliationList()
         }
         
         res.locals.user = req.session.user;
