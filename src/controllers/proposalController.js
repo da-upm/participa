@@ -11,12 +11,13 @@ const helpers = require('../helpers');
 const getProposals = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
+        const affiliations = await helpers.retrieveAffiliations();
 
         const searchQuery = helpers.normalizeString(req.query.search || '');
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
         const affiliationsQuery = Array.isArray(req.query.affiliations) ? req.query.affiliations : [req.query.affiliations];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
-        const filteredAffiliations = affiliationsQuery.filter(affiliation => categories.hasOwnProperty(affiliation));
+        const filteredAffiliations = affiliationsQuery.filter(affiliation => affiliations.hasOwnProperty(affiliation));
         
         // Construir la consulta
         const query = {
@@ -29,6 +30,7 @@ const getProposals = async (req, res, next) => {
         }
 
         // Si hay afiliaciones en filteredAffiliations, agregarlas a la consulta.
+        console.log("filteredAffiliations", filteredAffiliations);
         if (filteredAffiliations.length > 0) {
             query.usersDrafting = { $in: await User.find({ affiliation: { $in: filteredAffiliations } }).distinct('_id') };
         }
