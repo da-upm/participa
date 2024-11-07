@@ -19,6 +19,7 @@
                             if (affiliationId === 'student') badgeClass = 'text-bg-orange';
                             else if (affiliationId === 'pdi') badgeClass = 'text-bg-brown';
                             else if (affiliationId === 'ptgas') badgeClass = 'text-bg-purple';
+                            else if (affiliationId === 'none') badgeClass = 'text-bg-secondary';
                             const affiliation = affiliations[affiliationId];
                     %>
                         <span class="badge <%= badgeClass %>">
