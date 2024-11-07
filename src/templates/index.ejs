@@ -23,7 +23,7 @@
         <form hx-get="/api/proposals"
             hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
             hx-target="#proposalsContainer" hx-params="*" hx-indicator="#searchIndicator" onkeydown="if (event.keyCode === 13) event.preventDefault();">
-            <%- include('fragments/searchAndFilterSection', { categories }) %>
+            <%- include('fragments/searchAndFilterSection', { categories, affiliations }) %>
         </form>
     </div>
 
