@@ -1,0 +1,69 @@
+<div class="container mt-5">
+    <!-- Header Section -->
+    <div class="text-center">
+        <h1>Estadísticas del Sistema</h1>
+        <p class="lead">Resumen de las estadísticas actuales de las propuestas y usuarios.</p>
+    </div>
+
+    <!-- Statistics Table -->
+    <div class="table-responsive mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Estadística</th>
+                    <th scope="col">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Número total de usuarios</td>
+                    <td><%= totalUsers %></td>
+                </tr>
+                <tr>
+                    <td>Número total de propuestas</td>
+                    <td><%= totalProposals %></td>
+                </tr>
+                <tr>
+                    <td>Número de propuestas borrador</td>
+                    <td><%= draftProposals %></td>
+                </tr>
+                <tr>
+                    <td>Número de propuestas publicadas</td>
+                    <td><%= publishedProposals %></td>
+                </tr>
+                <tr>
+                    <td>Propuesta con más apoyos</td>
+                    <td><%= proposalWithMostSupport ? proposalWithMostSupport.title : 'N/A' %></td>
+                </tr>
+                <tr>
+                    <td>Número máximo de apoyos</td>
+                    <td><%= maxSupport %></td>
+                </tr>
+                <tr>
+                    <td>Número medio de apoyos</td>
+                    <td><%= averageSupport.toFixed(2) %></td>
+                </tr>
+                <tr>
+                    <td>Número de propuestas por centro</td>
+                    <td>
+                        <ul>
+                            <% proposalsByCentre.forEach(centre => { %>
+                                <li><%= centre._id %>: <%= centre.count %></li>
+                            <% }) %>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Número de propuestas por afiliación</td>
+                    <td>
+                        <ul>
+                            <% proposalsByAffiliation.forEach(affiliation => { %>
+                                <li><%= affiliation._id %>: <%= affiliation.count %></li>
+                            <% }) %>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
