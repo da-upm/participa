@@ -30,7 +30,7 @@ const getProposals = async (req, res, next) => {
 
         // Si hay afiliaciones en filteredAffiliations, agregarlas a la consulta.
         if (filteredAffiliations.length > 0) {
-            query.usersDrafting = { $in: await User.find({ affiliations: { $in: filteredAffiliations } }).distinct('_id') };
+            query.usersDrafting = { $in: await User.find({ affiliation: { $in: filteredAffiliations } }).distinct('_id') };
         }
 
         // Buscar todos los documentos, luego filtrar manualmente
