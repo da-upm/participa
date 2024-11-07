@@ -35,7 +35,6 @@
     </div>
 
     <!-- Proposals Section -->
-    <div id="proposalsContainer" class="row gy-4 mb-5">
-        <%- include('fragments/proposalCards', { proposals, categories }) %>
+    <div id="proposalsContainer" class="row gy-4 mb-5" hx-get="/api/proposals" hx-trigger="load" hx-indicator="#searchIndicator">
     </div>
 </div>

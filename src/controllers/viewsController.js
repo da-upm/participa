@@ -5,8 +5,8 @@ const helpers = require('../helpers');
 
 const getIndex = async (req, res, next) => {
     try {
-        const rawProposals = await Proposal.find({ isDraft: false }).sort({ updatedAt: -1 });
-        const proposals = await Promise.all(
+        //const rawProposals = await Proposal.find({ isDraft: false }).sort({ updatedAt: -1 });
+        /*const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
                     ...p.toObject(),
@@ -16,9 +16,9 @@ const getIndex = async (req, res, next) => {
                     centres: await p.getCentreList()
                 };
             })
-        );
+        );*/
                 
-        res.status(200).render('index', { proposals, page:'index' })
+        res.status(200).render('index', { page:'index' })
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
