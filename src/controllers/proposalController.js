@@ -14,7 +14,9 @@ const getProposals = async (req, res, next) => {
 
         const searchQuery = helpers.normalizeString(req.query.search || '');
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
+        const affiliationsQuery = Array.isArray(req.query.affiliations) ? req.query.affiliations : [req.query.affiliations];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
+        const filteredAffiliations = affiliationsQuery.filter(affiliation => categories.hasOwnProperty(affiliation));
         
         // Construir la consulta
         const query = {
@@ -24,6 +26,11 @@ const getProposals = async (req, res, next) => {
         // Si hay categorías en filteredCategories, agregarlas a la consulta
         if (filteredCategories.length > 0) {
             query.categories = { $in: filteredCategories };
+        }
+
+        // Si hay afiliaciones en filteredAffiliations, agregarlas a la consulta
+        if (filteredAffiliations.length > 0) {
+            query.affiliations = { $in: filteredAffiliations };
         }
 
         // Buscar todos los documentos, luego filtrar manualmente
