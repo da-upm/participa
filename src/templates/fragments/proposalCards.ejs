@@ -1,17 +1,18 @@
-<% if (proposals.length===0) { %>
+<% if (proposals.length === 0) { %>
     <div class="col-12 text-center">
         <h3>No hay propuestas que coincidan con los criterios de búsqueda.</h3>
     </div>
-    <% } else { %>
-        <% proposals.forEach((proposal, index)=> { %>
-            <% if (index===proposals.length - 1 && !lastPage) { %>
-                <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6"
-                    hx-get="/api/proposals?page=<%- page + 1 %>" hx-trigger="revealed" hx-target="#proposalsContainer"
-                    hx-swap="beforeend" hx-indicator="#searchIndicator">
-                    <% } else { %>
-                        <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
-                            <% } %>
-                                <%- include('proposalCard', { proposal, categories }) %>
-                        </div>
-                        <% }) %>
-                            <% } %>
+<% } else { %>
+    <% proposals.forEach((proposal, index) => { %>
+        <% if (index === proposals.length - 1 && !lastPage) { %>
+            <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6"
+                hx-get="/api/proposals?page=<%- page + 1 %>&search=<%- searchQuery %>&categories=<%- selectedCategories.join(',') %>&affiliations=<%- selectedAffiliations.join(',') %>" 
+                hx-trigger="revealed" hx-target="#proposalsContainer"
+                hx-swap="beforeend" hx-indicator="#searchIndicator">
+        <% } else { %>
+            <div id="proposal-card-<%= proposal._id.toString() %>" class="col-lg-4 col-md-6">
+        <% } %>
+                <%- include('proposalCard', { proposal, categories }) %>
+            </div>
+    <% }) %>
+<% } %>

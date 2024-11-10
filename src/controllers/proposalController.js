@@ -72,7 +72,17 @@ const getProposals = async (req, res, next) => {
         const totalPages = Math.ceil(totalProposals / limit);
         const lastPage = page * limit >= totalProposals;
         
-        res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories, page, lastPage, totalPages });
+        res.status(200).render('fragments/proposalCards', { 
+            layout: false, 
+            proposals, 
+            categories, 
+            page, 
+            lastPage, 
+            totalPages, 
+            searchQuery: req.query.search || '', 
+            selectedCategories: categoriesQuery, 
+            selectedAffiliations: affiliationsQuery 
+        });
     } catch (error) {
         console.error("Error en proposals/getProposals:", error);
         return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
