@@ -30,7 +30,6 @@ const getProposals = async (req, res, next) => {
         }
 
         // Si hay afiliaciones en filteredAffiliations, agregarlas a la consulta.
-        console.log("filteredAffiliations", filteredAffiliations);
         if (filteredAffiliations.length > 0) {
             query.usersDrafting = { $in: await User.find({ affiliation: { $in: filteredAffiliations } }).distinct('_id') };
         }
@@ -57,7 +56,8 @@ const getProposals = async (req, res, next) => {
                     supporters: await p.getSupportersCount(),
                     support: await p.getSupport(),
                     affiliations: await p.getAffiliationList(),
-                    centres: await p.getCentreList()
+                    centres: await p.getCentreList(),
+                    candidatesSupporters: await p.getCandidatesSupporters()
                 };
             })
         );
@@ -76,6 +76,7 @@ const getProposal = async (req, res, next) => {
         proposal.support = await proposal.getSupport();
         proposal.affiliations = await proposal.getAffiliationList();
         proposal.centres = await proposal.getCentreList();
+        proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
 
         res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
     } catch (error) {
@@ -110,7 +111,8 @@ const addSupporter = async (req, res, next) => {
             ...rawProposal.toObject(),
             supporters: await rawProposal.getSupportersCount(),
             support: await rawProposal.getSupport(),
-            affiliations: await rawProposal.getAffiliationList()
+            affiliations: await rawProposal.getAffiliationList(),
+            candidatesSupporters: await rawProposal.getCandidatesSupporters()
         }
         
         res.locals.user = req.session.user;
@@ -147,7 +149,8 @@ const removeSupporter = async (req, res, next) => {
         const proposal = {
             ...rawProposal.toObject(),
             supporters: await rawProposal.getSupportersCount(),
-            support: await rawProposal.getSupport()
+            support: await rawProposal.getSupport(),
+            candidatesSupporters: await rawProposal.getCandidatesSupporters()
         }
         
         res.locals.user = req.session.user;

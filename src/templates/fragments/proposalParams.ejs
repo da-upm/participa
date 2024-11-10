@@ -1,0 +1,46 @@
+<% if (proposal.affiliations && proposal.affiliations.length > 0) { %>
+    <p class="mt-2"><b>Colectivos que proponen:</b>
+        <% 
+            const uniqueAffiliations = [...new Set(proposal.affiliations)];
+            uniqueAffiliations.forEach(affiliationId => { 
+                let badgeClass = '';
+                if (affiliationId === 'student') badgeClass = 'text-bg-orange';
+                else if (affiliationId === 'pdi') badgeClass = 'text-bg-brown';
+                else if (affiliationId === 'ptgas') badgeClass = 'text-bg-purple';
+                const affiliation = affiliations[affiliationId];
+        %>
+            <span class="badge <%= badgeClass %>">
+                <%= affiliation %>
+            </span>
+        <% }); %>
+    </p>
+<% } %>
+
+<p><strong>Apoyo: </strong>
+    <span class="badge 
+    <%= proposal.support ? (proposal.support === 'low' ? 'text-bg-danger' : proposal.support === 'medium' ? 'text-bg-warning' : 'bg-success') : 'text-bg-secondary' %>">
+        <%= proposal.support ? (proposal.support==='low' ? 'Bajo' : proposal.support==='medium' ? 'Medio'
+            : 'Alto' ) : 'Desconocido' %>
+    </span>
+</p>
+
+<% if (proposal.candidatesSupporters && proposal.candidatesSupporters.length> 0) { %>
+        <p>
+            <span data-bs-toggle="tooltip" title="El orden de aparición de candidaturas se basa en la ordenación alfabética de las direcciones institucionales." style="cursor: pointer;">
+                <i class="bi bi-info-circle-fill"></i>
+            </span>
+        <b>Candidaturas que apoyan:</b>
+        
+        <% 
+            const candidateNames = proposal.candidatesSupporters
+                .map(candidateId => candidates[candidateId])
+                .sort((a, b) => a.localeCompare(b))
+                .join(', '); 
+        %>
+        <%= candidateNames %>
+        </p>
+        <% } %>
+
+<script type="text/javascript">
+    initTooltips();
+</script>

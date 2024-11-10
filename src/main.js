@@ -148,6 +148,13 @@ app.use(async (req, res, next) => {
 	next();
 });
 
+// Middleware to send to res.locals the candidates from helpers.retrieveCandidates
+app.use(async (req, res, next) => {
+	const candidates = await helpers.retrieveCandidates();
+	res.locals.candidates = candidates;
+	next();
+});
+
 // Login routes.
 app.get('/login', passport.authenticate('oidc', { scope: config.sso.scope }));
 

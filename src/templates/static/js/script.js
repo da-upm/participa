@@ -1,3 +1,5 @@
+const { init } = require("passport");
+
 $(document).ready(() => {
   toastr.options = {
     "closeButton": true,
@@ -12,4 +14,12 @@ $(document).ready(() => {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
   }
+  
+  initTooltips();
 });
+
+// Function to initialize tooltips
+function initTooltips() {
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+}

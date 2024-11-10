@@ -18,44 +18,14 @@
             <p id="proposalDescription">
                 <%- proposal.description %>
             </p>
-            <p><strong>Apoyo: </strong>
-                <span class="badge 
-                <%= proposal.support ? (proposal.support === 'low' ? 'text-bg-danger' : proposal.support === 'medium' ? 'text-bg-warning' : 'bg-success') : 'text-bg-secondary' %>">
-                    <%= proposal.support ? (proposal.support==='low' ? 'Bajo' : proposal.support==='medium' ? 'Medio'
-                        : 'Alto' ) : 'Desconocido' %>
-                </span>
-            </p>
-            <% if (proposal.candidatesSupporters && proposal.candidatesSupporters.length > 0) { %>
-                <p><strong>Candidaturas que apoyan:</strong> <span id="proposalSupportingCandidates">
-                    <%= proposal.candidatesSupporters.map(c => c).join(', ') %>
-                </span></p>
-            <% } %>
-
-            <% if (proposal.affiliations && proposal.affiliations.length > 0) { %>
-                <p class="mt-2"><b>Colectivos que proponen:</b>
-                    <% 
-                        const uniqueAffiliations = [...new Set(proposal.affiliations)];
-                        uniqueAffiliations.forEach(affiliationId => { 
-                            let badgeClass = '';
-                            if (affiliationId === 'student') badgeClass = 'text-bg-orange';
-                            else if (affiliationId === 'pdi') badgeClass = 'text-bg-brown';
-                            else if (affiliationId === 'ptgas') badgeClass = 'text-bg-purple';
-                            const affiliation = affiliations[affiliationId];
-                    %>
-                        <span class="badge <%= badgeClass %>">
-                            <%= affiliation %>
-                        </span>
-                    <% }); %>
-                </p>
-            <% } %>
-
+        
             <% if (proposal.centres && proposal.centres.length > 0) { %>
-                <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
+                <p><strong>Escuelas desde las que se propone:</strong> <span id="proposingCentres">
                     <%= proposal.centres.map(c => centres[c]).join(', ') %>
                 </span></p>
             <% } %>
-            
 
+            <%- include('proposalParams', {proposal}) %>
 
             <div class="text-center justify-content-center">
                 <%- include('supportButton') %>
