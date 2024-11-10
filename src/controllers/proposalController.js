@@ -34,8 +34,13 @@ const getProposals = async (req, res, next) => {
             query.usersDrafting = { $in: await User.find({ affiliation: { $in: filteredAffiliations } }).distinct('_id') };
         }
 
+        // Paginación
+        const page = parseInt(req.query.page) || 1;
+        const limit = 9;
+        const skip = (page - 1) * limit;
+
         // Buscar todos los documentos, luego filtrar manualmente
-        const rawProposals = await Proposal.find(query).sort({ updatedAt: -1 });
+        const rawProposals = await Proposal.find(query).sort({ updatedAt: -1 }).skip(skip).limit(limit);
 
         // Normalizar los títulos y descripciones antes de hacer la comparación
         const filteredProposals = rawProposals.filter(p => {
@@ -61,8 +66,13 @@ const getProposals = async (req, res, next) => {
                 };
             })
         );
+
+        // Verificar si es la última página
+        const totalProposals = await Proposal.countDocuments(query);
+        const totalPages = Math.ceil(totalProposals / limit);
+        const lastPage = page * limit >= totalProposals;
         
-        res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories });
+        res.status(200).render('fragments/proposalCards', { layout: false, proposals, categories, page, lastPage, totalPages });
     } catch (error) {
         console.error("Error en proposals/getProposals:", error);
         return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));

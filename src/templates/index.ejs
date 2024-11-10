@@ -22,23 +22,25 @@
     <div class="mt-5">
         <form hx-get="/api/proposals"
             hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
-            hx-target="#proposalsContainer" hx-params="*" hx-indicator="#searchIndicator" onkeydown="if (event.keyCode === 13) event.preventDefault();">
+            hx-target="#proposalsContainer" hx-params="*" hx-indicator="#searchIndicator"
+            onkeydown="if (event.keyCode === 13) event.preventDefault();">
             <%- include('fragments/searchAndFilterSection', { categories, affiliations }) %>
         </form>
+    </div>
+
+    <!-- Proposals Section -->
+    <div id="proposalsContainer" class="row gy-4 mb-5" hx-get="/api/proposals" hx-trigger="load"
+        hx-indicator="#searchIndicator">
     </div>
 
     <!-- Search indicator -->
     <div class="d-flex justify-content-center text-center">
         <div id="searchIndicator">
-            <h5>Recuperando <%= publishedProposals %> propuestas...</h5>
+            <h5>Recuperando propuestas...</h5>
             <br>
             <div class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
-    </div>
-
-    <!-- Proposals Section -->
-    <div id="proposalsContainer" class="row gy-4 mb-5" hx-get="/api/proposals" hx-trigger="load" hx-indicator="#searchIndicator">
     </div>
 </div>
