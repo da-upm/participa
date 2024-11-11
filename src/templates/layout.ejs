@@ -165,24 +165,10 @@
         });
 
         document.getElementById("scrollToTopBtn").addEventListener("click", function() {
-            document.documentElement.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-        });
-    </script>
-    
-    <script>
-        document.addEventListener("scroll", function() {
-            var scrollToTopBtn = document.getElementById("scrollToTopBtn");
-            if (document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.style.display = "block";
-            } else {
-                scrollToTopBtn.style.display = "none";
+            var tooltip = bootstrap.Tooltip.getInstance(this);
+            if (tooltip) {
+                tooltip.hide();
             }
-        });
-    
-        document.getElementById("scrollToTopBtn").addEventListener("click", function() {
             document.documentElement.scrollTo({
                 top: 0,
                 behavior: "smooth"
