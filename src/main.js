@@ -21,6 +21,7 @@ const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
 const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
+const questionRouter = require('./routes/question');
 
 const loginController = require('./controllers/loginController');
 
@@ -181,6 +182,7 @@ app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
 //app.use('/api/users', userRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/questions', questionRouter);
 
 app.use('*', (req, res, next) => {res.status(404).render('notFound')});
 

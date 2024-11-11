@@ -8,6 +8,7 @@ router.get('/process', viewsController.getProcess);
 router.get('/dates', viewsController.getDates);
 router.get('/candidates', viewsController.getCandidates);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
+router.get('/questions', middlewares.checkLogin, viewsController.getQuestions);
 
 
 router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAdmin);

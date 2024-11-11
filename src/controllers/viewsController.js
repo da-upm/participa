@@ -1,5 +1,6 @@
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
+const Question = require('../models/question');
 
 const helpers = require('../helpers');
 
@@ -38,9 +39,15 @@ const getCandidates = async (req, res, next) => {
     res.status(200).render('candidates', {page: 'candidates'})
 }
 
+const getQuestions = async (req, res, next) => {
+    const user = req.session.user;
+    res.render('questions');
+};
+
 const getAdmin = async (req, res, next) => {
     try {
         const rawProposals = await Proposal.find({ isDraft: true }).sort({ updatedAt: -1 });
+        const questions = await Question.find().sort({ timestamp: -1 });
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 return {
@@ -51,8 +58,10 @@ const getAdmin = async (req, res, next) => {
                 };
             })
         );
+
+        const affiliations = await helpers.retrieveAffiliations();
         
-        res.status(200).render('admin', { proposals })
+        res.status(200).render('admin', { proposals, questions, affiliations });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }}
@@ -116,5 +125,6 @@ module.exports = {
     getDates,
     getCandidates,
     getAdmin,
-    getStats
+    getStats,
+    getQuestions
 }

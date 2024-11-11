@@ -1,0 +1,11 @@
+<form hx-post="/api/questions" hx-ext="json-enc">
+    <div class="mb-3">
+        <label for="body" class="form-label" style="font-size: 1.25rem;">Pregunta:</label>
+        <textarea id="body" name="question" class="form-control" rows="4" required></textarea>
+    </div>
+    <input type="hidden" id="affiliation" name="affiliation" value="<%= user.affiliation %>">
+    <input type="hidden" id="timestamp" name="timestamp" value="<%= new Date().toISOString() %>">
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Enviar Pregunta</button>
+    </div>
+</form>

@@ -68,4 +68,93 @@
         </table>
     </div>
 
+    <br />
+    <br />
+
+
+    <div class="text-center">
+        <h1>Gestión de Preguntas</h1>
+    </div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="questions-tab" data-bs-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="true">Preguntas</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+            <div class="d-flex justify-content-end mb-2">
+                <button type="button" id="deleteSelectedQuestions" class="btn btn-danger d-none"
+                    hx-delete="/api/admin/questions"
+                    hx-include="[name='questionIds']:checked"
+                    hx-params="*"
+                    hx-confirm="¿Estás seguro de que deseas eliminar las preguntas seleccionadas?"
+                    hx-target="#adminQuestionsTableBody"
+                    hx-swap="innerHTML">
+                    Eliminar Seleccionadas
+                </button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"><input type="checkbox" class="form-check-input" id="select-all-questions"></th>
+                        <th scope="col">Pregunta</th>
+                        <th scope="col">Afiliación</th>
+                        <th scope="col">Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="adminQuestionsTableBody">
+                    <%- include('fragments/admin/questionRows', { questions, affiliations }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
+
+<script>
+    document.getElementById('select-all-questions').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.question-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        toggleDeleteButton();
+    });
+
+    document.querySelectorAll('.question-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', toggleDeleteButton);
+    });
+
+    function toggleDeleteButton() {
+        const anyChecked = document.querySelectorAll('.question-checkbox:checked').length > 0;
+        const deleteButton = document.getElementById('deleteSelectedQuestions');
+        if (anyChecked) {
+            deleteButton.classList.remove('d-none');
+        } else {
+            deleteButton.classList.add('d-none');
+        }
+    }
+
+    // Deseleccionar todos los checkboxes después de la actualización
+    document.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'adminQuestionsTableBody') {
+            document.getElementById('select-all-questions').checked = false;
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            toggleDeleteButton();
+        }
+    });
+
+    // Deseleccionar todos los checkboxes al cargar la página
+    window.addEventListener('load', function() {
+        document.getElementById('select-all-questions').checked = false;
+        const checkboxes = document.querySelectorAll('.question-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        toggleDeleteButton();
+    });
+</script>
