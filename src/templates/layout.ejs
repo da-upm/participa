@@ -138,6 +138,58 @@
         </div>
     </footer>
 
+    <button id="scrollToTopBtn" class="btn btn-daupm bg-daupm text-white rounded-circle" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000;" data-bs-toggle="tooltip" data-bs-placement="left" title="Volver arriba">
+        <i class="bi bi-caret-up-fill"></i>
+    </button>
+
+    <script>
+        document.addEventListener("scroll", function() {
+            var scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            var footer = document.querySelector("footer");
+            var footerRect = footer.getBoundingClientRect();
+            var windowHeight = window.innerHeight;
+
+            if (document.documentElement.scrollTop > 20) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+
+            if (footerRect.top < windowHeight) {
+                scrollToTopBtn.classList.remove("btn-daupm", "bg-daupm", "text-white");
+                scrollToTopBtn.classList.add("btn-light", "bg-light", "text-daupm");
+            } else {
+                scrollToTopBtn.classList.remove("btn-light", "bg-light", "text-daupm");
+                scrollToTopBtn.classList.add("btn-daupm", "bg-daupm", "text-white");
+            }
+        });
+
+        document.getElementById("scrollToTopBtn").addEventListener("click", function() {
+            document.documentElement.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("scroll", function() {
+            var scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            if (document.documentElement.scrollTop > 20) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        });
+    
+        document.getElementById("scrollToTopBtn").addEventListener("click", function() {
+            document.documentElement.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
@@ -148,5 +200,4 @@
         document.documentElement.style.setProperty('--footer-height', document.querySelector('footer').offsetHeight + 'px');
     </script>
 </body>
-
 </html>

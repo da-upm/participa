@@ -41,6 +41,10 @@ p,
     /* Using the color scheme of the reference site */
 }
 
+.text-daupm {
+    color: #00509B !important;
+}
+
 .modal-content {
     border-radius: 10px;
 }
