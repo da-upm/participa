@@ -1,0 +1,11 @@
+<td><input type="checkbox" class="form-check-input question-checkbox" name="questionIds" value="<%= question._id.toString() %>"></td>
+<td>
+    <%= question.question %>
+</td>
+<td class="affiliation-column">
+    <% console.log(question) %>
+    <%= affiliations[question.affiliation] %>
+</td>
+<td class="timestamp-column">
+    <%= question.timestamp.toLocaleDateString() %>
+</td>

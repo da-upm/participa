@@ -5,6 +5,7 @@ const { BadRequestError, NotFoundError, InternalServerError } = require('../erro
 
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
+const Question = require('../models/question');
 
 const helpers = require('../helpers');
 
@@ -13,7 +14,7 @@ const getProposals = async (req, res, next) => {
     try {
         const categories = await helpers.retrieveCategories();
 
-        const searchQuery = helpers.normalizeString(req.query.search  || '');
+        const searchQuery = helpers.normalizeString(req.query.search || '');
         const categoriesQuery = Array.isArray(req.query.categories) ? req.query.categories : [req.query.categories];
         const filteredCategories = categoriesQuery.filter(category => categories.hasOwnProperty(category));
 
@@ -133,10 +134,10 @@ const sendProposal = async (req, res, next) => {
         // Recopilar todas las versiones anteriores de las propuestas de borrador
         const olderVersions = draftProposals.reduce((versions, draft) => {
             if (draft.olderVersions && draft.olderVersions.length > 0) {
-            versions.push(...draft.olderVersions.map(version => {
-                const { olderVersions, ...rest } = version.toObject ? version.toObject() : version;
-                return rest;
-            }));
+                versions.push(...draft.olderVersions.map(version => {
+                    const { olderVersions, ...rest } = version.toObject ? version.toObject() : version;
+                    return rest;
+                }));
             }
             const { olderVersions, ...rest } = draft.toObject();
             versions.push(rest);
@@ -266,11 +267,30 @@ const rejectProposal = async (req, res, next) => {
     }
 }
 
+const deleteQuestions = async (req, res, next) => {
+    try {
+        const { questionIds } = req.query;
+        console.log(questionIds);
+        if (!questionIds || questionIds.length === 0) {
+            return next(new BadRequestError('No se han proporcionado IDs de preguntas para eliminar.'));
+        }
+        await Question.deleteMany({ _id: { $in: questionIds } });
+
+        // Recargar solo las filas de la tabla de preguntas después de la eliminación
+        const questions = await Question.find().sort({ timestamp: -1 });
+        res.status(200).render('fragments/admin/questionRows', { layout: false, questions });
+    } catch (error) {
+        console.error('Error en question/deleteQuestions: ' + error.message);
+        return next(new InternalServerError('Error al eliminar las preguntas.'));
+    }
+};
+
 module.exports = {
     getProposals,
     getProposal,
     getProposalForm,
     sendProposal,
     getRejectForm,
-    rejectProposal
-}
+    rejectProposal,
+    deleteQuestions,
+};

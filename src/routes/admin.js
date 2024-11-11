@@ -15,5 +15,6 @@ router.post('/proposals', adminController.sendProposal);
 router.get('/reject-form', adminController.getRejectForm);
 router.delete('/proposals/:id([a-f,0-9]{24})', adminController.rejectProposal);
 
+router.delete('/questions', adminController.deleteQuestions);
 
 module.exports = router;
