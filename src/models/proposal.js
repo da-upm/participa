@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const helpers = require('../helpers');
 
 const proposalSchema = new mongoose.Schema({
     title: {
@@ -90,10 +89,12 @@ proposalSchema.methods.getCentreList = async function () {
 
 // Definir una función en el esquema para obtener qué candidatos apoyan la propuesta.
 proposalSchema.methods.getCandidatesSupporters = async function () {
-    const candidates = await helpers.retrieveCandidates();
+    const candidates = await mongoose.model('Candidate').find();
+
+    const candidateUsernames = candidates.flatMap(candidate => [candidate.username, ...candidate.surrogateUsers]);
 
     const candidatesSupporters = (await mongoose.model('User').find({
-        username: { $in: Object.keys(candidates) },
+        username: { $in: candidateUsernames },
         supportedProposals: this._id
     }).select('username')).map(user => user.username);
 

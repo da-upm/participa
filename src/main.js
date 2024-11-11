@@ -25,6 +25,8 @@ const questionRouter = require('./routes/question');
 
 const loginController = require('./controllers/loginController');
 
+const Candidate = require('./models/candidate');
+
 const { globalErrorHandler } = require('./errors');
 
 const app = express();
@@ -151,7 +153,7 @@ app.use(async (req, res, next) => {
 
 // Middleware to send to res.locals the candidates from helpers.retrieveCandidates
 app.use(async (req, res, next) => {
-	const candidates = await helpers.retrieveCandidates();
+	const candidates = await Candidate.find();
 	res.locals.candidates = candidates;
 	next();
 });

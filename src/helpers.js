@@ -32,12 +32,6 @@ module.exports.retrieveCentres = async () => {
     return result.centres;
 }
 
-module.exports.retrieveCandidates = async () => {
-    const result = await Parameter.findOne({ candidates: { $exists: true } });
-    return result.candidates;
-}
-
-
 const smtpTransport = nodemailer.createTransport({
 	host: config.email.host,
 	port: config.email.port,

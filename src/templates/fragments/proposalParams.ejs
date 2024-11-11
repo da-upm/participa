@@ -32,10 +32,19 @@
         <b>Candidaturas que apoyan:</b>
         
         <% 
+            const uniqueCandidates = new Set();
             const candidateNames = proposal.candidatesSupporters
-                .sort((a, b) => a.localeCompare(b))
-                .map(candidateId => candidates[candidateId])
-                .join(', '); 
+            .sort((a, b) => a.localeCompare(b))
+            .map(candidateId => {
+                const candidate = candidates.find(c => c.username === candidateId || (c.surrogateUsers && c.surrogateUsers.includes(candidateId)));
+                if (candidate && !uniqueCandidates.has(candidate.username)) {
+                uniqueCandidates.add(candidate.username);
+                return candidate.name;
+                }
+                return '';
+            })
+            .filter(name => name !== '')
+            .join(', '); 
         %>
         <%= candidateNames %>
         </p>
