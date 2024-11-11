@@ -36,9 +36,10 @@ const addQuestion = async (req, res, next) => {
         const questionObject = new Question({ question, affiliation, timestamp });
         await questionObject.save();
 
-        res.status(201).render('fragments/questionForm', { page: 'fragments/questionForm', layout: false });
+        req.toastr.success('Pregunta enviada con éxito', 'Pregunta enviada')
+        res.status(200).render('fragments/toastr', { layout: false, req: req })
     } catch (error) {
-        console.error('Error en question/addQuestion: ' + error.message);
+        req.toastr.error("Ha ocurrido un error al enviar la pregunta.", "Error al enviar la pregunta");
         return next(new InternalServerError('Error al añadir la pregunta.'));
     }
 }

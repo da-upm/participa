@@ -1,4 +1,5 @@
-<form hx-post="/api/questions" hx-ext="json-enc">
+<form hx-post="/api/questions" hx-ext="json-enc" hx-target="#toastr-container"
+hx-on::after-request="if (event.detail.xhr.status === 200) { document.getElementById('body').value = '' }" >
     <div class="mb-3">
         <label for="body" class="form-label" style="font-size: 1.25rem;">Pregunta:</label>
         <textarea id="body" name="question" class="form-control" rows="4" required></textarea>
@@ -9,3 +10,5 @@
         <button type="submit" class="btn btn-primary">Enviar Pregunta</button>
     </div>
 </form>
+
+<script src="https://unpkg.com/htmx.org@2.0.3"></script>
