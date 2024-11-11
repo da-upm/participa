@@ -14,10 +14,11 @@
 
             <%- include('proposalParams', {proposal}) %>
 
-                        <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
-                            hx-target="#proposalDetailModal"
-                            hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
-                            más</button>
-                        <%- include('supportButton') %>
+            <button class="btn btn-link view-more" hx-get="/api/proposals/<%= proposal._id.toString() %>"
+                hx-target="#proposalDetailModal"
+                hx-swap="innerHTML"
+                hx-on::after-request="$('#proposalDetailModal').modal('show')">Ver
+                más</button>
+            <%- include('supportButton') %>
     </div>
 </div>
