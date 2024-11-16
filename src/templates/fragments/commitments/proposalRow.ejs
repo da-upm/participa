@@ -1,10 +1,10 @@
-<td><input type="checkbox" class="form-check-input proposal-checkbox" name="proposalIds" value=<%= proposal._id.toString() %> <%= proposal.selected ? 'checked' : '' %>></td>
+<td><input type="checkbox" class="form-check-input proposal-checkbox" name="proposalIds" value=<%= proposal._id.toString() %> <%= proposal.supported || proposal.commitment != null ? 'checked' : '' %>></td>
 <td>
     <%= proposal.title %>
 </td>
 <td class="commitment-column">
-Vacío
+<%- proposal.commitment || '-' %>
 <td class="actions-column">
     <button class="btn btn-link view-more" hx-get="/api/commitments/proposals/<%= proposal._id.toString() %>"
-        hx-target="#proposalDetailModal" hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDetailModal').modal('show')">Abrir</button>
+        hx-target="#proposalCommitmentModal" hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalCommitmentModal').modal('show')">Abrir</button>
 </td>

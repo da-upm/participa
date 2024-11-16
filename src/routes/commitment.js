@@ -7,7 +7,7 @@ router.use(middlewares.checkLogin);
 router.use(middlewares.checkCandidate);
 
 router.get('/proposals', commitmentController.getProposals);
-//router.get('/proposals/:id([a-f,0-9]{24})', commitmentController.getProposal);
+router.get('/proposals/:id([a-f,0-9]{24})', commitmentController.getProposal);
 
 //router.get('/draft-form', adminController.getProposalForm);
 //router.post('/proposals', adminController.sendProposal);

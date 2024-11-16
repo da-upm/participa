@@ -18,9 +18,9 @@ const getProposals = async (req, res, next) => {
         const proposals = await Promise.all(
             rawProposals.map(async (p) => {
                 const isSupported = user.supportedProposals.includes(p._id);
-                const hasCommitment = await Commitment.exists({ 
-                    proposalId: p._id, 
-                    candidateUsername: candidate.username 
+                const commitment = await Commitment.findOne({
+                    proposalId: p._id,
+                    candidateUsername: candidate.username
                 });
 
                 return {
@@ -30,7 +30,8 @@ const getProposals = async (req, res, next) => {
                     affiliations: await p.getAffiliationList(),
                     centres: await p.getCentreList(),
                     candidatesSupporters: await p.getCandidatesSupporters(),
-                    selected: isSupported || hasCommitment
+                    supported: isSupported,
+                    commitment: commitment ? commitment.content : null
                 };
             })
         );
@@ -39,16 +40,43 @@ const getProposals = async (req, res, next) => {
             const aSupported = user.supportedProposals.includes(a._id);
             const bSupported = user.supportedProposals.includes(b._id);
             if (aSupported !== bSupported) return bSupported - aSupported;
-            return b.selected - a.selected;
+            return b.supported - a.supported;
         });
 
         res.render('fragments/commitments/proposalRows', { layout: false, proposals: sortedProposals });
     } catch (error) {
         console.error(error);
-        return next(new InternalServerError("Se muere aquí"));
+        return next(new InternalServerError("Ha ocurrido un error al cargar las propuestas."));
     }
 };
 
+const getProposal = async (req, res, next) => {
+    try {
+        const user = req.session.user;
+        const candidate = req.session.candidate;
+
+
+        const proposal = await Proposal.findById(new ObjectId(req.params.id));
+        proposal.supporters = await proposal.getSupportersCount();
+        proposal.affiliations = await proposal.getAffiliationList();
+        proposal.centres = await proposal.getCentreList();
+        const commitment = await Commitment.findOne({
+            proposalId: proposal._id,
+            candidateUsername: candidate.username
+        });
+        proposal.support = await proposal.getSupport();
+        proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
+        proposal.supported = user.supportedProposals.includes(proposal._id);
+        proposal.commitment = commitment ? commitment.content : null;
+        
+        res.status(200).render('fragments/commitments/proposalCommitmentForm', { layout: false, proposal });
+    } catch (error) {
+        console.error("Error commitment/getProposals:", error);
+        return next(new InternalServerError("Ha ocurrido un error al recuperar la propuesta."));
+    }
+}
+
 module.exports = {
-    getProposals
+    getProposals,
+    getProposal
 };
