@@ -20,6 +20,7 @@ const helpers = require('./helpers');
 const viewsRouter = require('./routes/views');
 const proposalRouter = require('./routes/proposal');
 const userRouter = require('./routes/user');
+const commitmentRouter = require('./routes/commitment');
 const adminRouter = require('./routes/admin');
 const questionRouter = require('./routes/question');
 
@@ -183,6 +184,7 @@ app.use(function (req, res, next) {
 app.use('/', viewsRouter);
 app.use('/api/proposals', proposalRouter);
 //app.use('/api/users', userRouter);
+app.use('/api/commitments', commitmentRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/questions', questionRouter);
 

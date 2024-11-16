@@ -1,0 +1,54 @@
+<div class="container mt-5">
+
+    <!-- Header Section -->
+    <div class="text-center">
+        <h1>Gestión de compromisos</h1>
+        <p class="lead">Compromisos de la candidatura de <%= candidate.name %>.</p>
+    </div>
+
+    <!-- Proposal Details Modal -->
+    <div class="modal fade" id="proposalDetailModal" tabindex="-1" aria-labelledby="proposalDetailModalLabel"
+        aria-hidden="true">
+    </div>
+
+    <!-- Proposal Draft Modal -->
+    <div class="modal fade" id="proposalDraftModal" tabindex="-1" aria-labelledby="proposalDraftModalLabel"
+        aria-hidden="true">
+    </div>
+
+    <!-- Botón para generar una nueva propuesta -->
+    <div class="d-flex justify-content-center">
+        <button type="button" id="generateNewProposal" class="btn btn-primary mb-4" hx-get="/api/admin/draft-form"
+            hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#proposalDraftModal"
+            hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show')">
+            Firmar compromisos
+        </button>
+    </div>
+
+    <!-- Tabla de propuestas -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Marcar</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Compromiso</th>
+                    <th scope="col">Definir compromiso</th>
+                </tr>
+            </thead>
+            <tbody id="commitmentsTableBody" hx-get="/api/commitments/proposals" hx-trigger="load" hx-indicator="#searchIndicator">
+
+                <!-- Search indicator -->
+                <div class="d-flex justify-content-center text-center mb-5">
+                    <div id="searchIndicator">
+                        <h5>Recuperando propuestas...</h5>
+                        <br>
+                        <div class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </tbody>
+        </table>
+    </div>
+</div>

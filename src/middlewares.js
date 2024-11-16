@@ -1,5 +1,6 @@
 const { UnauthorizedError, LimitedUserError, InternalServerError } = require('./errors');
 const User = require('./models/user');
+const Candidates = require('./models/candidate');
 
 function checkLogin(req, res, next) {
     if (!req.session.user?._id) return next(new UnauthorizedError());
@@ -42,4 +43,18 @@ module.exports.checkLogin = (
 module.exports.restrictAdmins = (req, res, next) => {
     if (!req.session.user.isAdmin) return next(new LimitedUserError());
     return next();
+};
+
+// Checks if the user is a candidate by checking their username against the usernames in list of candidates or their surrogateUsers array.
+module.exports.checkCandidate = (req, res, next) => {
+    Candidates.findOne({ $or: [{ username: req.session.userInfo.preferred_username }, { surrogateUsers: req.session.userInfo.preferred_username }] })
+        .then((candidate) => {
+            if (!candidate) return next(new LimitedUserError());
+            req.session.candidate = candidate;
+            return next();
+        })
+        .catch((err) => {
+            console.error(err);
+            return next(new InternalServerError('Ha ocurrido un error recuperando el candidato.'));
+        });
 };

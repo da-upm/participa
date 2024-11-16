@@ -6,19 +6,6 @@ const helpers = require('../helpers');
 
 const getIndex = async (req, res, next) => {
     try {
-        //const rawProposals = await Proposal.find({ isDraft: false }).sort({ updatedAt: -1 });
-        /*const proposals = await Promise.all(
-            rawProposals.map(async (p) => {
-                return {
-                    ...p.toObject(),
-                    supporters: await p.getSupportersCount(),
-                    support: await p.getSupport(),
-                    affiliations: await p.getAffiliationList(),
-                    centres: await p.getCentreList()
-                };
-            })
-        );*/
-
         const publishedProposals = await Proposal.countDocuments({ isDraft: false });
                 
         res.status(200).render('index', { page:'index', publishedProposals });
@@ -43,6 +30,13 @@ const getQuestions = async (req, res, next) => {
     const user = req.session.user;
     res.render('questions');
 };
+
+const getCommitments = async (req, res, next) => {
+    const user = req.session.user;
+    const candidate = req.session.candidate;
+
+    res.status(200).render('commitments', { user, candidate })
+}
 
 const getAdmin = async (req, res, next) => {
     try {
@@ -124,6 +118,7 @@ module.exports = {
     getProcess,
     getDates,
     getCandidates,
+    getCommitments,
     getAdmin,
     getStats,
     getQuestions
