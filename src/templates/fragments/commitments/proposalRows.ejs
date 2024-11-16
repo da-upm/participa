@@ -1,0 +1,10 @@
+<% proposals.forEach((proposal)=> { %>
+    <tr id="proposal-row-<%= proposal._id.toString() %>">
+        <%- include('proposalRow', { proposal, categories }) %>
+    </tr>
+<% }) %>
+<% if (proposals.length === 0) { %>
+    <tr>
+        <td colspan="100%"><h4>No hay borradores que coincidan con los criterios de búsqueda.<h4></td>
+    </tr>
+<% } %>
