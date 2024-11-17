@@ -1,8 +1,11 @@
 const Proposal = require('../models/proposal');
 const User = require('../models/user');
+const Candidate = require('../models/candidate');
 const Question = require('../models/question');
 
 const helpers = require('../helpers');
+
+const { NotFoundError, InternalServerError } = require('../errors');
 
 const getIndex = async (req, res, next) => {
     try {
@@ -36,6 +39,22 @@ const getCommitments = async (req, res, next) => {
     const candidate = req.session.candidate;
 
     res.status(200).render('commitments', { user, candidate })
+}
+
+const getCandidateCommitments = async (req, res, next) => {
+    try {
+        const candidate = await Candidate.findById(req.params.id);
+        if (!candidate || !candidate.signedCommitmentsDoc) {
+            return next(new NotFoundError('Compromisos no encontrados.'));
+        }
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename=Compromisos ${candidate.name}.pdf`);
+        res.send(candidate.signedCommitmentsDoc);
+    } catch (error) {
+        console.error(error)
+        return next(new InternalServerError('Error al obtener los compromisos del candidato.'));
+    }
 }
 
 const getAdmin = async (req, res, next) => {
@@ -119,6 +138,7 @@ module.exports = {
     getDates,
     getCandidates,
     getCommitments,
+    getCandidateCommitments,
     getAdmin,
     getStats,
     getQuestions

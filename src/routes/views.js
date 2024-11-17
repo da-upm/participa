@@ -11,6 +11,7 @@ router.get('/error', (req, res, next) => res.status(500).render('error'));
 router.get('/questions', middlewares.checkLogin, viewsController.getQuestions);
 router.get('/commitments', middlewares.checkLogin, middlewares.checkCandidate, viewsController.getCommitments);
 
+router.get('/commitments/:id([a-f,0-9]{24})', viewsController.getCandidateCommitments);
 
 router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAdmin);
 router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);

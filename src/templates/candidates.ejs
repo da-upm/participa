@@ -50,8 +50,18 @@
             <br>
             <button type="button" class="btn btn-primary">
                 <a class="text-white fs-6 link-underline link-underline-opacity-0"
-                    href="https://ilusionycambio.es/programa/">Programa Electoral</a>
+                    href="https://ilusionycambio.es/programa/" target="_blank">Programa Electoral</a>
             </button>
+
+            <% {
+                const candidate = candidates.find(c => c.username === 'o.garcia');
+                if (candidate?.signedCommitmentsDoc) { %>
+                <button type="button" class="btn btn-primary">
+                    <a class="text-white fs-6 link-underline link-underline-opacity-0"
+                        href="<%= serverUrl %>/commitments/<%= candidate._id.toString() %>" target="_blank">Compromisos</a>
+                </button>
+                <% }
+            } %>
         </div>
         <div id="candidates-second-column" class="col-md-4 mt-5">
             <h3 style="margin-bottom: 20px;">Mª Asunción Santamaría <br> Galdón</h3>
@@ -94,8 +104,18 @@
             </p>
             <button type="button" class="btn btn-primary">
                 <a class="text-white fs-6 link-underline link-underline-opacity-0"
-                    href="https://asunsantamaria.com/programa-electoral/">Programa Electoral</a>
+                    href="https://asunsantamaria.com/programa-electoral/" target="_blank">Programa Electoral</a>
             </button>
+
+            <% {
+                const candidate = candidates.find(c => c.username === 'asun.santamaria');
+                if (candidate?.signedCommitmentsDoc) { %>
+                <button type="button" class="btn btn-primary">
+                    <a class="text-white fs-6 link-underline link-underline-opacity-0"
+                        href="<%= serverUrl %>/commitments/<%= candidate._id.toString() %>" target="_blank">Compromisos</a>
+                </button>
+                <% }
+            } %>
         </div>
         <div id="candidates-third-column" class="col-md-4 mt-5">
             <h3 style="margin-bottom: 20px;">F. Javier Jiménez <br> Leube</h3>
@@ -143,8 +163,18 @@
             <br>
             <button type="button" class="btn btn-primary">
                 <a class="text-white fs-6 link-underline link-underline-opacity-0"
-                    href="https://www.javierleube.es/wp-content/uploads/2024/11/programa-electoral-Javier-Leube.pdf">Programa Electoral</a>
+                    href="https://www.javierleube.es/wp-content/uploads/2024/11/programa-electoral-Javier-Leube.pdf" target="_blank">Programa Electoral</a>
             </button>
+
+            <% {
+                const candidate = candidates.find(c => c.username === 'francisco.jimenez');
+                if (candidate?.signedCommitmentsDoc) { %>
+                <button type="button" class="btn btn-primary">
+                    <a class="text-white fs-6 link-underline link-underline-opacity-0"
+                        href="<%= serverUrl %>/commitments/<%= candidate._id.toString() %>" target="_blank">Compromisos</a>
+                </button>
+                <% }
+            } %>
         </div>
     </div>
 </div>
