@@ -130,8 +130,26 @@ const saveCommitment = async (req, res, next) => {
     }
 }
 
+const deleteCommitment = async (req, res, next) => {
+    const commitment = await Commitment.findOne({
+        proposalId: req.params.id,
+        candidateUsername: req.session.candidate.username
+    });
+
+    if (!commitment) {
+        console.error('Error en commitment/deleteCommitment:');
+        console.error(`El candidato ${req.session.user.id} ha intentado eliminar un compromiso inexistente.`);
+        return next(new NotFoundError("El compromiso no existe."));
+    }
+
+    await commitment.deleteOne();
+    req.toastr.success(`Se ha eliminado el compromiso.`);
+    return res.status(200).render('fragments/toastr', { layout: false, req: req });
+}
+
 module.exports = {
     getProposals,
     getProposal,
-    saveCommitment
+    saveCommitment,
+    deleteCommitment
 };

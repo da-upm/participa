@@ -9,7 +9,7 @@
             <h4 id="proposalTitle">
                 <%= proposal.title %>
             </h4>
-            
+
             <p>
                 <% proposal.categories.forEach((categoryId)=> { %>
                     <span class="badge bg-primary">
@@ -18,38 +18,44 @@
                     <% }) %>
             </p>
 
-                <p id="proposalDescription">
-                    <%- proposal.description %>
-                </p>
+            <p id="proposalDescription">
+                <%- proposal.description %>
+            </p>
 
-                <hr>
+            <hr>
 
-                <% if (proposal.centres && proposal.centres.length > 0) { %>
-                    <p><strong>Escuelas desde las que se propone:</strong> <span id="proposingCentres">
-                        <%= proposal.centres.map(c => centres[c]).join(', ') %>
+            <% if (proposal.centres && proposal.centres.length> 0) { %>
+                <p><strong>Escuelas desde las que se propone:</strong> <span id="proposingCentres">
+                        <%= proposal.centres.map(c=> centres[c]).join(', ') %>
                     </span></p>
                 <% } %>
 
-                <%- include('../proposalParams', {proposal}) %>
+                    <%- include('../proposalParams', {proposal}) %>
 
-                <hr>
+                        <hr>
 
-                <div>
-                    <form hx-post="/api/commitments/proposals/<%= proposal._id.toString() %>" hx-ext="json-enc"
-                        hx-target="#toastr-container"
-                        hx-on::after-request="if (event.detail.xhr.status === 200) htmx.ajax('GET', '/api/commitments/proposals', { target: '#commitmentsTableBody' });">
-                        <label for="commitmentContent"><b>Compromiso con la propuesta:</b></label>
-                        
-                        <textarea id="proposalCommitmentModalContent" name="content" hx-post="/api/commitments/proposals/<%= proposal._id.toString() %>" hx-ext="json-enc"
-                            hx-target="#toastr-container" hx-trigger="every 60s"
-                            required><% if (proposal.commitment) { %><%- proposal.commitment %><% } %></textarea>
-                        
-                        
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                        <div>
+                            <form hx-post="/api/commitments/proposals/<%= proposal._id.toString() %>" hx-ext="json-enc"
+                                hx-target="#toastr-container"
+                                hx-on::after-request="if (event.detail.xhr.status === 200) htmx.ajax('GET', '/api/commitments/proposals', { target: '#commitmentsTableBody' });">
+                                <label for="commitmentContent"><b>Compromiso con la propuesta:</b></label>
+
+                                <textarea id="proposalCommitmentModalContent" name="content"
+                                    hx-post="/api/commitments/proposals/<%= proposal._id.toString() %>"
+                                    hx-ext="json-enc" hx-target="#toastr-container" hx-trigger="every 60s"
+                                    required><% if (proposal.commitment) { %><%- proposal.commitment %><% } %></textarea>
+
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary mt-3 me-5">Guardar</button>
+                                    <button type="button" class="btn btn-danger mt-3 ms-5"
+                                        hx-delete="/api/commitments/proposals/<%= proposal._id.toString() %>"
+                                        hx-ext="json-enc" hx-target="#toastr-container"
+                                        hx-confirm="¿Estás seguro de que deseas borrar tu compromiso con esta propuesta?"
+                                        hx-on::after-request="if (event.detail.xhr.status === 200) {$('#proposalCommitmentModal').modal('hide'); htmx.ajax('GET', '/api/admin/proposals', { target: '#adminProposalsTableBody' })};">Borrar</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
         </div>
 
 
@@ -77,19 +83,19 @@
         let originalContent = textarea.value;
 
         // Detectar cambios en el editor
-        $('#proposalCommitmentModalContent').on('summernote.change', function(_, contents) {
+        $('#proposalCommitmentModalContent').on('summernote.change', function (_, contents) {
             hasUnsavedChanges = contents !== originalContent;
         });
 
         // Reset state when form is submitted
-        form.addEventListener('submit', function() {
+        form.addEventListener('submit', function () {
             hasUnsavedChanges = false;
             originalContent = textarea.value;
         });
 
         // Añadir listener para el cierre del modal
         const modal = document.getElementById('proposalCommitmentModal');
-        modal.addEventListener('hide.bs.modal', function(event) {
+        modal.addEventListener('hide.bs.modal', function (event) {
             if (hasUnsavedChanges) {
                 if (!confirm('Hay cambios sin guardar. ¿Estás seguro de que quieres cerrar?')) {
                     event.preventDefault();
