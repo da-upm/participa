@@ -12,22 +12,29 @@
     </div>
 
     <!-- Commitment Signing Modal -->
-    <div class="modal fade" id="commitmentsSignModal" tabindex="-1" aria-labelledby="commitmentsSignModalLabel"
+    <div class="modal fade" id="commitmentsDocModal" tabindex="-1" aria-labelledby="commitmentsDocModalLabel"
         aria-hidden="true">
     </div>
 
     <!-- Botón para generar una nueva propuesta -->
     <div class="d-flex justify-content-center">
-        <!-- <button type="button" id="signCommitments" class="btn btn-primary mb-4" hx-get="/api/commitments/sign"
-            hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#commitmentsSignModal"
-            hx-on::after-request="if(event.detail.xhr.status === 200) $('#commitmentsSignModal').modal('show')">
-            Firmar compromisos
-        </button>-->
-
         <button type="button" id="signCommitments" class="btn btn-primary mb-4" hx-get="/api/commitments/sign"
-            hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#toastr-container">
+            hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#commitmentsDocModal" hx-indicator="#signingIndicator"
+            hx-on::before-request="$(this).prop('disabled', true)"
+            hx-on::after-request="if(event.detail.xhr.status === 200) { $('#commitmentsDocModal').modal('show'); $(this).prop('disabled', false) }">
             Firmar compromisos
         </button>
+    </div>
+
+    <!-- Search indicator -->
+    <div class="d-flex justify-content-center text-center mb-5">
+        <div id="signingIndicator">
+            <h5>Generando documento...</h5>
+            <br>
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
 
     <!-- Tabla de propuestas -->

@@ -152,8 +152,13 @@ const deleteCommitment = async (req, res, next) => {
 
 const signCommitments = async (req, res, next) => {
     try {
+        const outputDir = __dirname + '/../output';
+        if (!fs.existsSync(outputDir)) {
+            fs.mkdirSync(outputDir, { recursive: true });
+        }
+
         const input = fs.createReadStream(__dirname + '/../templates/latex/main.tex')
-        const output = fs.createWriteStream(__dirname + '/../templates/static/output.pdf')
+        const output = fs.createWriteStream(__dirname + `/../output/${req.session.candidate.username}.pdf`)
 
         if (!req.query.proposalIds) {
             console.error('Error en commitment/signCommitments:');
@@ -196,14 +201,20 @@ const signCommitments = async (req, res, next) => {
 
         const pdf = latex(modifiedStream, {
             inputs: __dirname + '/../templates/latex',
-            cmd: 'lualatex'
+            cmd: 'pdflatex'
         });
 
-        pdf.pipe(output)
-        pdf.on('error', err => console.error(err))
-        pdf.on('finish', () => console.log('PDF generated!'))
+        pdf.pipe(output);
+        
+        await new Promise((resolve, reject) => {
+            pdf.on('error', err => reject(err));
+            pdf.on('finish', () => {
+                console.log('PDF generated!');
+                resolve();
+            });
+        });
 
-        res.status(200).send(output);
+        res.status(200).render('fragments/commitments/commitmentsDocModal', { layout: false, commitmentsDocument: fs.readFileSync(__dirname + `/../output/${req.session.candidate.username}.pdf`).toString('base64') });
     } catch (error) {
         console.error('Error en commitment/signCommitments: ' + error.message);
         req.toastr.error("Ha ocurrido un error al firmar los compromisos.", "Error al firmar los compromisos");

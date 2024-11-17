@@ -1,5 +1,3 @@
-const { init } = require("passport");
-
 $(document).ready(() => {
   toastr.options = {
     "closeButton": true,

@@ -68,6 +68,16 @@ p,
     display:inline;
 }
 
+#signingIndicator{
+    display:none;
+}
+.htmx-request #signingIndicator{
+    display:inline;
+}
+.htmx-request#signingIndicator{
+    display:inline;
+}
+
 #proposalDraftModalDescription {
     display: none;
 }

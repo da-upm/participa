@@ -133,3 +133,5 @@ dist
 config.json
 
 rector.daupm.es
+
+src/output
