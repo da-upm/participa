@@ -38,7 +38,7 @@ const getCommitments = async (req, res, next) => {
     const user = req.session.user;
     const candidate = req.session.candidate;
 
-    res.status(200).render('commitments', { user, candidate })
+    res.status(200).render('commitments', { page: 'commitments', candidate})
 }
 
 const getCandidateCommitments = async (req, res, next) => {

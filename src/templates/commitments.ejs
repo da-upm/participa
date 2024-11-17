@@ -21,7 +21,7 @@
         <button type="button" id="signCommitments" class="btn btn-primary mb-4" hx-get="/api/commitments/sign"
             hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#commitmentsDocModal" hx-indicator="#signingIndicator"
             hx-on::before-request="$(this).prop('disabled', true)"
-            hx-on::after-request="if(event.detail.xhr.status === 200) { $('#commitmentsDocModal').modal('show'); $(this).prop('disabled', false) }">
+            hx-on::after-request="$(this).prop('disabled', false); if(event.detail.xhr.status === 200) { $('#commitmentsDocModal').modal('show');  }">
             Firmar compromisos
         </button>
     </div>

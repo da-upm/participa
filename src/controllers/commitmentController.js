@@ -88,6 +88,31 @@ const getProposal = async (req, res, next) => {
     }
 }
 
+const getProposalRow = async (req, res, next) => {
+    try {
+        const user = req.session.user;
+        const candidate = req.session.candidate;
+
+        const proposal = await Proposal.findById(new ObjectId(req.params.id));
+        proposal.supporters = await proposal.getSupportersCount();
+        proposal.affiliations = await proposal.getAffiliationList();
+        proposal.centres = await proposal.getCentreList();
+        const commitment = await Commitment.findOne({
+            proposalId: proposal._id,
+            candidateUsername: candidate.username
+        });
+        proposal.support = await proposal.getSupport();
+        proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
+        proposal.supported = user.supportedProposals.includes(proposal._id);
+        proposal.commitment = commitment ? commitment.content : null;
+
+        res.status(200).render('fragments/commitments/proposalRow', { layout: false, proposal });
+    } catch (error) {
+        console.error("Error commitment/getProposals:", error);
+        return next(new InternalServerError("Ha ocurrido un error al recuperar la propuesta."));
+    }
+}
+
 const saveCommitment = async (req, res, next) => {
     try {
         if (!req.body.content || req.body.content.replace(/<\/?[^>]+(>|$)/g, "").trim() === "") {
@@ -113,8 +138,11 @@ const saveCommitment = async (req, res, next) => {
             candidateUsername: req.session.candidate.username
         });
 
+        var commitmentContent;
+
         if (commitment) {
             commitment.content = sanitizedContent;
+            commitmentContent = sanitizedContent;
             await commitment.save();
         } else {
             const newCommitment = new Commitment({
@@ -123,10 +151,19 @@ const saveCommitment = async (req, res, next) => {
                 content: sanitizedContent
             });
             await newCommitment.save();
+            commitmentContent = newCommitment.content;
         }
 
+        proposal.supporters = await proposal.getSupportersCount();
+        proposal.affiliations = await proposal.getAffiliationList();
+        proposal.centres = await proposal.getCentreList();
+        proposal.support = await proposal.getSupport();
+        proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
+        //proposal.supported = user.supportedProposals.includes(proposal._id);
+        proposal.commitment = commitmentContent;
+
         req.toastr.success(`Se han guardado los cambios.`);
-        return res.status(200).render('fragments/toastr', { layout: false, req: req });
+        return res.status(200).render('fragments/toastr', { layout: false, req: req, proposal });
     } catch (error) {
         console.error('Error en commitment/saveCommitment: ' + error.message);
         req.toastr.error("Ha ocurrido un error al enviar el compromiso.", "Error al enviar el compromiso");
@@ -149,6 +186,24 @@ const deleteCommitment = async (req, res, next) => {
     await commitment.deleteOne();
     req.toastr.success(`Se ha eliminado el compromiso.`);
     return res.status(200).render('fragments/toastr', { layout: false, req: req });
+}
+
+const htmlToLatex = (html) => {
+    return html
+        // Limpiar espacios y saltos de línea extra
+        .replace(/\s+/g, ' ')
+        .trim()
+        // Convertir párrafos a líneas LaTeX
+        .replace(/<p>(.*?)<\/p>/g, '$1 \\\\')
+        // Eliminar etiquetas bold vacías
+        .replace(/<b><\/b>/g, '')
+        // Escapar caracteres especiales de LaTeX
+        .replace(/([#$%&_{}])/g, '\\$1')
+        // Limpiar múltiples saltos de línea
+        .replace(/\\\\\s*\\\\/g, '\\\\')
+        // Convertir espacios múltiples en uno solo
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 const signCommitments = async (req, res, next) => {
@@ -231,8 +286,8 @@ const signCommitments = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error en commitment/signCommitments: ' + error.message);
-        req.toastr.error("Ha ocurrido un error al firmar los compromisos.", "Error al firmar los compromisos");
-        return next(new InternalServerError("Ha ocurrido un error al firmar los compromisos."));
+        req.toastr.error("Ha ocurrido un error al generar el documento de compromisos.", "Error al generar el documento");
+        return next(new InternalServerError("Ha ocurrido un error al generar el documento de compromisos."));
     }
 
 }
@@ -284,6 +339,7 @@ const receiveSignature = async (req, res, next) => {
 module.exports = {
     getProposals,
     getProposal,
+    getProposalRow,
     saveCommitment,
     deleteCommitment,
     signCommitments,

@@ -125,6 +125,17 @@ Issuer.discover(config.sso.wellKnownEndpoint)
 app.use(flash());
 app.use(toastr());
 
+// Middleware para eliminar trailing slash
+app.use((req, res, next) => {
+    if (req.path.length > 1 && req.path.endsWith('/')) {
+        const query = req.url.slice(req.path.length)
+        const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
+        res.redirect(301, safePath + query)
+    } else {
+        next()
+    }
+})
+
 app.use(function (req, res, next)
 {
     res.locals.toasts = req.toastr.render()

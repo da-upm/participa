@@ -8,6 +8,7 @@ router.use(middlewares.checkCandidate);
 
 router.get('/proposals', commitmentController.getProposals);
 router.get('/proposals/:id([a-f,0-9]{24})', commitmentController.getProposal);
+router.get('/proposals/:id([a-f,0-9]{24})/row', commitmentController.getProposalRow);
 router.post('/proposals/:id([a-f,0-9]{24})', commitmentController.saveCommitment);
 router.delete('/proposals/:id([a-f,0-9]{24})', commitmentController.deleteCommitment);
 

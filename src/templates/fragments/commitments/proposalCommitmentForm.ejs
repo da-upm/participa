@@ -37,7 +37,7 @@
                         <div>
                             <form hx-post="/api/commitments/proposals/<%= proposal._id.toString() %>" hx-ext="json-enc"
                                 hx-target="#toastr-container"
-                                hx-on::after-request="if (event.detail.xhr.status === 200) htmx.ajax('GET', '/api/commitments/proposals', { target: '#commitmentsTableBody' });">
+                                hx-on::after-request="if (event.detail.xhr.status === 200) htmx.ajax('GET', '/api/commitments/proposals/<%= proposal._id.toString() %>/row', { target: '#proposal-row-<%= proposal._id.toString() %>' });">
                                 <label for="commitmentContent"><b>Compromiso con la propuesta:</b></label>
 
                                 <textarea id="proposalCommitmentModalContent" name="content"
@@ -52,7 +52,7 @@
                                         hx-delete="/api/commitments/proposals/<%= proposal._id.toString() %>"
                                         hx-ext="json-enc" hx-target="#toastr-container"
                                         hx-confirm="¿Estás seguro de que deseas borrar tu compromiso con esta propuesta?"
-                                        hx-on::after-request="if (event.detail.xhr.status === 200) {$('#proposalCommitmentModal').modal('hide'); htmx.ajax('GET', '/api/admin/proposals', { target: '#adminProposalsTableBody' })};">Borrar</button>
+                                        hx-on::after-request="if (event.detail.xhr.status === 200) {$('#proposalCommitmentModal').modal('hide'); htmx.ajax('GET', '/api/commitments/proposals/<%= proposal._id.toString() %>/row', { target: '#proposal-row-<%= proposal._id.toString() %>' })};">Borrar</button>
                                 </div>
                             </form>
                         </div>
