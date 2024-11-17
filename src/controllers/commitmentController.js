@@ -199,20 +199,18 @@ const signCommitments = async (req, res, next) => {
         const input = fs.createReadStream(__dirname + '/../latex/main.tex')
         const outputPath = __dirname + `/../output/${req.session.candidate.username}.pdf`;
         const output = fs.createWriteStream(outputPath);
-        output.on('finish', async () => {
-            const pdfBuffer = fs.readFileSync(outputPath);
-            await Candidate.findOneAndUpdate(
-                { username: req.session.candidate.username },
-                { unsignedCommitmentsDoc: pdfBuffer }
-            );
-            fs.unlinkSync(outputPath); // Clean up temporary file
-        });
-
+        
         if (!req.query.proposalIds) {
             console.error('Error en commitment/signCommitments:');
             console.error(`El candidato ${req.session.user.id} ha intentado firmar compromisos sin especificarlos.`);
             return next(new BadRequestError("No se han especificado compromisos a firmar."));
         }
+
+        const candidate = await Candidate.findOne({ username: req.session.candidate.username });
+
+        candidate.unsignedCommitmentsDoc = null;
+        
+        await candidate.save();
 
         const proposalIds = Array.isArray(req.query.proposalIds) ? req.query.proposalIds : req.query.proposalIds.split(',');
         const proposals = await Promise.all(
@@ -254,18 +252,33 @@ const signCommitments = async (req, res, next) => {
 
         pdf.pipe(output);
 
+        // Wait for PDF generation to complete
         await new Promise((resolve, reject) => {
             pdf.on('error', err => reject(err));
             pdf.on('finish', () => {
-                console.log('PDF generated!');
-                resolve();
+            console.log('PDF generated!');
+            resolve();
             });
         });
 
-        const candidate = await Candidate.findOne({ username: req.session.candidate.username });
+        // Wait for file to be fully written
+        await new Promise((resolve, reject) => {
+            output.on('error', reject);
+            output.on('finish', resolve);
+        });
+
+        // Read file and update candidate
+        const pdfBuffer = fs.readFileSync(outputPath);
+        await Candidate.findOneAndUpdate(
+            { username: req.session.candidate.username },
+            { unsignedCommitmentsDoc: pdfBuffer }
+        );
+
+        // Clean up and send response
+        fs.unlinkSync(outputPath);
         res.status(200).render('fragments/commitments/commitmentsDocModal', {
-            layout: false,
-            commitmentsDocument: candidate.unsignedCommitmentsDoc.toString('base64')
+            layout: false, 
+            commitmentsDocument: pdfBuffer.toString('base64')
         });
     } catch (error) {
         console.error('Error en commitment/signCommitments: ' + error.message);
