@@ -10,14 +10,22 @@ services:
       - agartha
     depends_on:
       - mongodb
+    restart: always
 
   mongodb:
     image: mongo
     container_name: electoral-mongo
     ports:
       - "27017:27017"
+    volumes:
+      - ./participa:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_DATABASE=participa
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
     networks:
       - agartha
+    restart: always
 
   # Esto solo es necesario si se quiere tener una interfaz para visualizar la base de datos (por lo que sea)
   # mongo-express:
@@ -33,7 +41,7 @@ services:
   #     - agartha
   #   depends_on:
   #     - mongodb
+  #   restart: always
 
 networks:
   agartha:
-    external: true
