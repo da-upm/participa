@@ -188,23 +188,6 @@ const deleteCommitment = async (req, res, next) => {
     return res.status(200).render('fragments/toastr', { layout: false, req: req });
 }
 
-const htmlToLatex = (html) => {
-    return html
-        // Limpiar espacios y saltos de línea extra
-        .replace(/\s+/g, ' ')
-        .trim()
-        // Convertir párrafos a líneas LaTeX
-        .replace(/<p>(.*?)<\/p>/g, '$1 \\\\')
-        // Eliminar etiquetas bold vacías
-        .replace(/<b><\/b>/g, '')
-        // Escapar caracteres especiales de LaTeX
-        .replace(/([#$%&_{}])/g, '\\$1')
-        // Limpiar múltiples saltos de línea
-        .replace(/\\\\\s*\\\\/g, '\\\\')
-        // Convertir espacios múltiples en uno solo
-        .replace(/\s+/g, ' ')
-        .trim();
-}
 
 const signCommitments = async (req, res, next) => {
     try {
@@ -219,8 +202,8 @@ const signCommitments = async (req, res, next) => {
         output.on('finish', async () => {
             const pdfBuffer = fs.readFileSync(outputPath);
             await Candidate.findOneAndUpdate(
-            { username: req.session.candidate.username },
-            { unsignedCommitmentsDoc: pdfBuffer }
+                { username: req.session.candidate.username },
+                { unsignedCommitmentsDoc: pdfBuffer }
             );
             fs.unlinkSync(outputPath); // Clean up temporary file
         });
@@ -247,7 +230,7 @@ const signCommitments = async (req, res, next) => {
             })
         );
 
-        const latexContent = (await Promise.all(proposals.map(async p => 
+        const latexContent = (await Promise.all(proposals.map(async p =>
             `\\titulillo{${await convertText(p.title)}}
 
             \\cuerpo{${await convertText(p.description)}}
@@ -270,7 +253,7 @@ const signCommitments = async (req, res, next) => {
         });
 
         pdf.pipe(output);
-        
+
         await new Promise((resolve, reject) => {
             pdf.on('error', err => reject(err));
             pdf.on('finish', () => {
@@ -280,9 +263,9 @@ const signCommitments = async (req, res, next) => {
         });
 
         const candidate = await Candidate.findOne({ username: req.session.candidate.username });
-        res.status(200).render('fragments/commitments/commitmentsDocModal', { 
-            layout: false, 
-            commitmentsDocument: candidate.unsignedCommitmentsDoc.toString('base64') 
+        res.status(200).render('fragments/commitments/commitmentsDocModal', {
+            layout: false,
+            commitmentsDocument: candidate.unsignedCommitmentsDoc.toString('base64')
         });
     } catch (error) {
         console.error('Error en commitment/signCommitments: ' + error.message);
@@ -303,7 +286,7 @@ const receiveSignature = async (req, res, next) => {
     certificate.issuer.attributes.forEach(attr => {
         issuerAttrs[attr.shortName] = attr.value;
     });
-    
+
     const issuer = ['CN', 'OU', 'O', 'C']
         .map(key => `${key}=${issuerAttrs[key]}`)
         .join(',');
@@ -332,6 +315,12 @@ const receiveSignature = async (req, res, next) => {
         { signedCommitmentsDoc: signedDoc }
     );
 
+    const candidate = await Candidate.findOne({ username: req.session.candidate.username });
+
+    res.setHeader(
+        'Hx-Redirect',
+        `/commitments/${candidate._id.toString()}`
+    );
     req.toastr.success('Se ha firmado correctamente el documento.');
     return res.status(200).render('fragments/toastr', { layout: false, req: req });
 }

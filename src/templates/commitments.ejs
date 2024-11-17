@@ -4,6 +4,19 @@
     <div class="text-center">
         <h1>Gestión de compromisos</h1>
         <p class="lead">Compromisos de la candidatura de <%= candidate.name %>.</p>
+        <hr>
+        <div>
+            <p class="lead">Notas aclaratorias:</p>
+            <ul style="list-style: none;">
+                <li>Se generará un documento en formato PDF con las propuestas seleccionadas para su firma.</li>
+                <li>Por defecto aparecerán seleccionadas las propuestas apoyadas o con un compromiso.</li>
+                <li>Los cambios quedarán guardados en el servidor, por lo que no es necesario completar el proceso en una sola sesión.</li>
+                <li>Para firmar el documento de compromisos es necesario tener instalado y configurado Autofirma.</li>
+                <li>El documento será publicado automáticamente tras su firma.</li>
+                <li>Quedará publicado el último documento generado y firmado.</li>
+            </ul>
+        </div>
+        <hr>
     </div>
 
     <!-- Proposal Commitment Modal -->
@@ -16,7 +29,6 @@
         aria-hidden="true">
     </div>
 
-    <!-- Botón para generar una nueva propuesta -->
     <div class="d-flex justify-content-center">
         <button type="button" id="signCommitments" class="btn btn-primary mb-4" hx-get="/api/commitments/sign"
             hx-trigger="click" hx-include=".proposal-checkbox:checked" hx-params="*" hx-target="#commitmentsDocModal" hx-indicator="#signingIndicator"
