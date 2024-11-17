@@ -1,6 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
 const latex = require('node-latex')
 const fs = require('fs')
+const forge = require('node-forge');
 const { convertText } = require('html-to-latex');
 const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -226,6 +227,42 @@ const signCommitments = async (req, res, next) => {
 const receiveSignature = async (req, res, next) => {
     console.log('Document:', req.body.document);
     console.log('Certificate:', req.body.certificate);
+
+    const certificateData = forge.util.decode64(req.body.certificate);
+    const certificate = forge.pki.certificateFromAsn1(forge.asn1.fromDer(certificateData));
+
+    const issuerAttrs = {};
+    certificate.issuer.attributes.forEach(attr => {
+        issuerAttrs[attr.shortName] = attr.value;
+    });
+    
+    const issuer = ['CN', 'OU', 'O', 'C']
+        .map(key => `${key}=${issuerAttrs[key]}`)
+        .join(',');
+
+    const validIssuers = [
+        'CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES',
+        'CN=AC Representación,OU=Ceres,O=FNMT-RCM,C=ES',
+        'CN=AC Sector Público,OU=Ceres,O=FNMT-RCM,C=ES',
+        'CN=AC DNIE 001,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES',
+        'CN=AC DNIE 002,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES',
+        'CN=AC DNIE 003,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES',
+        'CN=AC DNIE 004,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES',
+        'CN=AC DNIE 005,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES',
+        'CN=AC DNIE 006,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES'
+    ];
+
+    if (!validIssuers.includes(issuer)) {
+        return next(new BadRequestError('Certificado no válido: emisor no autorizado'));
+    }
+
+
+    // Save the verified signed document
+    const signedDoc = Buffer.from(req.body.document, 'base64');
+    fs.writeFileSync(__dirname + `/../output/${req.session.candidate.username}_signed.pdf`, signedDoc);
+
+    req.toastr.success('Se ha firmado correctamente el documento.');
+    return res.status(200).render('fragments/toastr', { layout: false, req: req });
 }
 
 module.exports = {

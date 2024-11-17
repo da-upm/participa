@@ -9,7 +9,13 @@
                 <embed id="pdfEmbed" src="" type="application/pdf" />
             </object>
             <div class="text-center">
-                <button type="button" class="btn btn-primary mt-3 me-5" onclick="startSign()">Firmar</button>
+                <button id="signingButton" type="button" class="btn btn-primary mt-3 me-5" onclick="startSign()">
+                    <span id="signingSpinner" class="spinner-border spinner-border-sm visually-hidden" aria-hidden="true"></span>
+                    Firmar
+                </button>
+                <br>
+                <br>
+                <span id="waitingWarning" class="visually-hidden">La apertura de Autofirma puede tardar unos instantes...</span>
             </div>
 
         </div>
@@ -38,25 +44,19 @@
 <!-- Scripts necesarios -->
 <script type="text/javascript" src="./js/autoscript.js"></script>
 <script type="text/javascript">
-    let operationInProgress = false;
-
     function startSign() {
-        if (operationInProgress) return;
-        operationInProgress = true;
-
+        $('#signingButton').prop('disabled', true);
+        $('#signingSpinner').removeClass('visually-hidden');
+        $('#waitingWarning').removeClass('visually-hidden');
         try {
-            AutoScript.cargarMiniApplet("http://localhost:3000/");
+            AutoScript.cargarMiniApplet("<%= serverUrl %>/");
             AutoScript.setServlets(
-                "http://localhost:3000/commitments/signature",
-                "http://localhost:3000/commitments/signature"
+                "<%= serverUrl %>/api/commitments/signature",
+                "<%= serverUrl %>/api/commitments/signature"
             );
-            // Filtros de certificados permitidos
-            const ALLOWED_ISSUERS = {
-                FNMT: "ISSUER=CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES",
-                DNI_E: "ISSUER=CN=AC DNIE,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES"
-            };
+
             const extraParams = {
-                filters: Object.values(ALLOWED_ISSUERS).join('|'),
+                filters: "ISSUER=CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES|ISSUER=CN=AC DNIE,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES",
                 headless: 'true',
                 filterAntigovernment: 'true',
                 checkTime: 'true',
@@ -65,58 +65,43 @@
                 mandatoryCertificateConditions: 'true',
                 allowTransactions: 'false'
             };
-            // Callback para la selección de certificado
-            const selectCertSuccess = function (certificate) {
-                // Validar que el certificado sigue cumpliendo los requisitos
-                const signExtraParams = {
-                    ...extraParams,
-                    certFilters: Object.values(ALLOWED_ISSUERS).join('|'),
-                    specificCertificate: certificate,
-                    headless: 'true'
-                };
-                // Iniciamos la firma con el certificado seleccionado
-                AutoScript.sign(
-                    "<%= commitmentsDocument %>",
-                    "SHA256withRSA",
-                    "PAdES",
-                    JSON.stringify(signExtraParams),
-                    function (signature, cert, extraInfo) {
-                        operationInProgress = false;
-                        console.log("Firma completada:", signature);
-                    },
-                    function (errorType, errorMessage) {
-                        handleError(errorType, errorMessage);
-                    }
-                );
-            };
-            // Callback de error genérico
-            const handleError = function (errorType, errorMessage) {
-                operationInProgress = false;
-
-                if (errorType === "es.gob.afirma.core.AOCancelledOperationException") {
-                } else {
-                }
-                console.error("Error:", errorType, errorMessage);
-            };
-            // Iniciamos el proceso de selección de certificado
-            AutoScript.selectCertificate(
+            
+            AutoScript.sign(
+                "<%= commitmentsDocument %>",
+                "SHA256withRSA",
+                "PAdES",
                 JSON.stringify(extraParams),
-                selectCertSuccess,
-                handleError
+                (signature, cert) => {
+                    htmx.ajax('POST', '<%= serverUrl %>/api/commitments/signature', {
+                        target: '#toastr-container',
+                        swap: 'innerHTML',
+                        values: {
+                            document: signature,
+                            certificate: cert
+                        }
+                    });
+
+
+                    $('#signingSpinner').addClass('visually-hidden');
+                    $('#waitingWarning').addClass('visually-hidden');
+                    $('#signingButton').prop('disabled', false);
+                },
+                (error, message) => {
+                    console.error("Error:", error, message);
+                    toastr.error(message || 'Error al firmar el documento.');
+                    $('#signingSpinner').addClass('visually-hidden');
+                    $('#waitingWarning').addClass('visually-hidden');
+                    $('#signingButton').prop('disabled', false);
+                }
             );
+            
+
         } catch (error) {
-            operationInProgress = false;
             console.error(error);
+            toastr.error('Error al firmar el documento.');
+            $('#signingSpinner').addClass('visually-hidden');
+            $('#waitingWarning').addClass('visually-hidden');
+            $('#signingButton').prop('disabled', false);
         }
     }
-    function cancelOperation() {
-        if (!operationInProgress) return;
-
-        operationInProgress = false;
-    }
-    // Limpiar estado al cargar la página
-    window.onload = function () {
-        operationInProgress = false;
-        showProgress(false);
-    };
 </script>

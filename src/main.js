@@ -36,8 +36,8 @@ databaseConfig = config.database
 
 mongodbURI = process.env.MONGODB_URI || `mongodb://${databaseConfig.user}:${databaseConfig.password}@${databaseConfig.host}:${databaseConfig.port}/${databaseConfig.dbName}`;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'templates'));
@@ -156,6 +156,12 @@ app.use(async (req, res, next) => {
 app.use(async (req, res, next) => {
 	const candidates = await Candidate.find();
 	res.locals.candidates = candidates;
+	next();
+});
+
+// Middleware to send to res.locals the server url from config
+app.use((req, res, next) => {
+	res.locals.serverUrl = config.server.url;
 	next();
 });
 
