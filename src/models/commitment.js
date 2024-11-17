@@ -14,8 +14,11 @@ const commitmentSchema = new mongoose.Schema({
         required: true,
     }
 },
-    {
-        timestamps: true
-    });
+{
+    timestamps: true
+});
+
+// Agregar índice compuesto único
+commitmentSchema.index({ proposalId: 1, candidateUsername: 1 }, { unique: true });
 
 module.exports = mongoose.model('Commitment', commitmentSchema);

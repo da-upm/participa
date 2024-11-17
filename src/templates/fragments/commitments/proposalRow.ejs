@@ -3,8 +3,14 @@
     <%= proposal.title %>
 </td>
 <td class="commitment-column">
-<%- proposal.commitment || '-' %>
+    <% const plainText = proposal.commitment ? proposal.commitment.replace(/<\/?[^>]+(>|$)/g, " ") : '-';
+    %><%- proposal.commitment ? 
+        (plainText.length > 100 ? 
+            `${plainText.substring(0, 100)}...` : 
+            plainText) 
+        : '-' %>
+</td>
 <td class="actions-column">
-    <button class="btn btn-link view-more" hx-get="/api/commitments/proposals/<%= proposal._id.toString() %>"
+    <button class="btn btn-link view-more" hx-get="/api/commitments/proposals/<%= proposal._id.toString() %>" hx-disinherit="hx-indicator"
         hx-target="#proposalCommitmentModal" hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalCommitmentModal').modal('show')">Abrir</button>
 </td>
