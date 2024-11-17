@@ -1,0 +1,87 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Delegación de Alumnos de Telecomunicación
+% PLANTILLA DE DOCUMENTOS EN LaTeX
+%
+% Esta plantilla consiste en la plantilla oficial de documentos de DAT,
+% creada originalmente en LibreOffice y exportada a PDF, poniéndola como
+% fondo en un documento de LaTeX estándar con algunas modificaciones extra
+% (fuentes, márgenes, etc.).
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt]{article} % Documento de tipo "artículo", con fuente por defecto de 11pt.
+
+\usepackage{amsmath}
+
+%\usepackage{fontspec}
+%\newfontfamily\comfortaa{Comfortaa}[
+%    Extension=.ttf,%
+%    Ligatures={TeX,Common},%
+%    FontFace={l}{n}{*-Light},%
+%    FontFace={l}{it}{Font=*-Light,FakeSlant=0.167},%
+%    UprightFont={*-Regular},%
+%    ItalicFont={*-Regular},%
+%    ItalicFeatures={FakeSlant=0.167},%
+%    FontFace={b}{n}{*-Bold},%
+%    FontFace={b}{it}{Font=*-Bold,FakeSlant=0.167},%
+%    BoldFont={*-Bold},%
+%    BoldItalicFont={*-Bold},%
+%    BoldItalicFeatures={FakeSlant=0.167}]
+ 
+
+\usepackage[default]{comfortaa}
+\usepackage[T1]{fontenc}      % Usa fuentes "ricas", que facilitan el copy-paste en la salida.
+\usepackage[spanish]{babel}   % Traducción al español de meses, funciones matemáticas, etc.
+\usepackage{enumitem}         % Ajuste de espacios entre elementos de listas.
+\usepackage{graphicx}         % Permite la inserción de imágenes.
+\usepackage{hyperref}         % Convierte las referencias en hiperenlaces y añade el comando \url.
+\usepackage{wallpaper}        % Para la plantilla del fondo.
+\usepackage{xcolor}           % Fuentes de colores.
+\usepackage{fbb}              % Fuente para documentos.
+\usepackage[                  % Márgenes personalizados.
+  a4paper,
+  lmargin=2cm,
+  rmargin=2cm,
+  tmargin=4.5cm,
+  bmargin=3.5cm,
+  headheight=3cm
+]{geometry}
+\usepackage{setspace}
+
+\usepackage[]{hyphenat}   % Evita el corte de palabras cuando no caben en una unica linea.
+
+% Fondo de la plantilla de DAT.
+\ULCornerWallPaper{1}{background_DA_general_X.pdf}
+
+% Elimina el sangrado de cada párrafo.
+\setlength{\parindent}{0cm}
+% Espacio de 1 línea entre párrafos.
+\setlength{\parskip}{\baselineskip}
+
+% Elimina cabeceras/pies de página por defecto.
+\pagestyle{empty}
+
+% Elimina la separación adicional entre ítems de listas.
+\setlist[enumerate]{itemsep=0mm}
+
+% Definición de colores de la plantilla.
+\definecolor{DAblue}{HTML}{00509B}
+
+% Para hacer pruebas
+\usepackage{lipsum}
+
+% Nuestras definiciones de tipos de párrafos
+\newcommand{\titulo}{\centering\fontsize{20}{13.5}\textcolor{DAblue}\bfseries\comfortaa}
+
+\newcommand{\subtitulo}{\raggedright\comfortaa\fontsize{16}{18.5}\bfseries}
+
+\newcommand{\subtitulocentro}{\centering\comfortaa\fontsize{16}{18.5}\bfseries}
+
+\newcommand{\titulillo}{\raggedright\comfortaa\fontsize{13}{15}\bfseries}
+
+\newcommand{\titulilloazul}{\raggedright\comfortaa\fontsize{13}{15}\bfseries\textcolor{DAblue}}
+
+\newcommand{\cuerpo}{\raggedright\comfortaa\fontsize{11}{13.5}\fontseries{l}\selectfont}
+
+\newcommand{\resaltado}{\raggedright\comfortaa\fontsize{11}{13.5}\fontseries{l}\selectfont\textcolor{DAblue}}

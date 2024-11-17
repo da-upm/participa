@@ -1,4 +1,7 @@
 const sanitizeHtml = require('sanitize-html');
+const latex = require('node-latex')
+const fs = require('fs')
+const { convertText } = require('html-to-latex');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
@@ -44,10 +47,10 @@ const getProposals = async (req, res, next) => {
 
             // First sort by support
             if (aSupported !== bSupported) return bSupported - aSupported;
-            
+
             // Then sort by commitment existence
             if (aHasCommitment !== bHasCommitment) return bHasCommitment - aHasCommitment;
-            
+
             // Finally sort by update date (already sorted from the query)
             return 0;
         });
@@ -76,7 +79,7 @@ const getProposal = async (req, res, next) => {
         proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
         proposal.supported = user.supportedProposals.includes(proposal._id);
         proposal.commitment = commitment ? commitment.content : null;
-        
+
         res.status(200).render('fragments/commitments/proposalCommitmentForm', { layout: false, proposal });
     } catch (error) {
         console.error("Error commitment/getProposals:", error);
@@ -147,9 +150,72 @@ const deleteCommitment = async (req, res, next) => {
     return res.status(200).render('fragments/toastr', { layout: false, req: req });
 }
 
+const signCommitments = async (req, res, next) => {
+    try {
+        const input = fs.createReadStream(__dirname + '/../templates/latex/main.tex')
+        const output = fs.createWriteStream(__dirname + '/../templates/static/output.pdf')
+
+        if (!req.query.proposalIds) {
+            console.error('Error en commitment/signCommitments:');
+            console.error(`El candidato ${req.session.user.id} ha intentado firmar compromisos sin especificarlos.`);
+            return next(new BadRequestError("No se han especificado compromisos a firmar."));
+        }
+
+        const proposalIds = Array.isArray(req.query.proposalIds) ? req.query.proposalIds : req.query.proposalIds.split(',');
+        const proposals = await Promise.all(
+            proposalIds.map(async id => {
+                const proposal = await Proposal.findById(id);
+                const commitment = await Commitment.findOne({
+                    proposalId: id,
+                    candidateUsername: req.session.candidate.username
+                });
+                return {
+                    title: proposal.title,
+                    description: proposal.description,
+                    commitment: commitment ? commitment.content : ''
+                };
+            })
+        );
+
+        const latexContent = (await Promise.all(proposals.map(async p => 
+            `\\titulillo{${await convertText(p.title)}}
+
+            \\cuerpo{${await convertText(p.description)}}
+
+            \\resaltado{${await convertText(p.commitment)}}\n\\vspace{0.25cm}`
+        ))).join('\n\n');
+
+        const modifiedStream = input.pipe(
+            new require('stream').Transform({
+                transform(chunk, encoding, callback) {
+                    const content = chunk.toString().replaceAll('%CONTENT%', latexContent).replaceAll('%CANDIDATE%', req.session.candidate.name);
+                    callback(null, content);
+                }
+            })
+        );
+
+        const pdf = latex(modifiedStream, {
+            inputs: __dirname + '/../templates/latex',
+            cmd: 'lualatex'
+        });
+
+        pdf.pipe(output)
+        pdf.on('error', err => console.error(err))
+        pdf.on('finish', () => console.log('PDF generated!'))
+
+        res.status(200).send(output);
+    } catch (error) {
+        console.error('Error en commitment/signCommitments: ' + error.message);
+        req.toastr.error("Ha ocurrido un error al firmar los compromisos.", "Error al firmar los compromisos");
+        return next(new InternalServerError("Ha ocurrido un error al firmar los compromisos."));
+    }
+
+}
+
 module.exports = {
     getProposals,
     getProposal,
     saveCommitment,
-    deleteCommitment
+    deleteCommitment,
+    signCommitments
 };
