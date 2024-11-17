@@ -157,7 +157,7 @@ const signCommitments = async (req, res, next) => {
             fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        const input = fs.createReadStream(__dirname + '/../templates/latex/main.tex')
+        const input = fs.createReadStream(__dirname + '/../latex/main.tex')
         const output = fs.createWriteStream(__dirname + `/../output/${req.session.candidate.username}.pdf`)
 
         if (!req.query.proposalIds) {
@@ -200,7 +200,7 @@ const signCommitments = async (req, res, next) => {
         );
 
         const pdf = latex(modifiedStream, {
-            inputs: __dirname + '/../templates/latex',
+            inputs: __dirname + '/../latex',
             cmd: 'pdflatex'
         });
 
