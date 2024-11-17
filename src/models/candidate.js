@@ -18,6 +18,14 @@ const candidateSchema = new mongoose.Schema({
         default: [],
         required: true,
     },
+    unsignedCommitmentsDoc: {
+        type: Buffer,
+        required: false
+    },
+    signedCommitmentsDoc: {
+        type: Buffer,
+        required: false
+    }
 },
     {
         timestamps: true

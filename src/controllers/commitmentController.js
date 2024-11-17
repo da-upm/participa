@@ -8,7 +8,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
 
 const Proposal = require('../models/proposal');
-const User = require('../models/user');
+const Candidate = require('../models/candidate');
 const Commitment = require('../models/commitment');
 
 const helpers = require('../helpers');
@@ -159,7 +159,16 @@ const signCommitments = async (req, res, next) => {
         }
 
         const input = fs.createReadStream(__dirname + '/../latex/main.tex')
-        const output = fs.createWriteStream(__dirname + `/../output/${req.session.candidate.username}.pdf`)
+        const outputPath = __dirname + `/../output/${req.session.candidate.username}.pdf`;
+        const output = fs.createWriteStream(outputPath);
+        output.on('finish', async () => {
+            const pdfBuffer = fs.readFileSync(outputPath);
+            await Candidate.findOneAndUpdate(
+            { username: req.session.candidate.username },
+            { unsignedCommitmentsDoc: pdfBuffer }
+            );
+            fs.unlinkSync(outputPath); // Clean up temporary file
+        });
 
         if (!req.query.proposalIds) {
             console.error('Error en commitment/signCommitments:');
@@ -215,7 +224,11 @@ const signCommitments = async (req, res, next) => {
             });
         });
 
-        res.status(200).render('fragments/commitments/commitmentsDocModal', { layout: false, commitmentsDocument: fs.readFileSync(__dirname + `/../output/${req.session.candidate.username}.pdf`).toString('base64') });
+        const candidate = await Candidate.findOne({ username: req.session.candidate.username });
+        res.status(200).render('fragments/commitments/commitmentsDocModal', { 
+            layout: false, 
+            commitmentsDocument: candidate.unsignedCommitmentsDoc.toString('base64') 
+        });
     } catch (error) {
         console.error('Error en commitment/signCommitments: ' + error.message);
         req.toastr.error("Ha ocurrido un error al firmar los compromisos.", "Error al firmar los compromisos");
@@ -259,7 +272,10 @@ const receiveSignature = async (req, res, next) => {
 
     // Save the verified signed document
     const signedDoc = Buffer.from(req.body.document, 'base64');
-    fs.writeFileSync(__dirname + `/../output/${req.session.candidate.username}_signed.pdf`, signedDoc);
+    await Candidate.findOneAndUpdate(
+        { username: req.session.candidate.username },
+        { signedCommitmentsDoc: signedDoc }
+    );
 
     req.toastr.success('Se ha firmado correctamente el documento.');
     return res.status(200).render('fragments/toastr', { layout: false, req: req });
