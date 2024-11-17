@@ -9,7 +9,7 @@
                 <embed id="pdfEmbed" src="" type="application/pdf" />
             </object>
             <div class="text-center">
-                <button type="button" class="btn btn-primary mt-3 me-5">Firmar</button>
+                <button type="button" class="btn btn-primary mt-3 me-5" onclick="startSign()">Firmar</button>
             </div>
 
         </div>
@@ -20,7 +20,7 @@
 </div>
 
 <script>
-    $('#commitmentsDocModal').on('shown.bs.modal', () =>  {
+    $('#commitmentsDocModal').on('shown.bs.modal', () => {
         const base64Data = '<%= commitmentsDocument %>'; // Assuming the base64 data is passed as 'commitmentDocument'
         const byteCharacters = atob(base64Data);
         const byteNumbers = new Array(byteCharacters.length);
@@ -33,4 +33,90 @@
         document.getElementById('pdfViewer').data = url;
         document.getElementById('pdfEmbed').src = url;
     });
+</script>
+
+<!-- Scripts necesarios -->
+<script type="text/javascript" src="./js/autoscript.js"></script>
+<script type="text/javascript">
+    let operationInProgress = false;
+
+    function startSign() {
+        if (operationInProgress) return;
+        operationInProgress = true;
+
+        try {
+            AutoScript.cargarMiniApplet("http://localhost:3000/");
+            AutoScript.setServlets(
+                "http://localhost:3000/commitments/signature",
+                "http://localhost:3000/commitments/signature"
+            );
+            // Filtros de certificados permitidos
+            const ALLOWED_ISSUERS = {
+                FNMT: "ISSUER=CN=AC FNMT Usuarios,OU=Ceres,O=FNMT-RCM,C=ES",
+                DNI_E: "ISSUER=CN=AC DNIE,OU=DNIE,O=DIRECCION GENERAL DE LA POLICIA,C=ES"
+            };
+            const extraParams = {
+                filters: Object.values(ALLOWED_ISSUERS).join('|'),
+                headless: 'true',
+                filterAntigovernment: 'true',
+                checkTime: 'true',
+                checkCertificateValidityInterval: 'true',
+                checkCertificatePolicies: 'true',
+                mandatoryCertificateConditions: 'true',
+                allowTransactions: 'false'
+            };
+            // Callback para la selección de certificado
+            const selectCertSuccess = function (certificate) {
+                // Validar que el certificado sigue cumpliendo los requisitos
+                const signExtraParams = {
+                    ...extraParams,
+                    certFilters: Object.values(ALLOWED_ISSUERS).join('|'),
+                    specificCertificate: certificate,
+                    headless: 'true'
+                };
+                // Iniciamos la firma con el certificado seleccionado
+                AutoScript.sign(
+                    "<%= commitmentsDocument %>",
+                    "SHA256withRSA",
+                    "PAdES",
+                    JSON.stringify(signExtraParams),
+                    function (signature, cert, extraInfo) {
+                        operationInProgress = false;
+                        console.log("Firma completada:", signature);
+                    },
+                    function (errorType, errorMessage) {
+                        handleError(errorType, errorMessage);
+                    }
+                );
+            };
+            // Callback de error genérico
+            const handleError = function (errorType, errorMessage) {
+                operationInProgress = false;
+
+                if (errorType === "es.gob.afirma.core.AOCancelledOperationException") {
+                } else {
+                }
+                console.error("Error:", errorType, errorMessage);
+            };
+            // Iniciamos el proceso de selección de certificado
+            AutoScript.selectCertificate(
+                JSON.stringify(extraParams),
+                selectCertSuccess,
+                handleError
+            );
+        } catch (error) {
+            operationInProgress = false;
+            console.error(error);
+        }
+    }
+    function cancelOperation() {
+        if (!operationInProgress) return;
+
+        operationInProgress = false;
+    }
+    // Limpiar estado al cargar la página
+    window.onload = function () {
+        operationInProgress = false;
+        showProgress(false);
+    };
 </script>

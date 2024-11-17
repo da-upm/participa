@@ -223,10 +223,16 @@ const signCommitments = async (req, res, next) => {
 
 }
 
+const receiveSignature = async (req, res, next) => {
+    console.log('Document:', req.body.document);
+    console.log('Certificate:', req.body.certificate);
+}
+
 module.exports = {
     getProposals,
     getProposal,
     saveCommitment,
     deleteCommitment,
-    signCommitments
+    signCommitments,
+    receiveSignature
 };
