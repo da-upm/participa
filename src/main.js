@@ -30,6 +30,8 @@ const Candidate = require('./models/candidate');
 
 const { globalErrorHandler } = require('./errors');
 
+const { checkFeatureEnabled } = require('./middlewares');
+
 const app = express();
 
 databaseConfig = config.database
@@ -203,7 +205,7 @@ app.use('/api/proposals', proposalRouter);
 //app.use('/api/users', userRouter);
 app.use('/api/commitments', commitmentRouter);
 app.use('/api/admin', adminRouter);
-app.use('/api/questions', questionRouter);
+app.use('/api/questions', checkFeatureEnabled('questions'), questionRouter);
 
 app.use('*', (req, res, next) => {res.status(404).render('notFound')});
 

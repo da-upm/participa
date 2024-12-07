@@ -33,51 +33,31 @@
             <a class="navbar-brand" href="/">
                 <img id="logo" src="./img/logoRector_WH.png" alt="Logo DAUPM">
             </a>
-            <% const currentPage=typeof page !=='undefined' ? page : '' ; %>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link <%= (currentPage === 'index') ? 'active' : '' %>"
-                                aria-current="<%= (currentPage === 'index') ? 'page' : '' %>" href="/">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= (currentPage === 'process') ? 'active' : '' %>"
-                                aria-current="<%= (currentPage === 'process') ? 'page' : '' %>"
-                                href="/process">Proceso</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= (currentPage === 'dates') ? 'active' : '' %>"
-                                aria-current="<%= (currentPage === 'dates') ? 'page' : '' %>" href="/dates">Fechas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= (currentPage === 'candidates') ? 'active' : '' %>"
-                                aria-current="<%= (currentPage === 'candidates') ? 'page' : '' %>"
-                                href="/candidates">Candidaturas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <%= (currentPage === 'questions') ? 'active' : '' %>"
-                                aria-current="<%= (currentPage === 'questions') ? 'page' : '' %>"
-                                href="/questions">Preguntas</a>
-                        </li>
-                    </ul>
+            <div class="collapse navbar-collapse" id="navbarNav" 
+                 hx-get="/nav-menu" 
+                 hx-trigger="load"
+                 hx-swap="innerHTML">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Cargando...</span>
                 </div>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <% if (user==null) { %>
-                                <a class="nav-link" href="/login">Iniciar sesión</a>
-                                <% } else { %>
-                                    <a class="nav-link">
-                                        <%= user.name %>
-                                    </a>
-                                    <% } %>
-                        </li>
-                    </ul>
-                </div>
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <% if (user==null) { %>
+                            <a class="nav-link" href="/login">Iniciar sesión</a>
+                            <% } else { %>
+                                <a class="nav-link">
+                                    <%= user.name %>
+                                </a>
+                            <% } %>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 

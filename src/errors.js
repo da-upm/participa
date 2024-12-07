@@ -13,6 +13,9 @@ module.exports.NotFoundError = NotFoundError;
 class InternalServerError extends Error { }
 module.exports.InternalServerError = InternalServerError;
 
+class FeatureNotEnabledError extends Error { }
+module.exports.FeatureNotEnabledError = FeatureNotEnabledError;
+
 // The global error handler.
 // Express requires the 4 arguments to be present in order to identify this as
 // an error handler.
@@ -126,7 +129,26 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 
 		if (!req.xhr) return res.status(500).redirect('/error');
 		return res.status(500).render('fragments/toastr', { layout: false, req: req });
-		}
+	}
+
+	if (err instanceof FeatureNotEnabledError) {
+		console.error(err.message);
+		req.toastr.error("Esta funcionalidad no está habilitada en la plataforma.", '', {
+				"closeButton": true,
+				"progressBar": true,
+				"positionClass": "toast-bottom-right",
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+		});
+		if (!req.xhr) return res.status(423).redirect('/');
+		return res.status(423).render('fragments/toastr', { layout: false, req: req });
+	}
 
 	// Some other unknown error.
 	console.error("Error inesperado: " + err.message);

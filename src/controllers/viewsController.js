@@ -132,6 +132,16 @@ const getStats = async (_, res) => {
     }
 }
 
+// Obtener las featureFlags de la base de datos, y renderizar la vista nav-menu con las flags.
+const getNavMenu = async (req, res, next) => {
+    try {
+        const featureFlags = await helpers.retrieveFeatureFlags();
+        res.status(200).render('nav-menu', { layout: false, featureFlags });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getIndex,
     getProcess,
@@ -141,5 +151,6 @@ module.exports = {
     getCandidateCommitments,
     getAdmin,
     getStats,
-    getQuestions
+    getQuestions,
+    getNavMenu
 }
