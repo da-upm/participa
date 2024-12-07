@@ -135,3 +135,5 @@ config.json
 rector.daupm.es
 
 src/output
+
+databaseGenScript.js
