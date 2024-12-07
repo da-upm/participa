@@ -137,3 +137,5 @@ rector.daupm.es
 src/output
 
 databaseGenScript.js
+
+data

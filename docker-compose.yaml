@@ -1,0 +1,32 @@
+services:
+  participa:
+    container_name: participa
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  
+  mongo:
+    container_name: mongodb-participa
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root # Example username to use on Mongo Express
+      MONGO_INITDB_ROOT_PASSWORD: root # Example password to use on Mongo Express
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./src/databaseGenScript.js:/docker-entrypoint-initdb.d/databaseGenScript.js:ro
+      - ./data:/data/db
+  mongo-express:
+    container_name: mongo-express
+    restart: always
+    image: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_BASICAUTH: false
