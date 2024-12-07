@@ -10,6 +10,17 @@ const collectionList = [
 
 use(database);
 
+db.createUser({
+    user: 'user',
+    pwd: 'password',
+    roles: [
+        {
+            role: 'readWrite',
+            db: database
+        }
+    ]
+});
+
 collectionList.forEach(collection => {
     db.createCollection(collection);
 });
