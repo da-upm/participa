@@ -4,7 +4,12 @@ Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector
 
 Made with ❤️ by [@Pablofl01](https://github.com/Pablofl01) & [@aalonsolopez](https://github.com/aalonsolopez)
 
-### Código de Terceros
+## Indice
+
+- [Código de Terceros](#codigo-de-terceros)
+- [Donaciones](#donaciones)
+
+## Código de Terceros
 
 Este proyecto incluye código de  [ctt-gob-es/clienteafirma](https://github.com/ctt-gob-es/clienteafirma) en `src/templates/static/js/autoscript.js` que está licenciado bajo:
 
@@ -15,7 +20,7 @@ El código original puede encontrarse en: [https://github.com/ctt-gob-es/cliente
 
 Este código se incorpora respetando los términos de ambas licencias. Las modificaciones realizadas sobre este código están disponibles bajo los mismos términos que el código original.
 
-# Donaciones
+## Donaciones
 
 Si consideras que el trabajo llevado a cabo realizando esta web merece la pena, o te damos lástima, no dudes en aportar un donativo simbólico ❤️
 
