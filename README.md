@@ -5,9 +5,13 @@ Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector
 Made with ❤️ by [@Pablofl01](https://github.com/Pablofl01) & [@aalonsolopez](https://github.com/aalonsolopez)
 
 ## Indice
-
+- [Instalación](#instalación)
 - [Código de Terceros](#codigo-de-terceros)
 - [Donaciones](#donaciones)
+
+## Instalación
+
+TO-DO
 
 ## Código de Terceros
 
