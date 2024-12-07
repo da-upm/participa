@@ -32,6 +32,11 @@ module.exports.retrieveCentres = async () => {
     return result.centres;
 }
 
+module.exports.retrieveFeatureFlags = async () => {
+    const result = await Parameter.findOne({ featureFlags: { $exists: true } });
+    return result.featureFlags;
+};
+
 const smtpTransport = nodemailer.createTransport({
 	host: config.email.host,
 	port: config.email.port,

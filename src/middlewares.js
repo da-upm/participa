@@ -1,6 +1,7 @@
-const { UnauthorizedError, LimitedUserError, InternalServerError } = require('./errors');
+const { UnauthorizedError, LimitedUserError, InternalServerError, FeatureNotEnabledError } = require('./errors');
 const User = require('./models/user');
 const Candidates = require('./models/candidate');
+const Parameter = require('./models/parameter');
 
 function checkLogin(req, res, next) {
     if (!req.session.user?._id) return next(new UnauthorizedError());
@@ -57,4 +58,26 @@ module.exports.checkCandidate = (req, res, next) => {
             console.error(err);
             return next(new InternalServerError('Ha ocurrido un error recuperando el candidato.'));
         });
+};
+
+// Checks if a feature is enabled on the platform.
+module.exports.checkFeatureEnabled = (feature) => (req, res, next) => {
+    Parameter.findOne()
+        .then((parameter) => {
+            if (!parameter) return next(new InternalServerError('El objeto parámetro está vacío.'));
+            if (!parameter.featureFlags[feature]) return next(new FeatureNotEnabledError('La funcionalidad no está habilitada.'));
+            return next();
+        })
+        .catch((err) => {
+            console.error(err);
+            return next(new InternalServerError('Ha ocurrido un error recuperando los parámetros.'));
+        });
+}
+
+
+module.exports.requireHtmx = (req, res, next) => {
+    if (!req.headers['hx-request']) {
+        return res.status(403).send('Acceso no permitido');
+    }
+    next();
 };

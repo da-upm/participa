@@ -1,0 +1,28 @@
+<% const currentPage=typeof page !=='undefined' ? page : '' ; %>
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link <%= (currentPage === 'index') ? 'active' : '' %>"
+            aria-current="<%= (currentPage === 'index') ? 'page' : '' %>" href="/">Inicio</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= (currentPage === 'process') ? 'active' : '' %>"
+            aria-current="<%= (currentPage === 'process') ? 'page' : '' %>"
+            href="/process">Proceso</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= (currentPage === 'dates') ? 'active' : '' %>"
+            aria-current="<%= (currentPage === 'dates') ? 'page' : '' %>" href="/dates">Fechas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <%= (currentPage === 'candidates') ? 'active' : '' %>"
+            aria-current="<%= (currentPage === 'candidates') ? 'page' : '' %>"
+            href="/candidates">Candidaturas</a>
+    </li>
+    <% if (featureFlags.questions) { %>
+        <li class="nav-item">
+            <a class="nav-link <%= (currentPage === 'questions') ? 'active' : '' %>"
+                aria-current="<%= (currentPage === 'questions') ? 'page' : '' %>"
+                href="/questions">Preguntas</a>
+        </li>
+    <% } %>
+</ul>
