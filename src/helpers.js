@@ -81,8 +81,8 @@ module.exports.sendDraftRejectedMail = async (to, htmlBody) => {
 
 module.exports.getFeatureFlag = async (feature) => {
     try {
-        const features = await getFeatureFlags();
-        return features[feature];
+        const result = await Parameter.findOne({ featureFlags: { $exists: true } });
+		return result.featureFlags[feature];
     } catch (error) {
         console.error('Error getting feature flag:', error);
         return undefined;

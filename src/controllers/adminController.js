@@ -288,40 +288,31 @@ const deleteQuestions = async (req, res, next) => {
 
 
 const changeFeatureFlag = async (req, res, next) => {
+    try {
         const feature = req.params.feature;
-        if (!feature) {
-            return next(new BadRequestError('No se ha proporcionado ninguna característica para habilitar.'));
+        const value = req.method === 'PUT';
+
+        const parameter = await Parameter.findOne();
+        console.log("El valor de parameter es " + parameter);
+
+        if (!parameter) {
+            return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
+        }
+        
+        if (parameter.featureFlags[feature] === undefined) {
+            return next(new BadRequestError('La característica solicitada no existe.'));
         }
 
-        Parameter.findOne().then((param) => {
-            console.log("Parameter found:", param);
-            if (!param) {
-                return next(new InternalServerError('No se ha podido obtener el parámetro de configuración.'));
-            }
+        parameter.featureFlags[feature] = value;
+        await parameter.save();
 
-            const flag = param.featureFlags[feature];
-            if (flag === undefined) {
-                return next(new NotFoundError('La característica solicitada no existe.'));
-            }
-
-            // Cambiar el estado de la característica
-            param.featureFlags[feature] = !flag;
-            param.save().then(() => {
-
-                // Renderizar el fragment con el estado ACTUAL
-                res.render('fragments/admin/featuresRow', { 
-                    layout: false,
-                    flag: feature,
-                    enabled: param.featureFlags[feature]
-                });
-            }).catch((error) => {
-                console.error('Error en /admin/features: ' + error.message);
-                return next(new InternalServerError('Error al habilitar la característica.'));
-            });
-        }).catch((error) => {
-            console.error('Error en /admin/features: ' + error.message);
-            return next(new InternalServerError('Error al habilitar la característica.'));
-        });
+        req.toastr.success(`Característica "${feature}" actualizada correctamente.`);
+        res.status(200).render('fragments/admin/featureRow', { layout: false, flag: feature, featureValue: value });
+    } catch (error) {
+        console.error('Error en admin/changeFeatureFlag: ' + error.message);
+        req.toastr.error('Error al cambiar el estado de la característica.');
+        return next(new InternalServerError('Error al cambiar el estado de la característica.'));
+    }
 };
 
 

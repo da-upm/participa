@@ -3,9 +3,6 @@
     <p class="lead">Edita los distintos aspectos de la web desde esta página.</p>
 </div>
 <div class="container mt-5">
-    <!-- ...existing code... -->
-    
-    <!-- Feature Flags Section -->
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
             <div class="card">
@@ -22,8 +19,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for (const [flag, enabled] of Object.entries(featureFlags)) { %>
-                                    <%- include('fragments/admin/featuresRow', { flag, enabled }) %>
+                                <% for (const [flag, featureValue] of Object.entries(featureFlags)) { %>
+                                    <%- include('fragments/admin/featureRow', { flag, featureValue }) %>
                                 <% } %>
                             </tbody>
                         </table>
