@@ -8,6 +8,7 @@ const User = require('../models/user');
 const Question = require('../models/question');
 
 const helpers = require('../helpers');
+const Parameter = require('../models/parameter');
 
 
 const getProposals = async (req, res, next) => {
@@ -285,6 +286,45 @@ const deleteQuestions = async (req, res, next) => {
     }
 };
 
+
+const changeFeatureFlag = async (req, res, next) => {
+        const feature = req.params.feature;
+        if (!feature) {
+            return next(new BadRequestError('No se ha proporcionado ninguna característica para habilitar.'));
+        }
+
+        Parameter.findOne().then((param) => {
+            console.log("Parameter found:", param);
+            if (!param) {
+                return next(new InternalServerError('No se ha podido obtener el parámetro de configuración.'));
+            }
+
+            const flag = param.featureFlags[feature];
+            if (flag === undefined) {
+                return next(new NotFoundError('La característica solicitada no existe.'));
+            }
+
+            // Cambiar el estado de la característica
+            param.featureFlags[feature] = !flag;
+            param.save().then(() => {
+
+                // Renderizar el fragment con el estado ACTUAL
+                res.render('fragments/admin/featuresRow', { 
+                    layout: false,
+                    flag: feature,
+                    enabled: param.featureFlags[feature]
+                });
+            }).catch((error) => {
+                console.error('Error en /admin/features: ' + error.message);
+                return next(new InternalServerError('Error al habilitar la característica.'));
+            });
+        }).catch((error) => {
+            console.error('Error en /admin/features: ' + error.message);
+            return next(new InternalServerError('Error al habilitar la característica.'));
+        });
+};
+
+
 module.exports = {
     getProposals,
     getProposal,
@@ -293,4 +333,5 @@ module.exports = {
     getRejectForm,
     rejectProposal,
     deleteQuestions,
+    changeFeatureFlag
 };

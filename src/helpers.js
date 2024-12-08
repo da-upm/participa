@@ -78,3 +78,13 @@ module.exports.sendDraftRejectedMail = async (to, htmlBody) => {
 		throw new Error(`Error al enviar email: ${error.message}`);
 	}
 };
+
+module.exports.getFeatureFlag = async (feature) => {
+    try {
+        const features = await getFeatureFlags();
+        return features[feature];
+    } catch (error) {
+        console.error('Error getting feature flag:', error);
+        return undefined;
+    }
+};

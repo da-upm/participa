@@ -77,7 +77,8 @@ const getAdmin = async (req, res, next) => {
         res.status(200).render('admin', { proposals, questions, affiliations });
     } catch (error) {
         res.status(404).json({ message: error.message });
-    }}
+    }
+}
 
 // Función para obtener las estadísticas: número total de usuarios, número total de propuestas, número de propuestas borrador, número de propuestas publicadas, propuesta con más apoyos, número máximo de apoyos, número medio de apoyos, número de propuestas por centro, número de propuestas por afiliación.
 const getStats = async (_, res) => {
@@ -133,10 +134,21 @@ const getStats = async (_, res) => {
 }
 
 // Obtener las featureFlags de la base de datos, y renderizar la vista nav-menu con las flags.
+// Aqui nav-menu se usa como fragment, por lo que se renderiza sin layout. Es necesario para en caso de desactivar una featureFlag,
+// se actualice la vista sin necesidad de recargar la página.
+
 const getNavMenu = async (req, res, next) => {
     try {
         const featureFlags = await helpers.retrieveFeatureFlags();
         res.status(200).render('nav-menu', { layout: false, featureFlags });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+const getSettings = async (req, res, next) => {
+    try {
+        res.status(200).render('settings', { page: 'settings', featureFlags: await helpers.retrieveFeatureFlags() });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -152,5 +164,6 @@ module.exports = {
     getAdmin,
     getStats,
     getQuestions,
-    getNavMenu
+    getNavMenu,
+    getSettings
 }
