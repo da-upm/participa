@@ -1,0 +1,18 @@
+<tr>
+    <td><%= flag %></td>
+    <td class="text-center">
+        <div class="form-check form-switch d-flex justify-content-center">
+            <input class="form-check-input align-center"
+                type="checkbox"
+                id="<%= flag %>"
+                name="<%= flag %>"
+                <%= enabled ? 'checked' : '' %>
+                hx-post="/api/admin/features/<%= flag %>"
+                hx-trigger="change"
+                hx-target="closest tr"
+                hx-swap="outerHTML"
+                hx-indicator="this"
+            >
+        </div>
+    </td>
+</tr>

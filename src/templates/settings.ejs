@@ -1,0 +1,36 @@
+<div class="container mt-5 text-center">
+    <h1>Configuración</h1>
+    <p class="lead">Edita los distintos aspectos de la web desde esta página.</p>
+</div>
+<div class="container mt-5">
+    <!-- ...existing code... -->
+    
+    <!-- Feature Flags Section -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">Feature Flags</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Funcionalidad</th>
+                                    <th class="text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (const [flag, enabled] of Object.entries(featureFlags)) { %>
+                                    <%- include('fragments/admin/featuresRow', { flag, enabled }) %>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
