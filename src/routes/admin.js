@@ -17,6 +17,8 @@ router.delete('/proposals/:id([a-f,0-9]{24})', adminController.rejectProposal);
 
 router.delete('/questions', adminController.deleteQuestions);
 
-router.post('/features/:feature', adminController.changeFeatureFlag);
+router.put('/features/:feature', adminController.changeFeatureFlag);
+router.delete('/features/:feature', adminController.changeFeatureFlag);
+
 
 module.exports = router;

@@ -1,0 +1,28 @@
+<% if (featureValue == true) { %>
+    <div class="form-check form-switch d-flex justify-content-center">
+        <input class="form-check-input align-center"
+            type="checkbox"
+            id="<%= flag %>"
+            name="<%= flag %>"
+            enabled
+            hx-delete="/api/admin/features/<%= flag %>"
+            hx-trigger="change"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            hx-indicator="this"
+        >
+    </div>
+<% } else { %>
+    <div class="form-check form-switch d-flex justify-content-center">
+        <input class="form-check-input align-center"
+            type="checkbox"
+            id="<%= flag %>"
+            name="<%= flag %>"
+            hx-put="/api/admin/features/<%= flag %>"
+            hx-trigger="change"
+            hx-target="closest tr"
+            hx-swap="outerHTML"
+            hx-indicator="this"
+        >
+    </div>
+<% } %>
