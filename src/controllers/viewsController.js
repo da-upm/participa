@@ -148,7 +148,8 @@ const getNavMenu = async (req, res, next) => {
 
 const getSettings = async (req, res, next) => {
     try {
-        res.status(200).render('settings', { page: 'settings', featureFlags: await helpers.retrieveFeatureFlags() });
+        let featureFlags = await helpers.retrieveFeatureFlags();
+        res.status(200).render('settings', { page: 'settings', featureFlags });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

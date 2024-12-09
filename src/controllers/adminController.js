@@ -293,7 +293,6 @@ const changeFeatureFlag = async (req, res, next) => {
         const value = req.method === 'PUT';
 
         const parameter = await Parameter.findOne();
-        console.log("El valor de parameter es " + parameter);
 
         if (!parameter) {
             return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
@@ -304,10 +303,11 @@ const changeFeatureFlag = async (req, res, next) => {
         }
 
         parameter.featureFlags[feature] = value;
+        parameter.markModified('featureFlags');
         await parameter.save();
 
         req.toastr.success(`Característica "${feature}" actualizada correctamente.`);
-        res.status(200).render('fragments/admin/featureRow', { layout: false, flag: feature, featureValue: value });
+        return res.status(200).render('fragments/admin/featureRow', { layout: false, flag: feature, featureValue: value })
     } catch (error) {
         console.error('Error en admin/changeFeatureFlag: ' + error.message);
         req.toastr.error('Error al cambiar el estado de la característica.');
