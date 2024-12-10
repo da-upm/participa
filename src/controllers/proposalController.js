@@ -113,7 +113,7 @@ const addSupporter = async (req, res, next) => {
         if (!rawProposal) {
             console.error(`No se encuentra propuesta ${proposalId} para el usuario ${req.session.user.id}.`)
             req.toastr.error("Propuesta no encontrada.");
-            return res.status(409).render('fragments/toastr', { layout: false, req: req });
+            return res.status(404).render('fragments/toastr', { layout: false, req: req });
         }
 
         const user = req.session.user
