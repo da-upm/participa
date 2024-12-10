@@ -302,11 +302,20 @@ const changeFeatureFlag = async (req, res, next) => {
             return next(new BadRequestError('La característica solicitada no existe.'));
         }
 
+        if (parameter.featureFlags[feature] === value) {
+            req.toastr.warning(`La característica solicitada ya está ${value ? 'activada' : 'desactivada'}.`);
+            return res.status(409).render('fragments/toastr', { layout: false, req: req });
+        }
+
         parameter.featureFlags[feature] = value;
         parameter.markModified('featureFlags');
         await parameter.save();
 
         req.toastr.success(`Característica "${feature}" actualizada correctamente.`);
+        res.setHeader(
+			'Hx-Refresh',
+			`true`
+		);
         return res.status(200).render('fragments/admin/featureRow', { layout: false, flag: feature, featureValue: value })
     } catch (error) {
         console.error('Error en admin/changeFeatureFlag: ' + error.message);
