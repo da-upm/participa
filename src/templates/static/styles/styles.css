@@ -1,3 +1,8 @@
+:root {
+    --primary-color: #00509b; /* Default primary color */
+    --secondary-color: #ffffff; /* Default secondary color */
+}
+
 body {
     font-family: 'Comfortaa', sans-serif;
 }
@@ -37,12 +42,12 @@ p,
 /* Navbar custom color */
 .bg-daupm {
     --bs-bg-opacity: 1;
-    background-color: #00509B !important;
+    background-color: var(--primary-color) !important;
     /* Using the color scheme of the reference site */
 }
 
 .text-daupm {
-    color: #00509B !important;
+    color: var(--primary-color) !important;
 }
 
 .modal-content {
@@ -127,7 +132,7 @@ span.badge {
 
 /* Cambiar el color de fondo de la columna de checkboxes para mejorar visibilidad */
 .table td:first-child {
-    background-color: #f8f9fa;
+    background-color: var(--secondary-color);
 }
 
 /* Centrar contenido de la columna de checkboxes verticalmente */

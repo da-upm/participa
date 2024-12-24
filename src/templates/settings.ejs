@@ -29,5 +29,35 @@
             </div>
         </div>
     </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">Colores Personalizados</h3>
+                </div>
+                <div class="card-body">
+                    <form id="colorForm">
+                        <div class="form-group">
+                            <label for="primaryColor">Color Primario</label>
+                            <input type="color" id="primaryColor" name="primaryColor" class="form-control" value="<%= colors.primaryColor %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="secondaryColor">Color Secundario</label>
+                            <input type="color" id="secondaryColor" name="secondaryColor" class="form-control" value="<%= colors.secondaryColor %>">
+                        </div>
+                        <button
+                        type="submit"
+                        class="btn btn-primary mt-3"
+                        hx-post="/api/admin/colors"
+                        hx-trigger="click"
+                        hx-target="#colorForm"
+                        hx-swap="outerHTML"
+                        hx-target-error="#toastr-container"
+                        >Guardar Colores</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 

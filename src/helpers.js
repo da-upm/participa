@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 
+const fs = require('node:fs');
+
 const config = require('./config.json');
 
 const Parameter = require('./models/parameter');
@@ -88,3 +90,23 @@ module.exports.getFeatureFlag = async (feature) => {
         return undefined;
     }
 };
+
+module.exports.retrieveColors = async () => {
+	try {
+		const cssFileLocation = 'src/templates/static/styles/styles.css';
+		const css = fs.readFileSync(cssFileLocation, 'utf8');
+
+		const primaryColorRegEx = /--primary-color: ([#a-fA-F0-9]+);/g;
+
+		const primaryColor = css.match(primaryColorRegEx)[0].replace(primaryColorRegEx, '$1');
+
+		const secondaryColorRegEx = /--secondary-color: ([#a-fA-F0-9]+);/g;
+
+		const secondaryColor = css.match(secondaryColorRegEx)[0].replace(secondaryColorRegEx, '$1');
+
+		return { primaryColor: primaryColor, secondaryColor: secondaryColor };
+	} catch (error) {
+		console.error('Error getting colors:', error);
+		return undefined;
+	}
+}
