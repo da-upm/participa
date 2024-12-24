@@ -20,5 +20,7 @@ router.delete('/questions', adminController.deleteQuestions);
 router.put('/features/:feature', adminController.changeFeatureFlag);
 router.delete('/features/:feature', adminController.changeFeatureFlag);
 
+router.post('/colors', adminController.changeColors);
+
 
 module.exports = router;

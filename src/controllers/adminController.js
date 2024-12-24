@@ -1,4 +1,5 @@
 const sanitizeHtml = require('sanitize-html');
+const fs = require('node:fs');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
@@ -324,6 +325,39 @@ const changeFeatureFlag = async (req, res, next) => {
     }
 };
 
+const changeColors = async (req, res, next) => {
+    try {
+        const { primaryColor, secondaryColor } = req.body;
+
+        if (!primaryColor || !secondaryColor) {
+            return next(new BadRequestError('Se deben proporcionar ambos colores.'));
+        }
+
+        if (!/^#[0-9A-F]{6}$/i.test(primaryColor) || !/^#[0-9A-F]{6}$/i.test(secondaryColor)) {
+            return next(new BadRequestError('Los colores proporcionados no son válidos.'));
+        }
+
+        const fileDir = 'src/templates/static/styles/styles.css';
+
+        const file = fs.readFileSync(fileDir, 'utf8');
+        
+        const newFile = file.replace(/--primary-color: #\w+;/, `--primary-color: ${primaryColor};`);
+        const newFile2 = newFile.replace(/--secondary-color: #\w+;/, `--secondary-color: ${secondaryColor};`);
+
+        fs.writeFileSync(fileDir, newFile2);
+
+        req.toastr.success('Colores de la página actualizados correctamente.');
+        res.setHeader(
+            'Hx-Refresh',
+            `true`
+        );
+        return res.status(200).render('fragments/toastr', { layout: false, req: req });
+    } catch (error) {
+        console.error('Error en admin/setColorsOfPage: ' + error.message);
+        req.toastr.error('Error al cambiar los colores de la página.');
+        return next(new InternalServerError('Error al cambiar los colores de la página.'))
+    }
+}
 
 module.exports = {
     getProposals,
@@ -333,5 +367,6 @@ module.exports = {
     getRejectForm,
     rejectProposal,
     deleteQuestions,
-    changeFeatureFlag
+    changeFeatureFlag,
+    changeColors
 };
