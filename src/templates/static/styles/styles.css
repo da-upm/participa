@@ -150,3 +150,8 @@ span.badge {
     text-align: center;
     vertical-align: middle;
 }
+
+/* Margenes de las secciones de configuración */
+.settings-container {
+    margin-bottom: 30px;
+}
