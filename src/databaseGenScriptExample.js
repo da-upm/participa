@@ -103,5 +103,9 @@ db.parameters.insert({
         '90': 'Rectorado',
         '91': 'ICE',
         '97': 'IDR'
+    },
+    colors: {
+        primary: '#00509b',
+        secondary: '#ffffff',
     }
 });

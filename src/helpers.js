@@ -93,18 +93,8 @@ module.exports.getFeatureFlag = async (feature) => {
 
 module.exports.retrieveColors = async () => {
 	try {
-		const cssFileLocation = 'src/templates/static/styles/styles.css';
-		const css = fs.readFileSync(cssFileLocation, 'utf8');
-
-		const primaryColorRegEx = /--primary-color: ([#a-fA-F0-9]+);/g;
-
-		const primaryColor = css.match(primaryColorRegEx)[0].replace(primaryColorRegEx, '$1');
-
-		const secondaryColorRegEx = /--secondary-color: ([#a-fA-F0-9]+);/g;
-
-		const secondaryColor = css.match(secondaryColorRegEx)[0].replace(secondaryColorRegEx, '$1');
-
-		return { primaryColor: primaryColor, secondaryColor: secondaryColor };
+		const result = await Parameter.findOne({ colors: { $exists: true } });
+		return result.colors;
 	} catch (error) {
 		console.error('Error getting colors:', error);
 		return undefined;

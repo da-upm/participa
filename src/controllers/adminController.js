@@ -337,14 +337,23 @@ const changeColors = async (req, res, next) => {
             return next(new BadRequestError('Los colores proporcionados no son válidos.'));
         }
 
-        const fileDir = 'src/templates/static/styles/styles.css';
+        try {
+            const parameter = await Parameter.findOne();
+            if (!parameter) {
+                return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
+            }
 
-        const file = fs.readFileSync(fileDir, 'utf8');
-        
-        const newFile = file.replace(/--primary-color: #\w+;/, `--primary-color: ${primaryColor};`);
-        const newFile2 = newFile.replace(/--secondary-color: #\w+;/, `--secondary-color: ${secondaryColor};`);
+            parameter.colors.primary = primaryColor;
+            parameter.colors.secondary = secondaryColor;
+          
+            parameter.markModified('colors');
+            await parameter.save();
+        } catch (error) {
+            return next(new InternalServerError('Error al guardar los colores en la base de datos.'));
+        }
 
-        fs.writeFileSync(fileDir, newFile2);
+        res.locals.colors = { primary: primaryColor, secondary: secondaryColor };
+
 
         req.toastr.success('Colores de la página actualizados correctamente.');
         res.setHeader(
@@ -353,7 +362,7 @@ const changeColors = async (req, res, next) => {
         );
         return res.status(200).render('fragments/toastr', { layout: false, req: req });
     } catch (error) {
-        console.error('Error en admin/setColorsOfPage: ' + error.message);
+        console.error('Error en admin/changeColors: ' + error.message);
         req.toastr.error('Error al cambiar los colores de la página.');
         return next(new InternalServerError('Error al cambiar los colores de la página.'))
     }
