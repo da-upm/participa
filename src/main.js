@@ -178,6 +178,13 @@ app.use((req, res, next) => {
 	next();
 });
 
+// Middleware to send to res.locals the colors from helpers.retrieveColors
+app.use(async (req, res, next) => {
+	const colors = await helpers.retrieveColors();
+	res.locals.colors = colors;
+	next();
+});
+
 // Login routes.
 app.get('/login', passport.authenticate('oidc', { scope: config.sso.scope }));
 
