@@ -1,3 +1,8 @@
+:root {
+    --primary-color: #00509b; /* Default primary color */
+    --secondary-color: #ffffff; /* Default secondary color */
+}
+
 body {
     font-family: 'Comfortaa', sans-serif;
 }
@@ -148,5 +153,9 @@ span.badge {
 
 /* Margenes de las secciones de configuración */
 .settings-container {
+    margin-bottom: 30px;
+}
+
+.admin-container {
     margin-bottom: 30px;
 }

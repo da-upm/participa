@@ -1,4 +1,5 @@
 const sanitizeHtml = require('sanitize-html');
+const fs = require('node:fs');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
@@ -344,6 +345,7 @@ const changeColors = async (req, res, next) => {
 
             parameter.colors.primary = primaryColor;
             parameter.colors.secondary = secondaryColor;
+          
             parameter.markModified('colors');
             await parameter.save();
         } catch (error) {
@@ -351,6 +353,7 @@ const changeColors = async (req, res, next) => {
         }
 
         res.locals.colors = { primary: primaryColor, secondary: secondaryColor };
+
 
         req.toastr.success('Colores de la página actualizados correctamente.');
         res.setHeader(

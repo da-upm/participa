@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 
+const fs = require('node:fs');
+
 const config = require('./config.json');
 
 const Parameter = require('./models/parameter');
