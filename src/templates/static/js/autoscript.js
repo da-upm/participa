@@ -4608,7 +4608,7 @@ var Cipher = {
 		
 		// A cadena
 		var byteString;
-		var byteArray = str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ");
+		var byteArray = str.replace(/\r|\n/g, "").replace(/([\da-bi-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ");
 		
 		// Vaciamos la cadena por liberar recursos
 		str = "";

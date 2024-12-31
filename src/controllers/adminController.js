@@ -368,6 +368,59 @@ const changeColors = async (req, res, next) => {
     }
 }
 
+const changeText = async (req, res, next) => {
+    try {
+        const parameter = await Parameter.findOne();
+        if (!parameter) {
+            return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
+        }
+
+        const texts = {
+            delegationName: req.body.delegationName,
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
+            web: req.body.web,
+            emailElections: req.body.emailElections,
+            socialMedia: []
+        };
+
+        if (req.body.socialMedia) {
+            const socialMediaArray = Array.isArray(req.body.socialMedia) ? 
+                req.body.socialMedia : [req.body.socialMedia];
+
+            texts.socialMedia = socialMediaArray
+                .filter(media => media.link && media.icon && media.name)
+                .map(media => {
+                    if (!/^https?:\/\/.+\..+/.test(media.link)) {
+                        throw new BadRequestError('Las URLs de las redes sociales no son válidas.');
+                    }
+                    return {
+                        icon: media.icon,
+                        name: media.name,
+                        link: media.link
+                    };
+                });
+        }
+
+        parameter.text = texts;
+
+        parameter.markModified('text');
+        parameter.markModified('text.socialMedia');
+        
+        await parameter.save();
+
+        res.locals.texts = texts;
+
+        req.toastr.success('Textos de la página actualizados correctamente.');
+        res.setHeader('HX-Refresh', 'true');
+        return res.status(200).render('fragments/toastr', { layout: false, req: req });
+    } catch (error) {
+        console.error('Error en admin/changeText:', error);
+        req.toastr.error('Error al guardar los textos en la base de datos.');
+        return next(new InternalServerError('Error al guardar los textos en la base de datos.'));
+    }
+}
+
 module.exports = {
     getProposals,
     getProposal,
@@ -377,5 +430,6 @@ module.exports = {
     rejectProposal,
     deleteQuestions,
     changeFeatureFlag,
-    changeColors
+    changeColors,
+    changeText
 };

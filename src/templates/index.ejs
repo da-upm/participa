@@ -1,8 +1,8 @@
 <div class="container mt-5">
     <!-- Header Section -->
     <div class="text-center">
-        <h1>Propuestas para el Rector/a</h1>
-        <p class="lead">Comparte tus ideas para la mejora de nuestra universidad.</p>
+        <h1><%= texts.headerTitle %></h1>
+        <p class="lead"><%= texts.headerSubtitle %></p>
         <button class="btn btn-primary" hx-get="/api/proposals/draft-form" hx-target="#proposalDraftModal"
             hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show');">Aportar
             Propuesta</button>
