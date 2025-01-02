@@ -185,6 +185,12 @@ app.use(async (req, res, next) => {
 	next();
 });
 
+app.use(async (req, res, next) => {
+	const texts = await helpers.retrieveTexts();
+	res.locals.texts = texts;
+	next();
+});
+
 // Login routes.
 app.get('/login', passport.authenticate('oidc', { scope: config.sso.scope }));
 

@@ -22,5 +22,7 @@ router.delete('/features/:feature', adminController.changeFeatureFlag);
 
 router.post('/colors', adminController.changeColors);
 
+router.post('/text', adminController.changeText);
+
 
 module.exports = router;

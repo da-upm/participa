@@ -107,5 +107,31 @@ db.parameters.insert({
     colors: {
         primary: '#00509b',
         secondary: '#ffffff',
-    }
+    },
+    text: {
+        headerTitle: 'Propuestas para el Rector/a',
+        headerSubtitle: 'Comparte tus ideas para la mejora de nuestra universidad.',
+        delegationName: 'Delegación de Alumnos UPM',
+        phoneNumber: '91 067 06 28',
+        email: 'da@upm.es',
+        web: 'da.upm.es',
+        emailElections: 'da.elecciones@upm.es',
+        socialMedia: [
+            {
+                icon: 'bi bi-twitter-x',
+                name: '@Delegacion_UPM',
+                link: 'https://twitter.com/Delegacion_UPM'
+            },
+            {
+                icon: 'bi bi-instagram',
+                name: '@delegacionupm',
+                link: 'https://www.instagram.com/delegacionupm/'
+            },
+            {
+                icon: 'bi bi-youtube',
+                name: 'Delegación de Alumnos UPM',
+                link: 'https://www.youtube.com/channel/UCwhhsM-aaZ4bg_Mk_Vjzg0A'
+            }
+        ]
+    },
 });

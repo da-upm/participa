@@ -100,3 +100,13 @@ module.exports.retrieveColors = async () => {
 		return undefined;
 	}
 }
+
+module.exports.retrieveTexts = async () => {
+	try {
+		const result = await Parameter.findOne({ text: { $exists: true } });
+		return result.text;
+	} catch (error) {
+		console.error('Error getting text:', error);
+		return undefined;
+	}
+}

@@ -368,6 +368,77 @@ const changeColors = async (req, res, next) => {
     }
 }
 
+const changeText = async (req, res, next) => {
+    try {
+        const currentParameter = await Parameter.findOne();
+        if (!currentParameter) {
+            return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
+        }
+
+        const texts = {
+            headerTitle: req.body.headerTitle,
+            headerSubtitle: req.body.headerSubtitle,
+            delegationName: req.body.delegationName,
+            phoneNumber: req.body.phoneNumber,
+            email: req.body.email,
+            web: req.body.web,
+            emailElections: req.body.emailElections,
+            socialMedia: []
+        };
+
+        // 3. Validar campos requeridos
+        for (const key in texts) {
+            if (!texts[key] && key !== 'socialMedia') {
+                req.toastr.warning(`El campo "${key}" no puede estar vacío.`);
+                return res.status(400).render('fragments/toastr', { layout: false, req: req });
+            }
+        }
+
+        // 4. Procesar redes sociales
+        if (req.body.socialMedia) {
+            const socialMediaArray = Array.isArray(req.body.socialMedia) ? 
+                req.body.socialMedia : [req.body.socialMedia];
+
+            texts.socialMedia = socialMediaArray
+                .filter(media => media.link && media.icon && media.name)
+                .map(media => {
+                    if (!/^https?:\/\/.+\..+/.test(media.link)) {
+                        throw new BadRequestError('Las URLs de las redes sociales no son válidas.');
+                    }
+                    return {
+                        icon: media.icon,
+                        name: media.name,
+                        link: media.link
+                    };
+                });
+        }
+
+        const newParameter = new Parameter({
+            ...currentParameter.toObject(),
+            text: texts
+        });
+
+        await Parameter.findByIdAndDelete(currentParameter._id);
+
+        const savedParameter = await newParameter.save();
+
+        if (!savedParameter) {
+            req.toastr.error('Error al guardar los textos en la base de datos.');
+            return next(new InternalServerError('Error al guardar los textos en la base de datos.'));
+        }
+
+        res.locals.texts = texts;
+        req.toastr.success('Textos de la página actualizados correctamente.');
+        res.setHeader('HX-Refresh', 'true');
+        return res.status(200).render('fragments/toastr', { layout: false, req: req });
+
+    } catch (error) {
+        console.error('Error en admin/changeText:', error);
+        req.toastr.error('Error al guardar los textos en la base de datos.');
+        return next(new InternalServerError('Error al guardar los textos en la base de datos.'));
+    }
+};
+
 module.exports = {
     getProposals,
     getProposal,
@@ -377,5 +448,6 @@ module.exports = {
     rejectProposal,
     deleteQuestions,
     changeFeatureFlag,
-    changeColors
+    changeColors,
+    changeText
 };
