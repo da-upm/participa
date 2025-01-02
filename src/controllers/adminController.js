@@ -370,12 +370,14 @@ const changeColors = async (req, res, next) => {
 
 const changeText = async (req, res, next) => {
     try {
-        const parameter = await Parameter.findOne();
-        if (!parameter) {
+        const currentParameter = await Parameter.findOne();
+        if (!currentParameter) {
             return next(new InternalServerError('No se ha encontrado el documento de parámetros.'));
         }
 
         const texts = {
+            headerTitle: req.body.headerTitle,
+            headerSubtitle: req.body.headerSubtitle,
             delegationName: req.body.delegationName,
             phoneNumber: req.body.phoneNumber,
             email: req.body.email,
@@ -384,6 +386,15 @@ const changeText = async (req, res, next) => {
             socialMedia: []
         };
 
+        // 3. Validar campos requeridos
+        for (const key in texts) {
+            if (!texts[key] && key !== 'socialMedia') {
+                req.toastr.warning(`El campo "${key}" no puede estar vacío.`);
+                return res.status(400).render('fragments/toastr', { layout: false, req: req });
+            }
+        }
+
+        // 4. Procesar redes sociales
         if (req.body.socialMedia) {
             const socialMediaArray = Array.isArray(req.body.socialMedia) ? 
                 req.body.socialMedia : [req.body.socialMedia];
@@ -402,24 +413,31 @@ const changeText = async (req, res, next) => {
                 });
         }
 
-        parameter.text = texts;
+        const newParameter = new Parameter({
+            ...currentParameter.toObject(),
+            text: texts
+        });
 
-        parameter.markModified('text');
-        parameter.markModified('text.socialMedia');
-        
-        await parameter.save();
+        await Parameter.findByIdAndDelete(currentParameter._id);
+
+        const savedParameter = await newParameter.save();
+
+        if (!savedParameter) {
+            req.toastr.error('Error al guardar los textos en la base de datos.');
+            return next(new InternalServerError('Error al guardar los textos en la base de datos.'));
+        }
 
         res.locals.texts = texts;
-
         req.toastr.success('Textos de la página actualizados correctamente.');
         res.setHeader('HX-Refresh', 'true');
         return res.status(200).render('fragments/toastr', { layout: false, req: req });
+
     } catch (error) {
         console.error('Error en admin/changeText:', error);
         req.toastr.error('Error al guardar los textos en la base de datos.');
         return next(new InternalServerError('Error al guardar los textos en la base de datos.'));
     }
-}
+};
 
 module.exports = {
     getProposals,

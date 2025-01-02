@@ -63,6 +63,7 @@ if (config.server.usingProxy) app.set('trust proxy', 1);
 
 console.info("Conectando a MongoDB mediante: ", mongodbURI);
 
+mongoose.set('debug', true);
 mongoose.connect(mongodbURI);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection

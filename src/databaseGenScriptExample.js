@@ -116,23 +116,22 @@ db.parameters.insert({
         email: 'da@upm.es',
         web: 'da.upm.es',
         emailElections: 'da.elecciones@upm.es',
+        socialMedia: [
+            {
+                icon: 'bi bi-twitter-x',
+                name: '@Delegacion_UPM',
+                link: 'https://twitter.com/Delegacion_UPM'
+            },
+            {
+                icon: 'bi bi-instagram',
+                name: '@delegacionupm',
+                link: 'https://www.instagram.com/delegacionupm/'
+            },
+            {
+                icon: 'bi bi-youtube',
+                name: 'Delegación de Alumnos UPM',
+                link: 'https://www.youtube.com/channel/UCwhhsM-aaZ4bg_Mk_Vjzg0A'
+            }
+        ]
     },
-    socialMedia: [
-        {
-            icon: 'bi bi-twitter-x',
-            name: '@Delegacion_UPM',
-            link: 'https://twitter.com/Delegacion_UPM'
-        },
-        {
-            icon: 'bi bi-instagram',
-            name: '@delegacionupm',
-            link: 'https://www.instagram.com/delegacionupm/'
-        },
-        {
-            icon: 'bi bi-youtube',
-            name: 'Delegación de Alumnos UPM',
-            link: 'https://www.youtube.com/channel/UCwhhsM-aaZ4bg_Mk_Vjzg0A'
-        }
-    ]
-      
 });

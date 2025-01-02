@@ -159,8 +159,8 @@
                                             <% } %>
                                             <div class="form-row mb-4">
                                                 <div class="col mb-4">
-                                                    <label for="socialMediaIcon0">Icono</label>
-                                                    <select id="socialMediaIcon0" name="socialMedia[<%= index %>][icon]" class="form-control" selected="<%= texts.socialMedia[social].icon %>">
+                                                    <label for="socialMediaIcon<%= index %>">Icono</label>
+                                                    <select id="socialMediaIcon<%= index %>" name="socialMedia[<%= index %>][icon]" class="form-control" selected="<%= texts.socialMedia[social].icon %>">
                                                         <% for(let key in icons) { %>
                                                             <% if(icons[key] == texts.socialMedia[social].icon) { %>
                                                                 <option value="<%= icons[key] %>" selected><%= key.charAt(0).toUpperCase() + key.slice(1) %></option>
@@ -171,12 +171,17 @@
                                                     </select>
                                                 </div>
                                                 <div class="col mb-4">
-                                                    <label for="socialMediaName0">Nombre</label>
-                                                    <input type="text" id="socialMediaName0" name="socialMedia[<%= index %>][name]" class="form-control" value="<%= texts.socialMedia[social].name %>">
+                                                    <label for="socialMediaName<%= index %>">Nombre</label>
+                                                    <input type="text" id="socialMediaName<%= index %>" name="socialMedia[<%= index %>][name]" class="form-control" value="<%= texts.socialMedia[social].name %>">
                                                 </div>
                                                 <div class="col mb-4">
-                                                    <label for="socialMediaLink0">Enlace</label>
-                                                    <input type="text" id="socialMediaLink0" name="socialMedia[<%= index %>][link]" class="form-control" value="<%= texts.socialMedia[social].link %>">
+                                                    <label for="socialMediaLink<%= index %>">Enlace</label>
+                                                    <input type="text" id="socialMediaLink<%= index %>" name="socialMedia[<%= index %>][link]" class="form-control" value="<%= texts.socialMedia[social].link %>">
+                                                </div>
+                                                <div class="col-auto mb-4 d-flex align-items-end">
+                                                    <button type="button" class="btn btn-danger" onclick="removeSocialMedia(this)">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         <% index++ %>
@@ -242,8 +247,51 @@ document.getElementById('addSocialMediaButton').addEventListener('click', functi
             <label for="socialMediaLink${index}">Enlace</label>
             <input type="text" id="socialMediaLink${index}" name="socialMedia[${index}][link]" class="form-control" value="">
         </div>
+        <div class="col-auto mb-4 d-flex align-items-end">
+            <button type="button" class="btn btn-danger" onclick="removeSocialMedia(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
     `;
     container.appendChild(newField);
 });
+
+function removeSocialMedia(button) {
+    const row = button.closest('.form-row');
+    const separator = row.previousElementSibling;
+    if (separator && separator.className === 'social-media-separator') {
+        separator.remove();
+    }
+    row.remove();
+    reindexSocialMedia();
+}
+
+// Debido a que los elementos se eliminan y añaden dinámicamente, es necesario reindexar los elementos.
+// Si no se hace esto, puede dar problemas al enviar el formulario, ya que podrían haber elementos con
+// el mismo nombre.
+
+function reindexSocialMedia() {
+    const container = document.getElementById('socialMediaContainer');
+    const rows = container.getElementsByClassName('form-row');
+    
+    Array.from(rows).forEach((row, index) => {
+        const select = row.querySelector('select');
+        const inputs = row.querySelectorAll('input');
+        const labels = row.querySelectorAll('label');
+        
+        select.id = `socialMediaIcon${index}`;
+        select.name = `socialMedia[${index}][icon]`;
+        
+        inputs[0].id = `socialMediaName${index}`;
+        inputs[0].name = `socialMedia[${index}][name]`;
+        
+        inputs[1].id = `socialMediaLink${index}`;
+        inputs[1].name = `socialMedia[${index}][link]`;
+
+        labels[0].htmlFor = `socialMediaIcon${index}`;
+        labels[1].htmlFor = `socialMediaName${index}`;
+        labels[2].htmlFor = `socialMediaLink${index}`;
+    });
+}
 </script>
 
