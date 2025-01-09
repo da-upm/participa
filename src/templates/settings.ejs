@@ -208,7 +208,35 @@
                 </div>
             </div>
         </div>
-    </div>              
+    </div>
+    
+    <!-- Logo Photo Change -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">Cambiar Logo</h3>
+                </div>
+                <div class="card-body">
+                    <form id="logoForm" enctype="multipart/form-data">
+                        <div class="form-group mb-4">
+                            <label for="logo">Logo</label>
+                            <input type="file" id="logo" name="logo" class="form-control">
+                        </div>
+                        <button
+                        type="submit"
+                        class="btn btn-primary mt-3"
+                        hx-post="/api/admin/logo"
+                        hx-trigger="click"
+                        hx-target="#logoForm"
+                        hx-swap="outerHTML"
+                        hx-target-error="#toastr-container"
+                        >Cambiar Logo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

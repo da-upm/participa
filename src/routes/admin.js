@@ -24,5 +24,6 @@ router.post('/colors', adminController.changeColors);
 
 router.post('/text', adminController.changeText);
 
+router.post('/logo', adminController.changeLogo);
 
 module.exports = router;
