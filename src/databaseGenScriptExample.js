@@ -109,6 +109,7 @@ db.parameters.insert({
         secondary: '#ffffff',
     },
     text: {
+        pageTitle: 'Participa DA-UPM',
         headerTitle: 'Propuestas para el Rector/a',
         headerSubtitle: 'Comparte tus ideas para la mejora de nuestra universidad.',
         delegationName: 'Delegación de Alumnos UPM',
