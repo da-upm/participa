@@ -376,6 +376,7 @@ const changeText = async (req, res, next) => {
         }
 
         const texts = {
+            pageTitle: req.body.pageTitle,
             headerTitle: req.body.headerTitle,
             headerSubtitle: req.body.headerSubtitle,
             delegationName: req.body.delegationName,
