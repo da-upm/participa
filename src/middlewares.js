@@ -1,4 +1,4 @@
-const { UnauthorizedError, LimitedUserError, InternalServerError, FeatureNotEnabledError } = require('./errors');
+const { UnauthorizedError, LimitedUserError, InternalServerError, FeatureNotEnabledError, RestrictedUserError } = require('./errors');
 const User = require('./models/user');
 const Candidates = require('./models/candidate');
 const Parameter = require('./models/parameter');
@@ -80,4 +80,14 @@ module.exports.requireHtmx = (req, res, next) => {
         return res.status(403).send('Acceso no permitido');
     }
     next();
+};
+
+module.exports.checkSchoolRestriction = (req, res, next) => {
+    Parameter.findOne()
+        .then((parameter) => {
+            if (!parameter) return next(new InternalServerError('El objeto parámetro está vacío.'));
+            if (!parameter.schoolRestricted || parameter.schoolRestricted == false) return next();
+            if (req.session.user.centre.includes(parameter.schoolRestricted)) return next();
+            return next(new RestrictedUserError());
+        })
 };
