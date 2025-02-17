@@ -108,6 +108,12 @@ db.parameters.insert({
         primary: '#00509b',
         secondary: '#ffffff',
     },
+    featureFlags: {
+        'questions': true,
+        'candidates': true,
+        'process': true,
+        'dates': true
+    },
     text: {
         pageTitle: 'Participa DA-UPM',
         headerTitle: 'Propuestas para el Rector/a',
