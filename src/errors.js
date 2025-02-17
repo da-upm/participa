@@ -4,6 +4,9 @@ module.exports.BadRequestError = BadRequestError;
 class LimitedUserError extends Error { }
 module.exports.LimitedUserError = LimitedUserError;
 
+class RestrictedUserError extends Error { }
+module.exports.RestrictedUserError = RestrictedUserError;
+
 class UnauthorizedError extends Error { }
 module.exports.UnauthorizedError = UnauthorizedError;
 
@@ -90,6 +93,25 @@ module.exports.globalErrorHandler = (err, req, res, next) => {
 		
 		return res.status(403).redirect('/');
 	}
+
+	if (err instanceof RestrictedUserError) {
+		console.warn(`El usuario ${req.session.user.id} ha intentado realizar una acción pero no pertenece a la escuela habilitada.`)
+		req.toastr.error("No perteneces a la escuela habilitada.", '', {
+			"closeButton": true,
+			"progressBar": true,
+			"positionClass": "toast-bottom-right",
+			"showDuration": "300",
+			"hideDuration": "1000",
+			"timeOut": "5000",
+			"extendedTimeOut": "1000",
+			"showEasing": "swing",
+			"hideEasing": "linear",
+			"showMethod": "fadeIn",
+			"hideMethod": "fadeOut"
+		});
+		return res.status(400).render('fragments/toastr', { layout: false, req: req });
+	}
+
 
 	if (err instanceof NotFoundError) {
 		req.toastr.error(err.message, '', {

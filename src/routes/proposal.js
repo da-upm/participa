@@ -8,9 +8,9 @@ router.get('/:id([a-f,0-9]{24})', proposalController.getProposal);
 
 router.use(middlewares.checkLogin);
 
-router.get('/draft-form', proposalController.getDraftForm);
-router.post('/draft', proposalController.sendProposalAsDraft);
-router.post('/:id([a-f,0-9]{24})/support', proposalController.addSupporter);
-router.delete('/:id([a-f,0-9]{24})/support', proposalController.removeSupporter);
+router.get('/draft-form', middlewares.checkSchoolRestriction, proposalController.getDraftForm);
+router.post('/draft', middlewares.checkSchoolRestriction, proposalController.sendProposalAsDraft);
+router.post('/:id([a-f,0-9]{24})/support', middlewares.checkSchoolRestriction, proposalController.addSupporter);
+router.delete('/:id([a-f,0-9]{24})/support', middlewares.checkSchoolRestriction, proposalController.removeSupporter);
 
 module.exports = router;
