@@ -114,6 +114,7 @@ db.parameters.insert({
         'process': true,
         'dates': true
     },
+    // schoolRestricted: 61, Only enable if you want to restrict the school to the number of the center.
     text: {
         pageTitle: 'Participa DA-UPM',
         headerTitle: 'Propuestas para el Rector/a',
