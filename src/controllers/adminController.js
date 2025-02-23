@@ -327,13 +327,13 @@ const changeFeatureFlag = async (req, res, next) => {
 
 const changeColors = async (req, res, next) => {
     try {
-        const { primaryColor, secondaryColor } = req.body;
+        const { primaryColor, secondaryColor, primaryButtonColor, secondaryButtonColor } = req.body;
 
-        if (!primaryColor || !secondaryColor) {
-            return next(new BadRequestError('Se deben proporcionar ambos colores.'));
+        if (!primaryColor || !secondaryColor || !primaryButtonColor|| !secondaryButtonColor) {
+            return next(new BadRequestError('Se deben proporcionar todos los colores.'));
         }
 
-        if (!/^#[0-9A-F]{6}$/i.test(primaryColor) || !/^#[0-9A-F]{6}$/i.test(secondaryColor)) {
+        if (!/^#[0-9A-F]{6}$/i.test(primaryColor) || !/^#[0-9A-F]{6}$/i.test(secondaryColor) || !/^#[0-9A-F]{6}$/i.test(primaryButtonColor) || !/^#[0-9A-F]{6}$/i.test(secondaryButtonColor)) {
             return next(new BadRequestError('Los colores proporcionados no son válidos.'));
         }
 
@@ -345,6 +345,8 @@ const changeColors = async (req, res, next) => {
 
             parameter.colors.primary = primaryColor;
             parameter.colors.secondary = secondaryColor;
+            parameter.colors.primaryButton = primaryButtonColor;
+            parameter.colors.secondaryButton = secondaryButtonColor;
           
             parameter.markModified('colors');
             await parameter.save();
@@ -352,7 +354,7 @@ const changeColors = async (req, res, next) => {
             return next(new InternalServerError('Error al guardar los colores en la base de datos.'));
         }
 
-        res.locals.colors = { primary: primaryColor, secondary: secondaryColor };
+        res.locals.colors = { primary: primaryColor, secondary: secondaryColor, primaryButton: primaryButtonColor, secondaryButton: secondaryButtonColor };
 
 
         req.toastr.success('Colores de la página actualizados correctamente.');
