@@ -37,12 +37,22 @@ p,
 /* Navbar custom color */
 .bg-daupm {
     --bs-bg-opacity: 1;
-    background-color: var(--primary-color) !important;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
     /* Using the color scheme of the reference site */
 }
 
 .text-daupm {
     color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-button-color);
+    border-color: var(--primary-button-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-button-color);
+    border-color: var(--secondary-button-color);
 }
 
 .modal-content {
@@ -120,15 +130,11 @@ span.badge {
 
 /* Aumentar contraste de las checkboxes */
 .table .form-check-input:checked {
-    background-color: #007bff;
+    background-color: var(--primary-button-color);
     /* Color azul para las checkboxes seleccionadas */
-    border-color: #007bff;
+    border-color: var(--primary-button-color);
 }
 
-/* Cambiar el color de fondo de la columna de checkboxes para mejorar visibilidad */
-.table td:first-child {
-    background-color: var(--secondary-color);
-}
 
 /* Centrar contenido de la columna de checkboxes verticalmente */
 .table td {

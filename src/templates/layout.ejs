@@ -27,6 +27,8 @@
         :root {
             --primary-color: <%= colors.primary %>;
             --secondary-color: <%= colors.secondary %>;
+            --primary-button-color: <%= colors.primaryButton %>;
+            --secondary-button-color: <%= colors.secondaryButton %>;
         }
     </style>
 </head>
@@ -74,7 +76,7 @@
 
     <div id="toastr-container"><%- toasts %></div>
 
-    <footer class="bg-daupm text-white py-4 mt-auto">
+    <footer class="bg-daupm text-white p-4 mt-auto">
         <div class="container">
             <div class="row">
                 <!-- Primera columna -->
@@ -87,7 +89,6 @@
                         <li><strong>Email:</strong> <a href="mailto:<%= texts.email %>" class="text-white"><%= texts.email %></a></li>
                         <li><strong>Web:</strong> <a href="http://<%= texts.web %>" class="text-white"><%= texts.web %></a></li>
                     </ul>
-
                 </div>
                 <!-- Segunda columna -->
                 <div class="col-md-6 mb-3">
