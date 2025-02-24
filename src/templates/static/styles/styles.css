@@ -2,6 +2,7 @@ body {
     font-family: 'Comfortaa', sans-serif;
 }
 
+
 h1,
 h2,
 h3,
@@ -13,6 +14,11 @@ p,
 .card {
     font-family: 'Comfortaa', sans-serif;
 }
+
+label {
+    color: var(--primary-color) !important;
+}
+
 
 /* Margin for the proposals container */
 #proposalsContainer .col-lg-4 {

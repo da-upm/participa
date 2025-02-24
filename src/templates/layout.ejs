@@ -38,7 +38,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-daupm">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img id="logo" src="./img/logoRector_WH.png" alt="Logo DAUPM">
+                <img id="logo" src="./img/logo_WH.png" alt="Logo DAUPM">
             </a>
             <div class="collapse navbar-collapse" id="navbarNav" 
                  hx-get="/nav-menu" 
@@ -90,16 +90,16 @@
                         <li><strong>Web:</strong> <a href="http://<%= texts.web %>" class="text-white"><%= texts.web %></a></li>
                     </ul>
                 </div>
-                <!-- Segunda columna -->
+<!-- Segunda columna -->
                 <div class="col-md-6 mb-3">
                     <h5 class="text-uppercase fw-bold">¡Conoce nuestras RRSS!</h5>
                     <ul class="list-unstyled">
                         <% for(let key in texts.socialMedia) { %>
                             <li class="me-3">
                                 <a href="<%= texts.socialMedia[key].link %>"
-                                    class="text-white fs-4 link-underline link-underline-opacity-0">
+                                    class="text-white  link-underline link-underline-opacity-0">
                                     <i class="<%= texts.socialMedia[key].icon %>"></i>
-                                    <p class="d-inline fs-5"> <%= texts.socialMedia[key].name %></p>
+                                    <p class="d-inline "> <%= texts.socialMedia[key].name %></p>
                                 </a>
                             </li>
                         <% } %>

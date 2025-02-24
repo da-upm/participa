@@ -1,0 +1,15 @@
+<form id="textForm">
+    <%- include('settingsBrowserTabText', { texts }) %>
+    <%- include('settingsCentralPageText', { texts }) %>
+    <%- include('settingsFooterText', { texts }) %>
+    <%- include('settingsSocialMediaText', { texts, icons }) %>
+    
+    <button type="submit" class="btn btn-primary mt-3" 
+            hx-post="/api/admin/text"
+            hx-trigger="click" 
+            hx-target="#textForm" 
+            hx-swap="outerHTML"
+            hx-target-error="#toastr-container">
+        Guardar Texto
+    </button>
+</form>
