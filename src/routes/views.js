@@ -17,7 +17,8 @@ router.get('/commitments/:id([a-f,0-9]{24})', viewsController.getCandidateCommit
 
 router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAdmin);
 router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);
-router.get('/settings', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getSettings);
-
+router.get('/aesthetics', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAesthetics);
+router.get('/candidatesAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getCandidatesAdmin);
+router.get('/proposalsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsAdmin);
 
 module.exports = router;
