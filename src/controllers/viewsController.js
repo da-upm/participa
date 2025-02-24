@@ -57,27 +57,8 @@ const getCandidateCommitments = async (req, res, next) => {
     }
 }
 
-const getAdmin = async (req, res, next) => {
-    try {
-        const rawProposals = await Proposal.find({ isDraft: true }).sort({ updatedAt: -1 });
-        const questions = await Question.find().sort({ timestamp: -1 });
-        const proposals = await Promise.all(
-            rawProposals.map(async (p) => {
-                return {
-                    ...p.toObject(),
-                    supporters: await p.getSupportersCount(),
-                    affiliations: await p.getAffiliationList(),
-                    centres: await p.getCentreList()
-                };
-            })
-        );
-
-        const affiliations = await helpers.retrieveAffiliations();
-        
-        res.status(200).render('admin', { proposals, questions, affiliations });
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
+const getAdmin = async (req, res, next) => {    
+        res.status(200).render('admin/adminDashboard');
 }
 
 // Función para obtener las estadísticas: número total de usuarios, número total de propuestas, número de propuestas borrador, número de propuestas publicadas, propuesta con más apoyos, número máximo de apoyos, número medio de apoyos, número de propuestas por centro, número de propuestas por afiliación.
@@ -117,7 +98,7 @@ const getStats = async (_, res) => {
             return acc;
         }, Promise.resolve({}));
 
-        res.status(200).render('stats', {
+        res.status(200).render('admin/stats', {
             totalUsers,
             totalProposals,
             draftProposals,
@@ -146,14 +127,41 @@ const getNavMenu = async (req, res, next) => {
     }
 }
 
-const getSettings = async (req, res, next) => {
+const getAesthetics = async (req, res, next) => {
     try {
         let featureFlags = await helpers.retrieveFeatureFlags();
         let colors = await helpers.retrieveColors();
-        res.status(200).render('settings', { page: 'settings', featureFlags, colors });
+        res.status(200).render('admin/aesthetics', { page: 'aesthetics', featureFlags, colors });
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
+}
+
+const getProposalsAdmin = async (req, res, next) => {
+    try {
+        const rawProposals = await Proposal.find({ isDraft: true }).sort({ updatedAt: -1 });
+        const questions = await Question.find().sort({ timestamp: -1 });
+        const proposals = await Promise.all(
+            rawProposals.map(async (p) => {
+                return {
+                    ...p.toObject(),
+                    supporters: await p.getSupportersCount(),
+                    affiliations: await p.getAffiliationList(),
+                    centres: await p.getCentreList()
+                };
+            })
+        );
+
+        const affiliations = await helpers.retrieveAffiliations();
+        
+        res.status(200).render('admin/proposalsAdmin', { proposals, questions, affiliations });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+const getCandidatesAdmin = async (req, res, next) => {
+    res.status(200).render('admin/candidatesAdmin', {page: 'candidates'})
 }
 
 module.exports = {
@@ -167,5 +175,7 @@ module.exports = {
     getStats,
     getQuestions,
     getNavMenu,
-    getSettings
+    getAesthetics,
+    getProposalsAdmin,
+    getCandidatesAdmin
 }
