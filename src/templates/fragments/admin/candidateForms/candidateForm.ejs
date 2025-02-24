@@ -1,0 +1,25 @@
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-dark m-4">Configuración de
+                <%= candidate.name %> <%= candidate.surname %>
+            </h5>
+            <form id="textForm-<%= candidate._id %>">
+                <%- include('./basicInfo', { candidate: candidate }); %>
+                <%- include('./surrogateUsers', { candidate: candidate }); %>
+                <%- include('./socialMedia', { candidate: candidate }); %>
+                <%- include('./details', { candidate: candidate }); %>
+
+                <button type="submit" class="btn btn-primary mt-3" 
+                        hx-post="/api/admin/candidate" 
+                        hx-trigger="click"
+                        hx-target="#candidateForm" 
+                        hx-swap="outerHTML" 
+                        hx-target-error="#toastr-container">
+                    Guardar Candidato
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,21 @@
+<div class="container mt-5 text-center ">
+    <h1>Configuración de candidatos</h1>
+    <p class="lead">Edita la información de los distintos candidatos desde esta página.</p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-center">
+        <button class="btn btn-success float-end"
+                hx-get="/api/admin/candidate/new"
+                hx-target="#candidatesContainer"
+                hx-swap="beforeend">
+            <i class="bi bi-plus-circle me-2"></i>Añadir Candidato
+        </button>
+    </div>
+</div>
+
+<div class="container settings-container row justify-content-center">
+        <% for (const candidate of candidates) { %>
+            <%- include('../fragments/admin/candidateForms/candidateForm', {candidate}) %>
+        <% } %>
+</div>

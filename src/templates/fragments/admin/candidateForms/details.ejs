@@ -1,0 +1,53 @@
+                <!-- Details Accordion -->
+                <div class="accordion mb-3" id="detailsAccordion-<%= candidate._id %>">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#detailsCollapse-<%= candidate._id %>" aria-expanded="false"
+                                aria-controls="detailsCollapse-<%= candidate._id %>">
+                                Detalles del Candidato
+                            </button>
+                        </h2>
+                        <div id="detailsCollapse-<%= candidate._id %>" class="accordion-collapse collapse"
+                            data-bs-parent="#detailsAccordion-<%= candidate._id %>">
+                            <div class="accordion-body">
+                                <div class="form-row">
+                                    <div class="form-group mb-4">
+                                        <label for="antiguedad-<%= candidate._id %>">Antigüedad en la UPM</label>
+                                        <input type="text" id="antiguedad-<%= candidate._id %>"
+                                            name="details[Antigüedad en la UPM]" class="form-control"
+                                            value="<%= candidate.details['Antigüedad en la UPM'] %>">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="estudios-<%= candidate._id %>">Estudios</label>
+                                        <input type="text" id="estudios-<%= candidate._id %>" name="details[Estudios]"
+                                            class="form-control" value="<%= candidate.details['Estudios'] %>">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="centro-<%= candidate._id %>">Centro</label>
+                                        <input type="text" id="centro-<%= candidate._id %>" name="details[Centro]"
+                                            class="form-control" value="<%= candidate.details['Centro'] %>">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="departamento-<%= candidate._id %>">Departamento</label>
+                                        <input type="text" id="departamento-<%= candidate._id %>"
+                                            name="details[Departamento]" class="form-control"
+                                            value="<%= candidate.details['Departamento'] %>">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="area-<%= candidate._id %>">Área de Conocimiento</label>
+                                        <input type="text" id="area-<%= candidate._id %>"
+                                            name="details[Área de Conocimiento]" class="form-control"
+                                            value="<%= candidate.details['Área de Conocimiento'] %>">
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="categoria-<%= candidate._id %>">Categoría Docente</label>
+                                        <input type="text" id="categoria-<%= candidate._id %>"
+                                            name="details[Categoría Docente]" class="form-control"
+                                            value="<%= candidate.details['Categoría Docente'] %>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>

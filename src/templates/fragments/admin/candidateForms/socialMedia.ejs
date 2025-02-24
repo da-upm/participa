@@ -1,0 +1,126 @@
+<!-- Social Media Accordion -->
+<div class="accordion mb-3" id="socialMediaAccordion-<%= candidate._id %>">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#socialMediaCollapse-<%= candidate._id %>" aria-expanded="false"
+                aria-controls="socialMediaCollapse-<%= candidate._id %>">
+                Redes Sociales
+            </button>
+        </h2>
+        <div id="socialMediaCollapse-<%= candidate._id %>" class="accordion-collapse collapse"
+            data-bs-parent="#socialMediaAccordion-<%= candidate._id %>">
+            <div class="accordion-body">
+                <div class="form-group mb-3">
+                    <div class="card">
+                        <div class="card-body" id="socialMediaContainer-<%= candidate._id %>">
+                            <% if(candidate.socialMedia.length==0) { %>
+                                <% } else { %>
+                                    <% let index=0; %>
+                                        <% for(let social of candidate.socialMedia) { %>
+                                            <div class="form-row mb-4">
+                                                <div class="col-md-4 mb-4">
+                                                    <label
+                                                        for="socialMediaIcon<%= index %>-<%= candidate._id %>">Icono</label>
+                                                    <input type="text"
+                                                        id="socialMediaIcon<%= index %>-<%= candidate._id %>"
+                                                        name="socialMedia[<%= index %>][icon]" class="form-control"
+                                                        value="<%= social.icon %>">
+                                                </div>
+                                                <div class="col-md-7 mb-4">
+                                                    <label
+                                                        for="socialMediaUrl<%= index %>-<%= candidate._id %>">URL</label>
+                                                    <input type="url"
+                                                        id="socialMediaUrl<%= index %>-<%= candidate._id %>"
+                                                        name="socialMedia[<%= index %>][url]" class="form-control"
+                                                        value="<%= social.url %>">
+                                                </div>
+                                                <div class="col-md-1 mb-4 d-flex align-items-end">
+                                                    <button type="button" class="btn btn-danger"
+                                                        onclick="removeSocialMedia_<%= candidate._id %>(this)">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <% index++ %>
+                                                <% } %>
+                                                    <% } %>
+                        </div>
+                        <button type="button" class="btn btn-secondary mt-3"
+                            id="addSocialMediaButton-<%= candidate._id %>">
+                            Añadir red social</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    document.getElementById(`addSocialMediaButton-<%= candidate._id %>`).addEventListener('click', function () {
+        const container = document.getElementById(`socialMediaContainer-<%= candidate._id %>`);
+        const index = container.getElementsByClassName('form-row').length;
+
+        const newField = document.createElement('div');
+        newField.className = 'form-row mb-4';
+        newField.innerHTML = `
+                        <div class="col-md-4 mb-4">
+                            <label for="socialMediaIcon${index}-<%= candidate._id %>">Icono</label>
+                            <input type="text" 
+                                id="socialMediaIcon${index}-<%= candidate._id %>"
+                                name="socialMedia[${index}][icon]"
+                                class="form-control"
+                                value="">
+                        </div>
+                        <div class="col-md-7 mb-4">
+                            <label for="socialMediaUrl${index}-<%= candidate._id %>">URL</label>
+                            <input type="url" 
+                                id="socialMediaUrl${index}-<%= candidate._id %>"
+                                name="socialMedia[${index}][url]"
+                                class="form-control"
+                                value="">
+                        </div>
+                        <div class="col-md-1 mb-4 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger"
+                                onclick="removeSocialMedia_<%= candidate._id %>(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    `;
+        container.appendChild(newField);
+        reindexSocialMedia_<%= candidate._id %> ();
+    });
+
+    function removeSocialMedia_<%= candidate._id %> (button) {
+        const row = button.closest('.form-row');
+        row.remove();
+        reindexSocialMedia_<%= candidate._id %> ();
+    }
+
+    function reindexSocialMedia_<%= candidate._id %> () {
+        const container = document.getElementById(`socialMediaContainer-<%= candidate._id %>`);
+        const rows = container.getElementsByClassName('form-row');
+
+        Array.from(rows).forEach((row, index) => {
+            const iconInput = row.querySelector('input[id^="socialMediaIcon"]');
+            const urlInput = row.querySelector('input[id^="socialMediaUrl"]');
+            const iconLabel = row.querySelector('label[for^="socialMediaIcon"]');
+            const urlLabel = row.querySelector('label[for^="socialMediaUrl"]');
+
+            if (iconInput && urlInput) {
+                // Update icon field
+                iconInput.id = `socialMediaIcon${index}-<%= candidate._id %>`;
+                iconInput.name = `socialMedia[${index}][icon]`;
+                iconLabel.htmlFor = `socialMediaIcon${index}-<%= candidate._id %>`;
+
+                // Update URL field
+                urlInput.id = `socialMediaUrl${index}-<%= candidate._id %>`;
+                urlInput.name = `socialMedia[${index}][url]`;
+                urlLabel.htmlFor = `socialMediaUrl${index}-<%= candidate._id %>`;
+            }
+        });
+    }
+
+
+</script>
