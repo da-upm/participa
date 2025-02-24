@@ -32,9 +32,6 @@
             hx-on::after-request="if(event.detail.xhr.status === 200) $('#proposalDraftModal').modal('show')">
         Generar Nueva Propuesta
         </button>
-        <a href="/settings" class="btn btn-secondary mb-4 ms-2">
-            <i class="bi bi-gear"></i> Configuración
-        </a>
     </div>
 
     <!-- Search and Filter Section -->
@@ -43,7 +40,7 @@
             hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
             hx-target="#adminProposalsTableBody" hx-params="*" hx-indicator="#searchIndicator"
             onkeydown="if (event.keyCode === 13) event.preventDefault();">
-            <%- include('fragments/searchAndFilterSection', { categories, affiliations }) %>
+            <%- include('../fragments/searchAndFilterSection', { categories, affiliations }) %>
         </form>
     </div>
 
@@ -59,7 +56,7 @@
                 </tr>
             </thead>
             <tbody id="adminProposalsTableBody">
-                <%- include('fragments/admin/proposalRows', { proposals, categories }) %>
+                <%- include('../fragments/admin/proposalRows', { proposals, categories }) %>
                     <!-- Search indicator -->
                     <div class="d-flex justify-content-center">
                         <div id="searchIndicator" class="spinner-border text-primary" style="width: 5rem; height: 5rem;"
@@ -108,7 +105,7 @@
                     </tr>
                 </thead>
                 <tbody id="adminQuestionsTableBody">
-                    <%- include('fragments/admin/questionRows', { questions, affiliations }) %>
+                    <%- include('../fragments/admin/questionRows', { questions, affiliations }) %>
                 </tbody>
             </table>
         </div>
