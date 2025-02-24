@@ -1,243 +1,88 @@
-<% const icons = {
-    x: "bi bi-twitter-x",
-    instagram: "bi bi-instagram",
-    youtube: "bi bi-youtube",
-    facebook: "bi bi-facebook",
-    tiktok: "bi bi-tiktok",
-    telegram: "bi bi-telegram",
-    whatsapp: "bi bi-whatsapp",
-    linkedin: "bi bi-linkedin"
-  } %>
-<div class="container mt-5 text-center">
-    <h1>Configuración</h1>
-    <p class="lead">Edita los distintos aspectos de la web desde esta página.</p>
-</div>
-<div class="container mt-5 settings-container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0 text-center">Feature Flags</h3>
+<% const icons={ x: "bi bi-twitter-x" , instagram: "bi bi-instagram" , youtube: "bi bi-youtube" ,
+    facebook: "bi bi-facebook" , tiktok: "bi bi-tiktok" , telegram: "bi bi-telegram" , whatsapp: "bi bi-whatsapp" ,
+    linkedin: "bi bi-linkedin" } %>
+    <div class="container mt-5 text-center">
+        <h1>Configuración</h1>
+        <p class="lead">Edita los distintos aspectos de la web desde esta página.</p>
+    </div>
+
+    <div class="container settings-container row justify-content-center">
+        <div class="col-md-6">
+            <!-- Feature Flags Card -->
+            <div class="row justify-content-center mt-5">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mt-2 mb-0 text-center">Feature Flags</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Funcionalidad</th>
+                                            <th class="text-center">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for (const [flag, featureValue] of Object.entries(featureFlags)) { %>
+                                            <%- include('fragments/admin/featureRow', { flag, featureValue }) %>
+                                                <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Funcionalidad</th>
-                                    <th class="text-center">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for (const [flag, featureValue] of Object.entries(featureFlags)) { %>
-                                    <%- include('fragments/admin/featureRow', { flag, featureValue }) %>
-                                <% } %>
-                            </tbody>
-                        </table>
+            </div>
+
+            <!-- Color settings -->
+            <div class="row justify-content-center mt-5">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mt-2 mb-0 text-center">Colores Personalizados</h3>
+                        </div>
+                        <div class="card-body">
+                            <%- include('fragments/admin/settingsColorForm', { colors }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Text Settings -->
+            <div class="row justify-content-center mt-5">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mt-2 mb-0 text-center">Configuración de Texto</h3>
+                        </div>
+                        <div class="card-body">
+                            <%- include('fragments/admin/settingsTextForm', { texts, icons }) %>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Color settings -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0 text-center">Colores Personalizados</h3>
-                </div>
-                <div class="card-body">
-                    <form id="colorForm">
-                        <div class="form-group mb-4">
-                            <label for="primaryColor">Color Primario</label>
-                            <input type="color" id="primaryColor" name="primaryColor" class="form-control" value="<%= colors.primary %>">
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="secondaryColor">Color Secundario</label>
-                            <input type="color" id="secondaryColor" name="secondaryColor" class="form-control" value="<%= colors.secondary %>">
-                        </div>
-                        <button
-                        type="submit"
-                        class="btn btn-primary mt-3"
-                        hx-post="/api/admin/colors"
-                        hx-trigger="click"
-                        hx-target="#colorForm"
-                        hx-swap="outerHTML"
-                        hx-target-error="#toastr-container"
-                        >Guardar Colores</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        document.getElementById('addSocialMediaButton').addEventListener('click', function () {
+            const container = document.getElementById('socialMediaContainer');
+            const index = container.children.length;
 
-    <!-- Text Settings -->
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-0 text-center">Configuración de Texto</h3>
-                </div>
-                <div class="card-body">
-                    <form id="textForm">
-                        <div class="form-group mb-4">
-                            <label for="headerText">Texto de pestaña de navegador</label>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-row mb-4">
-                                        <div class="form-group mb-4">
-                                            <label for="pageTitle">Título de pestaña</label>
-                                            <input type="text" id="pageTitle" name="pageTitle" class="form-control" value="<%= texts.pageTitle %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <div class="form-group mb-4">
-                            <label for="headerText">Texto central de página</label>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-row mb-4">
-                                        <div class="form-group mb-4">
-                                            <label for="headerTitle">Título</label>
-                                            <input type="text" id="headerTitle" name="headerTitle" class="form-control" value="<%= texts.headerTitle %>">
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="headerSubtitle">Subtítulo</label>
-                                            <input type="text" id="headerSubtitle" name="headerSubtitle" class="form-control" value="<%= texts.headerSubtitle %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="footerText">Texto de Pie de Página</label>
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="form-row mb-4">
-                                        <div class="form-group mb-4">
-                                            <label for="delegationName">Nombre de la Delegación</label>
-                                            <input type="text" id="delegationName" name="delegationName" class="form-control" value="<%= texts.delegationName %>">
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="phoneNumber">Número de Teléfono</label>
-                                            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" value="<%= texts.phoneNumber %>">
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="email">Correo Electrónico</label>
-                                            <input type="email" id="email" name="email" class="form-control" value="<%= texts.email %>">
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="address">Página Web</label>
-                                            <input type="text" id="web" name="web" class="form-control" value="<%= texts.web %>">
-                                        </div>
-                                        <div class="form-group mb-4">
-                                            <label for="email">Correo Electrónico de las elecciones</label>
-                                            <input type="email" id="emailElections" name="emailElections" class="form-control" value="<%= texts.emailElections %>">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            // Añadir separador si no es el primer elemento
+            if (index > 0) {
+                const separator = document.createElement('div');
+                separator.className = 'social-media-separator';
+                container.appendChild(separator);
+            }
 
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="socialMedia">Redes Sociales</label>
-                            <div class="card">
-                                <div class="card-body" id="socialMediaContainer">
-                                <% if(texts.socialMedia.length == 0) { %>
-                                    <div class="form-row mb-4">
-                                        <div class="col mb-4">
-                                            <label for="socialMediaIcon0">Icono</label>
-                                            <select id="socialMediaIcon0" name="socialMedia[0][icon]" class="form-control">
-                                                <% for(let key in icons) { %>
-                                                    <option value="<%= icons[key] %>"><%= key.charAt(0).toUpperCase() + key.slice(1) %></option>
-                                                <% } %>
-                                            </select>
-                                        </div>
-                                        <div class="col mb-4">
-                                            <label for="socialMediaName0">Nombre</label>
-                                            <input type="text" id="socialMediaName0" name="socialMedia[0][name]" class="form-control" value="">
-                                        </div>
-                                        <div class="col mb-4">
-                                            <label for="socialMediaLink0">Enlace</label>
-                                            <input type="text" id="socialMediaLink0" name="socialMedia[0][link]" class="form-control" value="">
-                                        </div>
-                                    </div> 
-                                <% } else { %>
-                                        <% let index = 0; %>
-                                        <% for(let social in texts.socialMedia) { %>
-                                            <% if(social > 0) { %>
-                                                <div class="social-media-separator"></div>
-                                            <% } %>
-                                            <div class="form-row mb-4">
-                                                <div class="col mb-4">
-                                                    <label for="socialMediaIcon<%= index %>">Icono</label>
-                                                    <select id="socialMediaIcon<%= index %>" name="socialMedia[<%= index %>][icon]" class="form-control" selected="<%= texts.socialMedia[social].icon %>">
-                                                        <% for(let key in icons) { %>
-                                                            <% if(icons[key] == texts.socialMedia[social].icon) { %>
-                                                                <option value="<%= icons[key] %>" selected><%= key.charAt(0).toUpperCase() + key.slice(1) %></option>
-                                                            <% } else { %>
-                                                                <option value="<%= icons[key] %>"><%= key.charAt(0).toUpperCase() + key.slice(1) %></option>
-                                                            <% } %>
-                                                        <% } %>
-                                                    </select>
-                                                </div>
-                                                <div class="col mb-4">
-                                                    <label for="socialMediaName<%= index %>">Nombre</label>
-                                                    <input type="text" id="socialMediaName<%= index %>" name="socialMedia[<%= index %>][name]" class="form-control" value="<%= texts.socialMedia[social].name %>">
-                                                </div>
-                                                <div class="col mb-4">
-                                                    <label for="socialMediaLink<%= index %>">Enlace</label>
-                                                    <input type="text" id="socialMediaLink<%= index %>" name="socialMedia[<%= index %>][link]" class="form-control" value="<%= texts.socialMedia[social].link %>">
-                                                </div>
-                                                <div class="col-auto mb-4 d-flex align-items-end">
-                                                    <button type="button" class="btn btn-danger" onclick="removeSocialMedia(this)">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        <% index++ %>
-                                        <% } %>
-                                <% } %>
-                                </div>
-                                <button
-                                type="button"
-                                class="btn btn-secondary mt-3"
-                                id="addSocialMediaButton">
-                                Añadir red social</button>
-                            </div>
-                        </div>
-                        <button
-                        type="submit"
-                        class="btn btn-primary mt-3"
-                        hx-post="/api/admin/text"
-                        hx-trigger="click"
-                        hx-target="#textForm"
-                        hx-swap="outerHTML"
-                        hx-target-error="#toastr-container"
-                        >Guardar Texto</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>              
-</div>
-
-<script>
-document.getElementById('addSocialMediaButton').addEventListener('click', function() {
-    const container = document.getElementById('socialMediaContainer');
-    const index = container.children.length;
-    
-    // Añadir separador si no es el primer elemento
-    if (index > 0) {
-        const separator = document.createElement('div');
-        separator.className = 'social-media-separator';
-        container.appendChild(separator);
-    }
-
-    const newField = document.createElement('div');
-    newField.className = 'form-row mb-4';
-    newField.innerHTML = `
+            const newField = document.createElement('div');
+            newField.className = 'form-row mb-4';
+            newField.innerHTML = `
         <div class="col mb-4">
             <label for="socialMediaIcon${index}">Icono</label>
             <select id="socialMediaIcon${index}" name="socialMedia[${index}][icon]" class="form-control">
@@ -265,45 +110,44 @@ document.getElementById('addSocialMediaButton').addEventListener('click', functi
             </button>
         </div>
     `;
-    container.appendChild(newField);
-});
+            container.appendChild(newField);
+        });
 
-function removeSocialMedia(button) {
-    const row = button.closest('.form-row');
-    const separator = row.previousElementSibling;
-    if (separator && separator.className === 'social-media-separator') {
-        separator.remove();
-    }
-    row.remove();
-    reindexSocialMedia();
-}
+        function removeSocialMedia(button) {
+            const row = button.closest('.form-row');
+            const separator = row.previousElementSibling;
+            if (separator && separator.className === 'social-media-separator') {
+                separator.remove();
+            }
+            row.remove();
+            reindexSocialMedia();
+        }
 
-// Debido a que los elementos se eliminan y añaden dinámicamente, es necesario reindexar los elementos.
-// Si no se hace esto, puede dar problemas al enviar el formulario, ya que podrían haber elementos con
-// el mismo nombre.
+        // Debido a que los elementos se eliminan y añaden dinámicamente, es necesario reindexar los elementos.
+        // Si no se hace esto, puede dar problemas al enviar el formulario, ya que podrían haber elementos con
+        // el mismo nombre.
 
-function reindexSocialMedia() {
-    const container = document.getElementById('socialMediaContainer');
-    const rows = container.getElementsByClassName('form-row');
-    
-    Array.from(rows).forEach((row, index) => {
-        const select = row.querySelector('select');
-        const inputs = row.querySelectorAll('input');
-        const labels = row.querySelectorAll('label');
-        
-        select.id = `socialMediaIcon${index}`;
-        select.name = `socialMedia[${index}][icon]`;
-        
-        inputs[0].id = `socialMediaName${index}`;
-        inputs[0].name = `socialMedia[${index}][name]`;
-        
-        inputs[1].id = `socialMediaLink${index}`;
-        inputs[1].name = `socialMedia[${index}][link]`;
+        function reindexSocialMedia() {
+            const container = document.getElementById('socialMediaContainer');
+            const rows = container.getElementsByClassName('form-row');
 
-        labels[0].htmlFor = `socialMediaIcon${index}`;
-        labels[1].htmlFor = `socialMediaName${index}`;
-        labels[2].htmlFor = `socialMediaLink${index}`;
-    });
-}
-</script>
+            Array.from(rows).forEach((row, index) => {
+                const select = row.querySelector('select');
+                const inputs = row.querySelectorAll('input');
+                const labels = row.querySelectorAll('label');
 
+                select.id = `socialMediaIcon${index}`;
+                select.name = `socialMedia[${index}][icon]`;
+
+                inputs[0].id = `socialMediaName${index}`;
+                inputs[0].name = `socialMedia[${index}][name]`;
+
+                inputs[1].id = `socialMediaLink${index}`;
+                inputs[1].name = `socialMedia[${index}][link]`;
+
+                labels[0].htmlFor = `socialMediaIcon${index}`;
+                labels[1].htmlFor = `socialMediaName${index}`;
+                labels[2].htmlFor = `socialMediaLink${index}`;
+            });
+        }
+    </script>

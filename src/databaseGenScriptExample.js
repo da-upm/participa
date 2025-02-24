@@ -106,7 +106,9 @@ db.parameters.insert({
     },
     colors: {
         primary: '#00509b',
-        secondary: '#ffffff',
+        secondary: '#00509b',
+        primaryButton: '#00509b',
+        secondaryButton: '#00509b',
     },
     featureFlags: {
         'questions': true,
