@@ -1,0 +1,28 @@
+<div class="accordion mb-3" id="centralTextAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button"
+                data-bs-toggle="collapse" data-bs-target="#centralTextCollapse"
+                aria-expanded="false" aria-controls="centralTextCollapse">
+                Texto central de página
+            </button>
+        </h2>
+        <div id="centralTextCollapse" class="accordion-collapse collapse"
+            data-bs-parent="#centralTextAccordion">
+            <div class="accordion-body">
+                <div class="form-row">
+                    <div class="form-group mb-4">
+                        <label for="headerTitle">Título</label>
+                        <input type="text" id="headerTitle" name="headerTitle"
+                            class="form-control" value="<%= texts.headerTitle %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="headerSubtitle">Subtítulo</label>
+                        <input type="text" id="headerSubtitle" name="headerSubtitle"
+                            class="form-control" value="<%= texts.headerSubtitle %>">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
