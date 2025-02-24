@@ -1,0 +1,42 @@
+<div class="col-md-4 mt-5">
+    <h3 style="margin-bottom: 20px;"><%= candidate.name %><br><%= candidate.surname%></h3>
+    <img src="./img/<%= candidate.image %>" class="img-responsive img-rounded" 
+         style="height: 300px; margin: 0 auto 20px;">
+    
+    <div class="row" style="margin-top: 20px; margin-bottom: 20px">
+        <div class="col-2" style="padding: 0"></div>
+        <% for (const social of candidate.socialMedia) { %>
+            <div class="col-2" style="padding: 0">
+                <a href="<%= social.url %>" target="_blank">
+                    <i class="bi bi-<%= social.icon %> icon-social"></i>
+                </a>
+            </div>
+        <% } %>
+    </div>
+
+    <% for (const [label, value] of Object.entries(candidate.details)) { %>
+        <p style="text-align: left">
+            <b><%= label %>:</b> <%= value %>
+        </p>
+    <% } %>
+
+    <p style="text-align: left">
+        <b>Email Institucional:</b> 
+    <a href="mailto:<%= candidate.email %>" target="_blank"><%= candidate.email %> </a>
+    </p>
+
+    <br>
+    <button type="button" class="btn btn-primary">
+        <a class="text-white fs-6 link-underline link-underline-opacity-0"
+           href="<%= candidate.programUrl %>" target="_blank">Programa Electoral</a>
+    </button>
+
+    <% {
+        if (candidate?.signedCommitmentsDoc) { %>
+        <button type="button" class="btn btn-primary">
+            <a class="text-white fs-6 link-underline link-underline-opacity-0"
+                href="<%= serverUrl %>/commitments/<%= candidate._id.toString() %>" target="_blank">Compromisos</a>
+        </button>
+        <% }
+    } %>
+</div>

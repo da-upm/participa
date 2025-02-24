@@ -5,11 +5,19 @@ const candidateSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    surname: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
     },
     username: {
+        type: String,
+        required: true,
+    },
+    image: {
         type: String,
         required: true,
     },
@@ -24,6 +32,28 @@ const candidateSchema = new mongoose.Schema({
     },
     signedCommitmentsDoc: {
         type: Buffer,
+        required: false
+    },
+    socialMedia: [{
+        icon: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }],
+    details: {
+        "Antigüedad en la UPM": String,
+        "Estudios": String,
+        "Centro": String,
+        "Departamento": String,
+        "Área de Conocimiento": String,
+        "Categoría Docente": String
+    },
+    programUrl: {
+        type: String,
         required: false
     }
 },

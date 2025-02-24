@@ -1,0 +1,130 @@
+<!-- Surrogate Users Form -->
+<div class="accordion mb-3" id="surrogateUsersAccordion-<%= candidate._id %>">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#surrogateUsersCollapse-<%= candidate._id %>" aria-expanded="false"
+                aria-controls="surrogateUsersCollapse-<%= candidate._id %>">
+                Emails autorizados
+            </button>
+        </h2>
+        <div id="surrogateUsersCollapse-<%= candidate._id %>" class="accordion-collapse collapse"
+            data-bs-parent="#surrogateUsersAccordion-<%= candidate._id %>">
+            <div class="accordion-body">
+                <div class="form-group mb-3">
+                    <div class="card">
+                        <div class="card-body" id="surrogateUsersContainer-<%= candidate._id %>">
+                            <% if(candidate.surrogateUsers.length==0) { %>
+                                <% } else { %>
+                                    <% let index=0; %>
+                                        <% for(let email in candidate.surrogateUsers) { %>
+                                            <% if(email> 0) { %>
+                                                <div class="surrogate-email-separator">
+                                                </div>
+                                                <% } %>
+                                                    <div class="form-row mb-4">
+                                                        <div class="col mb-4">
+                                                            <label for="surrogateUser<%= index %>">Email
+                                                                autorizado</label>
+                                                            <input type="email"
+                                                                id="surrogateUser<%= index %>-<%= candidate._id %>"
+                                                                name="surrogateUser[<%= index %>]" class="form-control"
+                                                                value="<%= candidate.surrogateUsers[index] %>">
+                                                        </div>
+                                                        <div class="col-auto mb-4 d-flex align-items-end">
+                                                            <button type="button" class="btn btn-danger"
+                                                                onclick="removesurrogateUsers(this)">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <% index++ %>
+                                                        <% } %>
+                                                            <% } %>
+                        </div>
+                        <button type="button" class="btn btn-secondary mt-3"
+                            id="addsurrogateUsersButton-<%= candidate._id %>">
+                            Añadir email</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('addsurrogateUsersButton-<%= candidate._id %>').addEventListener('click', function () {
+        const container = document.getElementById('surrogateUsersContainer-<%= candidate._id %>');
+        const index = container.getElementsByClassName('form-row').length;
+
+        // Añadir separador si no es el primer elemento
+        if (index > 0) {
+            const separator = document.createElement('div');
+            separator.className = 'surrogate-email-separator';
+            container.appendChild(separator);
+        }
+
+        const newField = document.createElement('div');
+        newField.className = 'form-row mb-4';
+        newField.innerHTML = `
+        <div class="col mb-4">
+            <label for="surrogateUser${index}-<%= candidate._id %>">Email autorizado</label>
+            <input type="email" 
+                   id="surrogateUser${index}-<%= candidate._id %>" 
+                   name="surrogateUser[${index}]" 
+                   class="form-control" 
+                   value="">
+        </div>
+        <div class="col-auto mb-4 d-flex align-items-end">
+            <button type="button" class="btn btn-danger" 
+                    onclick="removesurrogateUsers(this)">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>`;
+        container.appendChild(newField);
+        reindexsurrogateUsers(container);
+    });
+
+    function removesurrogateUsers(button) {
+        const row = button.closest('.form-row');
+        const container = row.parentElement;
+        const separator = row.previousElementSibling;
+        if (separator && separator.className === 'surrogate-email-separator') {
+            separator.remove();
+        }
+        row.remove();
+        reindexsurrogateUsers(container);
+    }
+
+    // Debido a que los elementos se eliminan y añaden dinámicamente, es necesario reindexar los elementos.
+    // Si no se hace esto, puede dar problemas al enviar el formulario, ya que podrían haber elementos con
+    // el mismo nombre.
+
+    function reindexsurrogateUsers(container) {
+        console.log('Reindexing started');
+
+        if (!container) {
+            console.error('Container not found');
+            return;
+        }
+
+        const rows = container.getElementsByClassName('form-row');
+        console.log(`Found ${rows.length} rows`);
+
+        Array.from(rows).forEach((row, index) => {
+            const input = row.querySelector('input[type="email"]');
+            const label = row.querySelector('label');
+
+            if (input && label) {
+                const newId = `surrogateUser${index}-<%= candidate._id %>`;
+                input.id = newId;
+                input.name = `surrogateUsers[${index}]`;  // Make consistent with plural form
+                label.htmlFor = newId;
+                console.log(`Updated row ${index} with ID ${newId}`);
+            } else {
+                console.warn(`Missing input or label in row ${index}`);
+            }
+        });
+    }
+
+</script>
