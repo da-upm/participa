@@ -11,6 +11,8 @@ const Question = require('../models/question');
 const helpers = require('../helpers');
 const Parameter = require('../models/parameter');
 
+const Candidate = require('../models/candidate');
+
 
 const getProposals = async (req, res, next) => {
     try {
@@ -442,6 +444,119 @@ const changeText = async (req, res, next) => {
     }
 };
 
+const changeCandidate = async (req, res, next) => {
+    try {
+        const candidateId = req.body._id;
+        if (!candidateId) {
+            return next(new BadRequestError('No se ha proporcionado el ID del candidato.'));
+        }
+
+        const updateData = {
+            name: sanitizeHtml(req.body.name || '', { allowedTags: [], allowedAttributes: {} }),
+            surname: sanitizeHtml(req.body.surname || '', { allowedTags: [], allowedAttributes: {} }),
+            email: sanitizeHtml(req.body.email || '', { allowedTags: [], allowedAttributes: {} }),
+            username: sanitizeHtml(req.body.username || '', { allowedTags: [], allowedAttributes: {} }),
+            surrogateUsers: Array.isArray(req.body.surrogateUsers) ? req.body.surrogateUsers : [],
+            programUrl: sanitizeHtml(req.body.programUrl || '', { allowedTags: [], allowedAttributes: {} }),
+            details: {
+                "Antigüedad en la UPM": sanitizeHtml(req.body.details?.["Antigüedad en la UPM"] || '', { allowedTags: [], allowedAttributes: {} }),
+                "Estudios": sanitizeHtml(req.body.details?.["Estudios"] || '', { allowedTags: [], allowedAttributes: {} }),
+                "Centro": sanitizeHtml(req.body.details?.["Centro"] || '', { allowedTags: [], allowedAttributes: {} }),
+                "Departamento": sanitizeHtml(req.body.details?.["Departamento"] || '', { allowedTags: [], allowedAttributes: {} }),
+                "Área de Conocimiento": sanitizeHtml(req.body.details?.["Área de Conocimiento"] || '', { allowedTags: [], allowedAttributes: {} }),
+                "Categoría Docente": sanitizeHtml(req.body.details?.["Categoría Docente"] || '', { allowedTags: [], allowedAttributes: {} })
+            }
+        };
+
+        // Handle social media array
+        if (req.body.socialMedia) {
+            updateData.socialMedia = Array.isArray(req.body.socialMedia) ? 
+                req.body.socialMedia.map(media => ({
+                    icon: sanitizeHtml(media.icon || '', { allowedTags: [], allowedAttributes: {} }),
+                    url: sanitizeHtml(media.url || '', { allowedTags: [], allowedAttributes: {} })
+                })) : [];
+        }
+
+        const updatedCandidate = await Candidate.findByIdAndUpdate(
+            candidateId,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedCandidate) {
+            return next(new NotFoundError('No se ha encontrado el candidato.'));
+        }
+
+        req.toastr.success(`Candidato "${updatedCandidate.name}" actualizado correctamente.`);
+        return res.status(200).render('fragments/admin/candidateForms/candidateForm', {
+            candidate: updatedCandidate,
+            layout: false
+        });
+
+    } catch (error) {
+        console.error('Error en changeCandidate:', error);
+        return next(new InternalServerError('Error al actualizar el candidato.'));
+    }
+};
+
+const createNewCandidate = async (req, res, next) => {
+    try {
+        const newCandidate = new Candidate({
+            name: "Nuevo Candidato",
+            surname: "Apellidos",
+            email: "email@email.com",
+            username: "nombredeusuario",
+            image: "default.webp",
+            surrogateUsers: [],
+            socialMedia: [],
+            details: {
+                "Antigüedad en la UPM": "",
+                "Estudios": "",
+                "Centro": "",
+                "Departamento": "",
+                "Área de Conocimiento": "",
+                "Categoría Docente": ""
+            },
+            programUrl: ""
+        });
+
+        const savedCandidate = await newCandidate.save();
+
+        if (!savedCandidate) {
+            return next(new InternalServerError('Error al guardar el candidato en la base de datos'));
+        }
+        return res.render('fragments/admin/candidateForms/candidateForm', {
+            candidate: savedCandidate,
+            layout: false,
+        });
+    } catch (error) {
+        console.error('Error en createNewCandidate:', error);
+        return next(new InternalServerError('Error al crear el nuevo candidato'));
+    }
+};
+
+const deleteCandidate = async (req, res, next) => {
+    try {
+        const candidateId = req.query._id;
+        if (!candidateId) {
+            return next(new BadRequestError('No se ha proporcionado el ID del candidato.'));
+        }
+
+        const deletedCandidate = await Candidate.findByIdAndDelete(candidateId);
+
+        if (!deletedCandidate) {
+            return next(new NotFoundError('No se ha encontrado el candidato.'));
+        }
+
+        req.toastr.success(`Candidato "${deletedCandidate.name}" eliminado correctamente.`);
+        return res.status(200).send('');
+
+    } catch (error) {
+        console.error('Error en deleteCandidate:', error);
+        return next(new InternalServerError('Error al eliminar el candidato.'));
+    }
+};
+
 module.exports = {
     getProposals,
     getProposal,
@@ -452,5 +567,8 @@ module.exports = {
     deleteQuestions,
     changeFeatureFlag,
     changeColors,
-    changeText
+    changeText,
+    changeCandidate,
+    createNewCandidate,
+    deleteCandidate
 };
