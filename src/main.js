@@ -208,7 +208,7 @@ app.use(function (req, res, next) {
 	res.locals.user = req.session.user;
 	res.setHeader(
 		'Content-Security-Policy',
-		`default-src 'self' blob: *.upm.es; connect-src 'self' ws: wss:;  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' 'unsafe-inline' data: https://da.upm.es; frame-src 'self' afirma:`
+		`default-src 'self' blob: *.upm.es; connect-src 'self' ws: wss:;  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.jquery.com https://unpkg.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' 'unsafe-inline' data: https://da.upm.es https://www.upm.es; frame-src 'self' afirma:`
 	);
 	next();
 });

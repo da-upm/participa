@@ -37,7 +37,7 @@
     <!-- Search and Filter Section -->
     <div class="mt-5">
         <form hx-get="/api/admin/proposals"
-            hx-trigger="input delay:500ms from: #searchInput, change delay:500ms from: #filterCategory"
+            hx-trigger="input delay:500ms from:#searchInput, change delay:500ms from:#filterCategory"
             hx-target="#adminProposalsTableBody" hx-params="*" hx-indicator="#searchIndicator"
             onkeydown="if (event.keyCode === 13) event.preventDefault();">
             <%- include('../fragments/searchAndFilterSection', { categories, affiliations }) %>
