@@ -452,10 +452,11 @@ const changeCandidate = async (req, res, next) => {
         }
 
         const updateData = {
-            name: sanitizeHtml(req.body.name || '', { allowedTags: [], allowedAttributes: {} }),
-            surname: sanitizeHtml(req.body.surname || '', { allowedTags: [], allowedAttributes: {} }),
+            name: sanitizeHtml(req.body.name || 'Nombre', { allowedTags: [], allowedAttributes: {} }),
+            surname: sanitizeHtml(req.body.surname || 'Apellidos', { allowedTags: [], allowedAttributes: {} }),
             email: sanitizeHtml(req.body.email || '', { allowedTags: [], allowedAttributes: {} }),
             username: sanitizeHtml(req.body.username || '', { allowedTags: [], allowedAttributes: {} }),
+            imageURL: sanitizeHtml(req.body.imageURL || './img/Default.png', { allowedTags: [], allowedAttributes: {} }),
             surrogateUsers: Array.isArray(req.body.surrogateUsers) ? req.body.surrogateUsers : [],
             programUrl: sanitizeHtml(req.body.programUrl || '', { allowedTags: [], allowedAttributes: {} }),
             details: {
@@ -506,7 +507,7 @@ const createNewCandidate = async (req, res, next) => {
             surname: "Apellidos",
             email: "email@email.com",
             username: "nombredeusuario",
-            image: "default.webp",
+            imageURL: "./img/Default.png",
             surrogateUsers: [],
             socialMedia: [],
             details: {
