@@ -13,32 +13,32 @@
                             <div class="accordion-body">
                                 <div class="form-row">
                                     <div class="form-group mb-4">
-                                        <label for="name">Nombre</label>
+                                        <label for="name-<%= candidate._id %>">Nombre</label>
                                         <input type="text" id="name-<%= candidate._id %>" name="name"
                                             class="form-control" value="<%= candidate.name %>">
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label for="surname">Apellido</label>
+                                        <label for="surname-<%= candidate._id %>">Apellido</label>
                                         <input type="text" id="surname-<%= candidate._id %>" name="surname"
                                             class="form-control" value="<%= candidate.surname %>">
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label for="username">Nombre de usuario</label>
+                                        <label for="username-<%= candidate._id %>">Nombre de usuario</label>
                                         <input type="text" id="username-<%= candidate._id %>" name="username"
                                             class="form-control" value="<%= candidate.username %>">
                                     </div>
                                     <div class="form-group mb-4">
-                                        <label for="email">Correo Electrónico</label>
+                                        <label for="email-<%= candidate._id %>">Correo Electrónico</label>
                                         <input type="email" id="email-<%= candidate._id %>" name="email"
                                             class="form-control" value="<%= candidate.email %>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="image">Nombre de imagen</label>
-                                        <input type="text" id="image-<%= candidate._id %>" name="image"
-                                            class="form-control" value="<%= candidate.image %>">
+                                        <label for="imageURL-<%= candidate._id %>">Dirección de imagen</label>
+                                        <input type="text" id="imageURL-<%= candidate._id %>" name="imageURL"
+                                            class="form-control" value="<%= candidate.imageURL %>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="programUrl">Nombre de imagen</label>
+                                        <label for="programUrl-<%= candidate._id %>">Nombre de imagen</label>
                                         <input type="link" id="programUrl-<%= candidate._id %>" name="programUrl"
                                             class="form-control" value="<%= candidate.programUrl %>">
                                     </div>

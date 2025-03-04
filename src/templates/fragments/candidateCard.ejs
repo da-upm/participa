@@ -1,7 +1,7 @@
 <div class="col-md-4 mt-5">
     <h3 style="margin-bottom: 20px;"><%= candidate.name %><br><%= candidate.surname%></h3>
-    <img src="./img/<%= candidate.image %>" class="img-responsive img-rounded" 
-         style="height: 300px; margin: 0 auto 20px;">
+    <img src="<%= candidate.imageURL %>" class="img-responsive img-rounded" 
+         style="width: 200px; height: 300px; object-fit: cover; margin: 0 auto 20px;">
     
     <div class="row" style="margin-top: 20px; margin-bottom: 20px">
         <div class="col-2" style="padding: 0"></div>

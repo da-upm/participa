@@ -1,25 +1,38 @@
-<div class="col-md-6">
+
+<div class="col-md-6" id="candidateForm-<%= candidate._id %>">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title text-dark m-4">Configuración de
                 <%= candidate.name %> <%= candidate.surname %>
             </h5>
-            <form id="textForm-<%= candidate._id %>">
+            <form id="candidateForm-<%= candidate._id %>">
+                <input type="hidden" name="_id" value="<%= candidate._id %>">
                 <%- include('./basicInfo', { candidate: candidate }); %>
                 <%- include('./surrogateUsers', { candidate: candidate }); %>
                 <%- include('./socialMedia', { candidate: candidate }); %>
                 <%- include('./details', { candidate: candidate }); %>
 
                 <button type="submit" class="btn btn-primary mt-3" 
-                        hx-post="/api/admin/candidate" 
+                        hx-post="/api/admin/candidate/change" 
                         hx-trigger="click"
-                        hx-target="#candidateForm" 
+                        hx-target="#candidateForm-<%= candidate._id %>" 
                         hx-swap="outerHTML" 
                         hx-target-error="#toastr-container">
                     Guardar Candidato
                 </button>
+
+                
             </form>
+            <button type="button" class="btn btn-danger mt-3" 
+                    hx-delete="/api/admin/candidate/delete"
+                    hx-trigger="click"
+                    hx-vals='{"_id": "<%= candidate._id %>"}'
+                    hx-target="#candidateForm-<%= candidate._id %>" 
+                    hx-swap="outerHTML" 
+                    hx-confirm="¿Estás seguro de que deseas eliminar al candidato <%= candidate.name %> <%= candidate.surname %>?"
+                    hx-target-error="#toastr-container">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
         </div>
     </div>
 </div>
-
