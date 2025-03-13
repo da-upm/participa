@@ -21,3 +21,29 @@ function initTooltips() {
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
   const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 }
+
+function copyToClipboard(text, element) {
+  navigator.clipboard.writeText(text)
+      .then(() => {
+
+          element.tooltip('dispose');
+
+          element.tooltip({
+              title: 'Copiado!',
+              trigger: 'manual'
+          });
+
+          element.tooltip('show');
+
+          setTimeout(() => {
+              element.tooltip('dispose');
+
+              element.tooltip({
+                  title: 'Copiar enlace',
+                  trigger: 'manual'
+              });
+
+              element.tooltip('show');
+          }, 2000);
+      });
+}
