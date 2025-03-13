@@ -25,36 +25,52 @@ collectionList.forEach(collection => {
     db.createCollection(collection);
 });
 
-db.parameters.insert({
-    _id: ObjectId('6726ce49c8b45bdd85cf64e8'),
-    candidates: [
+db.candidates.insert({
+    _id: ObjectId('67bb5178df6a7f70b73ce484'),
+    name: 'Manolo',
+    surname: 'Ruiz Sanz',
+    email: 'manolo.ruizzz@correo.es',
+    username: 'manolo.ruizzz',
+    imageURL: "./img/Default.png",
+    surrogateUsers: [],
+    unsignedCommitmentsDoc: null,
+    signedCommitmentsDoc: null,
+    socialMedia: [
         {
-            name: 'Óscar',
-            surname: 'García Suárez',
-            image: 'oscar-garcia.webp',
-            socialMedia: [
-                {
-                    icon: 'globe',
-                    url: 'https://example.com/oscar'
-                },
-                {
-                    icon: 'twitter',
-                    url: 'https://twitter.com/oscar'
-                }
-            ],
-            details: {
-                antiguedad: '32 años',
-                estudios: 'Doctor, Ingeniero Industrial por la UPM',
-                centro: 'ETSI. Industriales.',
-                departamento: 'Automática, Ingeniería Eléctrica y Electrónica e Informática Industrial.',
-                areaConocimiento: 'Tecnología Electrónica.',
-                categoriaDocente: 'Catedrático de Universidad.'
-            },
-            emailInstitucional: 'candidato.oscar.garcia@upm.es',
-            programUrl: 'https://example.com/oscar/programa',
-            signedCommitmentsDoc: true
+            icon: 'globe',
+            url: 'https://example.com/manolo',
+            _id: ObjectId('67c0c10af96ae5a9d4ad68a1')
+        },
+        {
+            icon: 'twitter',
+            url: 'https://twitter.com/manolo',
+            _id: ObjectId('67c0c10af96ae5a9d4ad68a2')
+        },
+        {
+            icon: 'linkedin',
+            url: 'https://linkedin.com/in/manolo',
+            _id: ObjectId('67c0c10af96ae5a9d4ad68a3')
+        },
+        {
+            icon: 'instagram',
+            url: 'https://linkedin.com/in/manolo',
+            _id: ObjectId('67c0c10af96ae5a9d4ad68a4')
         }
     ],
+    details: {
+        "Antigüedad en la UPM": "80 años",
+        "Estudios": "Panadero por la UPM888",
+        "Centro": "ETSIT888",
+        "Departamento": "A saber: muchos, poc888os. Puede que no esé en ninguno",
+        "Área de Conocimiento": "Sabe muchas cosas888",
+        "Categoría Docente": "Holahola caracola88"
+    },
+    programUrl: "https://example.com/manolo/programazz",
+    updatedAt: new Date("2025-02-27T19:46:18.298Z")
+});
+
+db.parameters.insert({
+    _id: ObjectId('6726ce49c8b45bdd85cf64e8'),
     categories: {
         general: 'General',
         economic: 'Financiación',
@@ -139,7 +155,7 @@ db.parameters.insert({
         'questions': true,
         'candidates': true,
         'process': true,
-        'dates': true
+        'timeline': true
     },
     // schoolRestricted: 61, Only enable if you want to restrict the school to the number of the center.
     text: {
@@ -169,4 +185,26 @@ db.parameters.insert({
             }
         ]
     },
+});
+
+db.timelinesections.insert({
+    _id: ObjectId(),
+    dateRange: "1 - 10 JAN 2025",
+    title: "Example Title",
+    content: "<p>Example content goes here. You can include HTML as needed.</p>",
+    buttons: [
+        {
+            text: "Example Button 1",
+            url: "https://example.com/1",
+            _id: ObjectId("EXAMPLE_BUTTON_ID_1") // Replace with a valid ObjectId
+        },
+        {
+            text: "Example Button 2",
+            url: "https://example.com/2",
+            _id: ObjectId("EXAMPLE_BUTTON_ID_2") // Replace with a valid ObjectId
+        }
+    ],
+    order: 1,                         
+    createdAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
+    updatedAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
 });
