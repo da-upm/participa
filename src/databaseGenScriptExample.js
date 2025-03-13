@@ -25,8 +25,8 @@ collectionList.forEach(collection => {
     db.createCollection(collection);
 });
 
-db.candidates.insert({
-    _id: ObjectId('67bb5178df6a7f70b73ce484'),
+db.candidates.insertOne({
+    _id: new ObjectId('67bb5178df6a7f70b73ce484'),
     name: 'Manolo',
     surname: 'Ruiz Sanz',
     email: 'manolo.ruizzz@correo.es',
@@ -39,22 +39,22 @@ db.candidates.insert({
         {
             icon: 'globe',
             url: 'https://example.com/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a1')
+            _id: new ObjectId('67c0c10af96ae5a9d4ad68a1')
         },
         {
             icon: 'twitter',
             url: 'https://twitter.com/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a2')
+            _id: new ObjectId('67c0c10af96ae5a9d4ad68a2')
         },
         {
             icon: 'linkedin',
             url: 'https://linkedin.com/in/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a3')
+            _id: new ObjectId('67c0c10af96ae5a9d4ad68a3')
         },
         {
             icon: 'instagram',
             url: 'https://linkedin.com/in/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a4')
+            _id: new ObjectId('67c0c10af96ae5a9d4ad68a4')
         }
     ],
     details: {
@@ -69,8 +69,8 @@ db.candidates.insert({
     updatedAt: new Date("2025-02-27T19:46:18.298Z")
 });
 
-db.parameters.insert({
-    _id: ObjectId('6726ce49c8b45bdd85cf64e8'),
+db.parameters.insertOne({
+    _id: new ObjectId('6726ce49c8b45bdd85cf64e8'),
     categories: {
         general: 'General',
         economic: 'Financiación',
@@ -187,8 +187,8 @@ db.parameters.insert({
     },
 });
 
-db.timelinesections.insert({
-    _id: ObjectId(),
+db.timelinesections.insertOne({
+    _id: new ObjectId(),
     dateRange: "1 - 10 JAN 2025",
     title: "Example Title",
     content: "<p>Example content goes here. You can include HTML as needed.</p>",
@@ -196,12 +196,12 @@ db.timelinesections.insert({
         {
             text: "Example Button 1",
             url: "https://example.com/1",
-            _id: ObjectId("EXAMPLE_BUTTON_ID_1") // Replace with a valid ObjectId
+            _id: new ObjectId() // Using auto-generated ObjectId
         },
         {
             text: "Example Button 2",
             url: "https://example.com/2",
-            _id: ObjectId("EXAMPLE_BUTTON_ID_2") // Replace with a valid ObjectId
+            _id: new ObjectId() // Using auto-generated ObjectId
         }
     ],
     order: 1,                         
