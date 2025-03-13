@@ -1,0 +1,13 @@
+<div class="container my-4 ">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" >
+                <ul class="timeline">
+                    <% for (const Section of timelineSections) { %>
+                        <%- include('fragments/timelineSection', {Section}) %>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

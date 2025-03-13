@@ -21,8 +21,8 @@ const getProcess = async (req, res, next) => {
         res.status(200).render('process', {page:'process'})
 }
 
-const getDates = async (req, res, next) => {
-    res.status(200).render('dates', {page: 'dates'})
+const getTimeline = async (req, res, next) => {
+    res.status(200).render('timeline', {page: 'timelineSections'})
 }
 
 const getCandidates = async (req, res, next) => {
@@ -164,10 +164,14 @@ const getCandidatesAdmin = async (req, res, next) => {
     res.status(200).render('admin/candidatesAdmin', {page: 'candidates'})
 }
 
+const getTimelineAdmin = async (req, res, next) => {
+    res.status(200).render('admin/timelineAdmin', {page: 'timelineSections'})
+}
+
 module.exports = {
     getIndex,
     getProcess,
-    getDates,
+    getTimeline,
     getCandidates,
     getCommitments,
     getCandidateCommitments,
@@ -177,5 +181,6 @@ module.exports = {
     getNavMenu,
     getAesthetics,
     getProposalsAdmin,
-    getCandidatesAdmin
+    getCandidatesAdmin,
+    getTimelineAdmin
 }
