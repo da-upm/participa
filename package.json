@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/main.js",
     "dev": "node --watch src/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "mongosh --file src/databaseGenScriptExample.js"
   },
   "repository": {
     "type": "git",
