@@ -46,3 +46,22 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", function() {
+      const params = new URLSearchParams(window.location.search);
+      const proposalId = params.get("proposal");
+      if (proposalId) {
+        // Realiza la petición hx-get al cargar la página
+        htmx.ajax("GET", `/api/proposals/${proposalId}`, "#proposalDetailModal", {
+          swap: "innerHTML",
+          trigger: "load"
+        });
+
+        // Add 1 second delay before showing the modal
+        setTimeout(() => {
+          $('#proposalDetailModal').modal('show');
+        }, 1000);
+      }
+    });
+</script>
