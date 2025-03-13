@@ -1,0 +1,8 @@
+<h2 class="mb-3">Preview</h2>
+            <div id="timeline-content" >
+                <ul class="timeline" style="max-width: 70%; padding-right: 0px">
+                    <% for (const Section of timelineSections) { %>
+                        <%- include('../timelineSection', {Section}) %>
+                    <% } %>
+                </ul>
+            </div>

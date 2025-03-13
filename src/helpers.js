@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const config = require('./config.json');
 
 const Parameter = require('./models/parameter');
+const TimelineSection = require('./models/timelineSection');
 
 // Función para eliminar acentos
 module.exports.normalizeString = (str) => {
@@ -110,3 +111,13 @@ module.exports.retrieveTexts = async () => {
 		return undefined;
 	}
 }
+
+module.exports.retrieveTimelineSections = async (req, res, next) => {
+		try {
+			const result = await TimelineSection.find().sort({ order: 1 });
+        	return result;
+		} catch (error) {
+			console.error('Error getting timeline:', error);
+			return undefined;
+		}
+};

@@ -12,10 +12,10 @@
             </a>
         </li>
     <% } %>
-    <% if (featureFlags.dates) { %>
+    <% if (featureFlags.timeline) { %>
         <li class="nav-item">
-            <a class="nav-link <%= (currentPage === 'dates') ? 'active' : '' %>"
-                aria-current="<%= (currentPage === 'dates') ? 'page' : '' %>" href="/dates">Fechas
+            <a class="nav-link <%= (currentPage === 'timeline') ? 'active' : '' %>"
+                aria-current="<%= (currentPage === 'timeline') ? 'page' : '' %>" href="/timeline">Fechas
             </a>
         </li>
     <% } %>
