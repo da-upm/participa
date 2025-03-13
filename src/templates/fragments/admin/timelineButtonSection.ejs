@@ -1,0 +1,81 @@
+<div class="form-group mb-4">
+    <h5>Botones</h5>
+    <!-- Contenedor para los botones existentes y nuevos -->
+    <div id="buttons-container-<%= Section._id %>">
+        <% if (Section.buttons && Section.buttons.length) { %>
+            <% Section.buttons.forEach(function(btn, index) { %>
+                <div class="row align-items-center mb-2 buttonRow">
+                    <div class="col-md-5">
+                        <label for="buttonText<%= index %>-<%= Section._id %>">Texto</label>
+                        <input type="text" id="buttonText<%= index %>-<%= Section._id %>" 
+                            name="buttons[<%= index %>][text]" class="form-control" 
+                            placeholder="Texto del botón" value="<%= btn.text %>">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="buttonURL<%= index %>-<%= Section._id %>">Enlace</label>
+                        <input type="text" id="buttonURL<%= index %>-<%= Section._id %>" 
+                            name="buttons[<%= index %>][url]" class="form-control"
+                            placeholder="Enlace del botón" value="<%= btn.url %>">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger" onclick="removeButtonSection(this, '<%= Section._id %>')">Eliminar</button>
+                    </div>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+    <button type="button" class="btn btn-secondary" onclick="addButtonSection('<%= Section._id %>')">Agregar botón</button>
+</div>
+
+<script>
+  function removeButtonSection(btn, sectionId) {
+      // Remueve la fila de botón más cercana
+      btn.closest('.buttonRow').remove();
+      reindexButtonsSection(sectionId);
+  }
+
+  function addButtonSection(sectionId) {
+      const container = document.getElementById('buttons-container-' + sectionId);
+      console.log('buttons-container-' + sectionId);
+      console.log('Contenedor:', container);
+      const newIndex = container.getElementsByClassName('buttonRow').length;
+      const newRow = document.createElement('div');
+      newRow.className = 'row align-items-center mb-2 buttonRow';
+      newRow.innerHTML =
+          '<div class="col-md-5">' +
+              '<label for="buttonText' + newIndex + '-' + sectionId + '">Texto</label>' +
+              '<input type="text" id="buttonText' + newIndex + '-' + sectionId + 
+                  '" name="buttons[' + newIndex + '][text]" class="form-control" placeholder="Texto del botón" value="">' +
+          '</div>' +
+          '<div class="col-md-5">' +
+              '<label for="buttonURL' + newIndex + '-' + sectionId + '">Enlace</label>' +
+              '<input type="text" id="buttonURL' + newIndex + '-' + sectionId + 
+                  '" name="buttons[' + newIndex + '][url]" class="form-control" placeholder="Enlace del botón" value="">' +
+          '</div>' +
+          '<div class="col-md-2 d-flex align-items-end">' +
+              '<button type="button" class="btn btn-danger" onclick="removeButtonSection(this, \'' + sectionId + '\')">Eliminar</button>' +
+          '</div>';
+      container.appendChild(newRow);
+  }
+
+  function reindexButtonsSection(sectionId) {
+      const container = document.getElementById('buttons-container-' + sectionId);
+      const rows = container.getElementsByClassName('buttonRow');
+      Array.from(rows).forEach((row, index) => {
+          // Actualizar los IDs y names de los inputs y los for de los labels
+          const textInput = row.querySelector('input[id^="buttonText"]');
+          const linkInput = row.querySelector('input[id^="buttonLink"]');
+          const textLabel = row.querySelector('label[for^="buttonText"]');
+          const linkLabel = row.querySelector('label[for^="buttonLink"]');
+
+          textInput.id = 'buttonText' + index + '-' + sectionId;
+          linkInput.id = 'buttonLink' + index + '-' + sectionId;
+
+          textInput.name = 'buttons[' + index + '][text]';
+          linkInput.name = 'buttons[' + index + '][link]';
+          
+          textLabel.htmlFor = 'buttonText' + index + '-' + sectionId;
+          linkLabel.htmlFor = 'buttonLink' + index + '-' + sectionId;
+      });
+  }
+</script>

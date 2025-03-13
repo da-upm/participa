@@ -28,4 +28,9 @@ router.post('/candidate/change', adminController.changeCandidate);
 router.get('/candidate/new', adminController.createNewCandidate);
 router.delete('/candidate/delete', adminController.deleteCandidate);
 
+router.get('/timelineAdmin/new', adminController.createTimelineSection);
+router.post('/timelineAdmin/change', adminController.changeTimelineSection);
+router.delete('/timelineAdmin/delete', adminController.deleteTimelineSection);
+router.get('/timelineAdmin/preview', adminController.getTimelinePreview);
+
 module.exports = router;

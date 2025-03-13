@@ -12,6 +12,7 @@ const helpers = require('../helpers');
 const Parameter = require('../models/parameter');
 
 const Candidate = require('../models/candidate');
+const TimelineSection = require('../models/timelineSection')
 
 
 const getProposals = async (req, res, next) => {
@@ -558,6 +559,112 @@ const deleteCandidate = async (req, res, next) => {
     }
 };
 
+const createTimelineSection = async (req, res, next) => {
+    try {
+        const newSection = new TimelineSection({
+            dateRange: 'Fecha',
+            title: 'Título',
+            content: 'Contenido',
+            order: 0,
+            buttons: []
+        });
+
+        const savedSection = await newSection.save();
+        if (!savedSection) {
+            return next(new InternalServerError('Error al guardar la sección.'));
+        }
+        req.toastr.success('Sección creada correctamente.');
+        return res.render('fragments/admin/timelineSectionForm', {
+            Section: savedSection,
+            layout: false,
+        });
+    } catch (error) {
+        console.error("Error in createTimelineSection:", error);
+        return next(new InternalServerError('Error al crear la sección.'));
+    }
+};
+
+const changeTimelineSection = async (req, res, next) => {
+    try {
+        const sectionId = req.body._id;
+        if (!sectionId) {
+            return next(new BadRequestError('No se ha proporcionado el ID de la sección.'));
+        }
+
+        const updateData = {
+            dateRange: req.body.dateRange,
+            title: req.body.title,
+            content: req.body.content.replace(/&nbsp;/g, ' '),
+            order: req.body.order
+        };
+
+        console.log('Request body:', req.body);
+
+        if (req.body.buttons) {
+            let buttons = Array.isArray(req.body.buttons)
+              ? req.body.buttons
+              : Object.values(req.body.buttons);
+            
+            buttons = buttons.filter(btn => btn.text && btn.url);
+            
+            updateData.buttons = buttons;
+        } else {
+            updateData.buttons = [];
+        }
+
+        const updatedSection = await TimelineSection.findByIdAndUpdate(
+            sectionId,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedSection) {
+            return next(new NotFoundError('Sección no encontrada.'));
+        }
+        req.toastr.success('Sección actualizada correctamente.');
+        return res.status(200).render('fragments/admin/timelineSectionForm', {
+            Section: updatedSection,
+            layout: false,
+        });
+
+    } catch (error) {
+        console.error("Error in updateTimelineSection:", error);
+        return next(new InternalServerError('Error al actualizar la sección.'));
+    }
+};
+
+const deleteTimelineSection = async (req, res, next) => {
+    try {
+        const sectionId = req.query._id;
+        if (!sectionId) {
+            return next(new BadRequestError('No se ha proporcionado el ID de la sección.'));
+        }
+
+        const deletedSection = await TimelineSection.findByIdAndDelete(sectionId);
+        if (!deletedSection) {
+            return next(new NotFoundError('Sección no encontrada.'));
+        }
+        req.toastr.success('Sección eliminada correctamente.');
+        return res.status(200).send('');
+    } catch (error) {
+        console.error("Error in deleteTimelineSection:", error);
+        return next(new InternalServerError('Error al eliminar la sección.'));
+    }
+};
+
+const getTimelinePreview = async (req, res, next)=> {
+    try {
+        const timelineSections = await TimelineSection.find().sort({ order: 1 });
+        return res.render('fragments/admin/timelinePreview', {
+            candidate: timelineSections,
+            layout: false,
+        });
+    } catch (error) {
+        console.error("Error in getTimelinePreview:", error);
+        return next(new InternalServerError('Error al obtener la vista previa de la línea de tiempo.'));
+    }
+};
+
 module.exports = {
     getProposals,
     getProposal,
@@ -571,5 +678,9 @@ module.exports = {
     changeText,
     changeCandidate,
     createNewCandidate,
-    deleteCandidate
+    deleteCandidate,
+    createTimelineSection,
+    changeTimelineSection,
+    deleteTimelineSection,
+    getTimelinePreview
 };
