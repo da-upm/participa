@@ -4,9 +4,9 @@ const viewsController = require('../controllers/viewsController');
 const middlewares = require('../middlewares');
 
 router.get('/', viewsController.getIndex);
-router.get('/process', middlewares.checkFeatureEnabled('process'), middlewares.checkSchoolRestriction, viewsController.getProcess);
-router.get('/dates', middlewares.checkFeatureEnabled('dates'), middlewares.checkSchoolRestriction, viewsController.getDates);
-router.get('/candidates', middlewares.checkFeatureEnabled('candidates'), middlewares.checkSchoolRestriction, viewsController.getCandidates);
+router.get('/process', middlewares.checkLogin, middlewares.checkFeatureEnabled('process'), middlewares.checkSchoolRestriction, viewsController.getProcess);
+router.get('/timeline', middlewares.checkLogin, middlewares.checkFeatureEnabled('timeline'), middlewares.checkSchoolRestriction, viewsController.getTimeline);
+router.get('/candidates', middlewares.checkLogin, middlewares.checkFeatureEnabled('candidates'), middlewares.checkSchoolRestriction, viewsController.getCandidates);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
 router.get('/questions', middlewares.checkLogin, middlewares.checkFeatureEnabled('questions'), middlewares.checkSchoolRestriction, viewsController.getQuestions);
 router.get('/commitments', middlewares.checkLogin, middlewares.checkCandidate, viewsController.getCommitments);
@@ -20,5 +20,6 @@ router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsCo
 router.get('/aesthetics', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAesthetics);
 router.get('/candidatesAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getCandidatesAdmin);
 router.get('/proposalsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsAdmin);
+router.get('/timelineAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getTimelineAdmin);
 
 module.exports = router;

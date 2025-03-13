@@ -1,0 +1,93 @@
+<div class="accordion mb-3" id="timelineSectionAccordion-<%= Section._id %>">
+    <form id="timelineSectionForm-<%= Section._id %>">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#SectionCollapse-<%= Section._id %>" aria-expanded="false"
+                    aria-controls="SectionCollapse-<%= Section._id %>">
+                    Sección <%= Section.order %> : <%= Section.title %>
+                </button>
+            </h2>
+            <div id="SectionCollapse-<%= Section._id %>" class="accordion-collapse collapse"
+                data-bs-parent="#timelineSectionAccordion-<%= Section._id %>">
+                <div class="accordion-body">
+                    <div class="form-row">
+                        <input type="hidden" name="_id" value="<%= Section._id %>">
+                        <div class="form-group mb-4">
+                            <label for="dateRange-<%= Section._id %>">Fecha</label>
+                            <input type="text" id="dateRange-<%= Section._id %>" name="dateRange" class="form-control"
+                                value="<%= Section.dateRange %>">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="title-<%= Section._id %>">Título</label>
+                            <input type="text" id="title-<%= Section._id %>" name="title" class="form-control"
+                                value="<%= Section.title %>">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="content-<%= Section._id %>">Contenido</label>
+                            <div id="editor-<%= Section._id %>" name="content" class="form-control">
+                            </div>
+                            <textarea hidden id="content-<%= Section._id %>" name="content" class="form-control" rows="4"><%= Section.content%></textarea>                           
+                            <div id="status-<%= Section._id %>" class="py-3">No modificado</div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="order-<%= Section._id %>">Orden</label>
+                            <input type="number" id="order-<%= Section._id %>" name="order" class="form-control"
+                                value="<%= Section.order %>">
+                        </div>
+                    </div>
+                    <!-- Buttons Section -->
+                    <%- include('./timelineButtonSection', {Section}) %>
+                    
+                    <button type="submit" class="btn btn-primary mt-3" 
+                            id="saveButton-<%= Section._id %>"
+                            hx-post="/api/admin/timelineAdmin/change"
+                            hx-trigger="click" 
+                            hx-target="#timelineSectionAccordion-<%= Section._id %>" 
+                            hx-swap="outerHTML"
+                            hx-target-error="#toastr-container">
+                            Guardar Sección
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <button type="button" class="btn btn-danger mt-3" 
+    hx-delete="/api/admin/timelineAdmin/delete"
+    hx-trigger="click"
+    hx-vals='{"_id": "<%= Section._id %>"}'
+    hx-target="#timelineSectionAccordion-<%= Section._id %>" 
+    hx-swap="delete" 
+    hx-confirm="¿Estás seguro de que deseas eliminar la sección <%= Section.title %>?"
+    hx-target-error="#toastr-container">
+    <i class="bi bi-trash"></i> Eliminar
+    </button>
+</div>
+
+
+<script>
+    const quill_<%= Section._id %> = new Quill("#editor-<%= Section._id %>", {
+      theme: "snow",
+    });
+
+    quill_<%= Section._id %>.clipboard.dangerouslyPasteHTML(<%- JSON.stringify(Section.content) %>);
+
+    quill_<%= Section._id %>.on('text-change', function(delta, oldDelta, source){
+      document.getElementById("content-<%= Section._id %>").value = quill_<%= Section._id %>.getSemanticHTML(0);
+      checkSavedStatus_<%= Section._id %>()
+    });
+
+    function checkSavedStatus_<%= Section._id %>() {
+      const hiddenContent = document.getElementById("content-" + "<%= Section._id %>");
+      const quillValue = quill_<%= Section._id %>.getSemanticHTML(0);
+      const statusFlag = document.getElementById("status-<%= Section._id %>");
+      if (hiddenContent.value === quillValue) {
+          statusFlag.innerHTML = "Listo";
+          statusFlag.style.color = "green";
+      } else {
+          statusFlag.innerHTML = "CUIDADO: El texto no está listo para enviar";
+          statusFlag.style.color = "red";
+      }
+    }
+
+  </script>

@@ -1,0 +1,72 @@
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+<div class="container mt-5">
+<h1 class="text-center">Timeline Administration</h1>
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div id="preview">
+            <%- include('../fragments/admin/timelinePreview', {timelineSections}) %>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="edicion">
+            <h2 class="mb-3">Edición</h2>
+            <div id="timeline-form-content" >
+                    <% for (const Section of timelineSections) { %>
+                        <%- include('../fragments/admin/timelineSectionForm', {Section}) %>
+                    <% } %>
+            </div>
+            <button class="btn btn-success mt-3"
+            hx-get="/api/admin/timelineAdmin/new"
+            hx-target="#timeline-form-content"
+            hx-swap="beforeend">
+            <i class="bi bi-plus-circle me-2"></i>Nueva Sección
+        </button>
+</button>
+        </div>
+    </div>
+
+<script>
+    function removeButton(btn) {
+        btn.parentElement.remove();
+    }
+    function addButton(sectionId) {
+        const container = document.getElementById('buttons-' + sectionId);
+        const div = document.createElement('div');
+        div.classList.add('buttonRow');
+        div.innerHTML =
+            '<input type="text" name="buttonText[]" placeholder="Button text">' +
+            '<input type="text" name="buttonLink[]" placeholder="Button link">' +
+            '<button type="button" onclick="removeButton(this)">Remove</button>';
+        container.appendChild(div);
+    }
+    function addNewButton() {
+        const container = document.getElementById('new-buttons');
+        const div = document.createElement('div');
+        div.classList.add('buttonRow');
+        div.innerHTML =
+            '<input type="text" name="buttonText[]" placeholder="Button text">' +
+            '<input type="text" name="buttonLink[]" placeholder="Button link">' +
+            '<button type="button" onclick="removeButton(this)">Remove</button>';
+        container.appendChild(div);
+    }
+
+    document.body.addEventListener("htmx:afterRequest", function(evt) {
+    // Prevent update loop: skip if the target is already "#preview"
+    if (evt.detail.requestConfig.url !== "/api/admin/timelineAdmin/preview" && evt.detail.target.id !== "preview") {
+      setTimeout(function() {
+        htmx.ajax("GET", "/api/admin/timelineAdmin/preview", "#preview");
+      }, 300);
+    }
+  });
+
+</script>
+
+
+<style>
+    .main-content {
+      margin: 40px 20px; /* Change these values as needed */
+    }
+  </style>
+
+</div>
+</div>
