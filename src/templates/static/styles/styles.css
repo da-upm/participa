@@ -42,7 +42,6 @@ label {
 
 /* Navbar custom color */
 .bg-daupm {
-    --bs-bg-opacity: 1;
     background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
     /* Using the color scheme of the reference site */
 }
