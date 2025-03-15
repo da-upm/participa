@@ -190,13 +190,11 @@ db.timelinesections.insertOne({
     buttons: [
         {
             text: "Example Button 1",
-            url: "https://example.com/1",
-            _id: new ObjectId()
+            url: "https://example.com/1"
         },
         {
             text: "Example Button 2",
-            url: "https://example.com/2",
-            _id: new ObjectId()
+            url: "https://example.com/2"
         }
     ],
     order: 1,
