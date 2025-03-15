@@ -26,7 +26,7 @@ collectionList.forEach(collection => {
 });
 
 db.candidates.insertOne({
-    _id: new ObjectId('67bb5178df6a7f70b73ce484'),
+    _id: new ObjectId(),
     name: 'Manolo',
     surname: 'Ruiz Sanz',
     email: 'manolo.ruizzz@correo.es',
@@ -38,23 +38,19 @@ db.candidates.insertOne({
     socialMedia: [
         {
             icon: 'globe',
-            url: 'https://example.com/manolo',
-            _id: new ObjectId('67c0c10af96ae5a9d4ad68a1')
+            url: 'https://example.com/manolo'
         },
         {
             icon: 'twitter',
-            url: 'https://twitter.com/manolo',
-            _id: new ObjectId('67c0c10af96ae5a9d4ad68a2')
+            url: 'https://twitter.com/manolo'
         },
         {
             icon: 'linkedin',
-            url: 'https://linkedin.com/in/manolo',
-            _id: new ObjectId('67c0c10af96ae5a9d4ad68a3')
+            url: 'https://linkedin.com/in/manolo'
         },
         {
             icon: 'instagram',
-            url: 'https://linkedin.com/in/manolo',
-            _id: new ObjectId('67c0c10af96ae5a9d4ad68a4')
+            url: 'https://linkedin.com/in/manolo'
         }
     ],
     details: {
@@ -65,12 +61,11 @@ db.candidates.insertOne({
         "Área de Conocimiento": "Sabe muchas cosas888",
         "Categoría Docente": "Holahola caracola88"
     },
-    programUrl: "https://example.com/manolo/programazz",
-    updatedAt: new Date("2025-02-27T19:46:18.298Z")
+    programUrl: "https://example.com/manolo/programazz"
 });
 
 db.parameters.insertOne({
-    _id: new ObjectId('6726ce49c8b45bdd85cf64e8'),
+    _id: new ObjectId(),
     categories: {
         general: 'General',
         economic: 'Financiación',
@@ -196,15 +191,13 @@ db.timelinesections.insertOne({
         {
             text: "Example Button 1",
             url: "https://example.com/1",
-            _id: new ObjectId() // Using auto-generated ObjectId
+            _id: new ObjectId()
         },
         {
             text: "Example Button 2",
             url: "https://example.com/2",
-            _id: new ObjectId() // Using auto-generated ObjectId
+            _id: new ObjectId()
         }
     ],
-    order: 1,                         
-    createdAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
-    updatedAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
+    order: 1,
 });
