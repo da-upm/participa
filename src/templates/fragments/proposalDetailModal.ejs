@@ -6,7 +6,12 @@
         </div>
         <div class="modal-body">
             <h4 id="proposalTitle">
-                <%= proposal.title %>
+                <%= proposal.title %> 
+                <a href="javascript:void(0)" class="text-decoration-none ms-2"
+                   data-bs-toggle="tooltip" title="Copiar enlace" 
+                   onclick="copyToClipboard('<%= serverUrl %>/?proposal=<%= proposal.id %>', $(this))">
+                    <i class="bi bi-link-45deg"></i>
+                </a>
             </h4>
             <p>
                 <% proposal.categories.forEach((categoryId)=> { %>

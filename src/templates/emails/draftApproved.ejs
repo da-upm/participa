@@ -95,7 +95,10 @@
         </div>
         <div class="details">
             <h2>Detalles de la propuesta</h2>
-            <p><strong>Título:</strong> <%= proposal.title %></p>
+            <a href="<%= serverUrl %>/?proposal=<%= proposal.id %>">Ver en la web</a>
+            <p><strong>Título:</strong><%= proposal.title %>
+                 <i class="bi bi-link-45deg"></i>
+             </a></p>
             <p><strong>Descripción:</strong> <%- proposal.description %></p>
         </div>
         <div class="footer">
