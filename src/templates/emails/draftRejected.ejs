@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificación de propuesta rechazada</title>
     <style>
+        :root {
+            --primary-color: <%= colors.primary %>;
+            --secondary-color: <%= colors.secondary %>;
+            --primary-button-color: <%= colors.primaryButton %>;
+            --secondary-button-color: <%= colors.secondaryButton %>;
+        }
+
         body {
             font-family: 'Comfortaa', sans-serif;
             background-color: #f4f4f4;
@@ -26,7 +33,7 @@
         .header {
             text-align: center;
             padding: 20px;
-            background-color: #00509B;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
             color: #ffffff;
         }
 
@@ -48,7 +55,7 @@
         .footer {
             text-align: center;
             padding: 20px;
-            background-color: #00509B;
+            background: var(--primary-color);
             color: #ffffff;
         }
 
@@ -61,14 +68,16 @@
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #00509B;
+            background-color: var(--primary-button-color);
+            border-color: var(--primary-button-color);
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
         }
 
         .button:hover {
-            background-color: #002244;
+            background-color: var(--secondary-button-color);
+            border-color: var(--secondary-button-color);
         }
     </style>
 </head>
