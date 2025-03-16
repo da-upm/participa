@@ -21,5 +21,6 @@ router.get('/aesthetics', middlewares.checkLogin, middlewares.restrictAdmins, vi
 router.get('/candidatesAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getCandidatesAdmin);
 router.get('/proposalsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsAdmin);
 router.get('/timelineAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getTimelineAdmin);
+router.get('/proposalsRanking', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsRanking);
 
 module.exports = router;

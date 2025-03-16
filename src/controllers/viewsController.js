@@ -168,6 +168,36 @@ const getTimelineAdmin = async (req, res, next) => {
     res.status(200).render('admin/timelineAdmin', {page: 'timelineSections'})
 }
 
+const getProposalsRanking = async (req, res, next) => {
+    try {
+        // Obtener todas las propuestas que no son borradores
+        const rawProposals = await Proposal.find({ isDraft: false }).sort({ updatedAt: -1 });
+        
+        // Enriquecer cada propuesta con información de soporte
+        const proposals = await Promise.all(
+            rawProposals.map(async (p) => {
+                return {
+                    ...p.toObject(),
+                    supporters: await p.getSupportersCount(),
+                    affiliations: await p.getAffiliationList(),
+                    centres: await p.getCentreList()
+                };
+            })
+        );
+        
+        // Ordenar las propuestas por número de apoyos (de mayor a menor)
+        const sortedProposals = proposals.sort((a, b) => b.supporters - a.supporters);
+        
+        res.status(200).render('admin/proposalsRanking', { 
+            proposals: sortedProposals,
+            title: 'Ranking de Propuestas'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getIndex,
     getProcess,
@@ -182,5 +212,6 @@ module.exports = {
     getAesthetics,
     getProposalsAdmin,
     getCandidatesAdmin,
-    getTimelineAdmin
+    getTimelineAdmin,
+    getProposalsRanking
 }
