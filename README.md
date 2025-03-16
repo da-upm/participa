@@ -2,7 +2,7 @@
 
 Plataforma web de apoyo a propuestas para las diferentes Candidaturas a Rector
 
-Made with ❤️ by [@Pablofl01](https://github.com/Pablofl01) & [@aalonsolopez](https://github.com/aalonsolopez)
+Made with ❤️ by [@Pablofl01](https://github.com/Pablofl01), [@aalonsolopez](https://github.com/aalonsolopez) & [@Ines023](https://github.com/Ines023)
 
 ## Indice
 - [Instalación](#instalación)
