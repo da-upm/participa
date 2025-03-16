@@ -2,8 +2,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Ranking de Propuestas Más Votadas</h2>
+                <div class="card-header">
+                    <h2 class="mb-0 text-center">Ranking de Propuestas Más Votadas</h2>
                 </div>
                 <div class="card-body">
                     <% if (proposals && proposals.length> 0) { %>
@@ -30,9 +30,7 @@
                                                 <%= proposal.title %>
                                             </td>
                                             <td>
-                                                <span class="badge badge-success">
-                                                    <%= proposal.supporters %>
-                                                </span>
+                                                <%= proposal.supporters %>
                                             </td>
                                             <td>
                                                 <% if (proposal.centres && proposal.centres.length> 0) { %>
@@ -49,7 +47,7 @@
                                                 <% } %>
                                             </td>
                                             <td>
-                                                <%= new Date(proposal.createdAt).toLocaleDateString(' es-ES') %>
+                                                <%= new Date(proposal.createdAt).toLocaleDateString('es-ES') %>
                                             </td>
                                             <td>
                                                 <a href="/?proposal=<%= proposal._id %>" class="btn btn-sm btn-info"
