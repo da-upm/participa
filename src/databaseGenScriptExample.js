@@ -25,8 +25,8 @@ collectionList.forEach(collection => {
     db.createCollection(collection);
 });
 
-db.candidates.insert({
-    _id: ObjectId('67bb5178df6a7f70b73ce484'),
+db.candidates.insertOne({
+    _id: new ObjectId(),
     name: 'Manolo',
     surname: 'Ruiz Sanz',
     email: 'manolo.ruizzz@correo.es',
@@ -38,23 +38,19 @@ db.candidates.insert({
     socialMedia: [
         {
             icon: 'globe',
-            url: 'https://example.com/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a1')
+            url: 'https://example.com/manolo'
         },
         {
             icon: 'twitter',
-            url: 'https://twitter.com/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a2')
+            url: 'https://twitter.com/manolo'
         },
         {
             icon: 'linkedin',
-            url: 'https://linkedin.com/in/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a3')
+            url: 'https://linkedin.com/in/manolo'
         },
         {
             icon: 'instagram',
-            url: 'https://linkedin.com/in/manolo',
-            _id: ObjectId('67c0c10af96ae5a9d4ad68a4')
+            url: 'https://linkedin.com/in/manolo'
         }
     ],
     details: {
@@ -65,12 +61,11 @@ db.candidates.insert({
         "Área de Conocimiento": "Sabe muchas cosas888",
         "Categoría Docente": "Holahola caracola88"
     },
-    programUrl: "https://example.com/manolo/programazz",
-    updatedAt: new Date("2025-02-27T19:46:18.298Z")
+    programUrl: "https://example.com/manolo/programazz"
 });
 
-db.parameters.insert({
-    _id: ObjectId('6726ce49c8b45bdd85cf64e8'),
+db.parameters.insertOne({
+    _id: new ObjectId(),
     categories: {
         general: 'General',
         economic: 'Financiación',
@@ -187,24 +182,20 @@ db.parameters.insert({
     },
 });
 
-db.timelinesections.insert({
-    _id: ObjectId(),
+db.timelinesections.insertOne({
+    _id: new ObjectId(),
     dateRange: "1 - 10 JAN 2025",
     title: "Example Title",
     content: "<p>Example content goes here. You can include HTML as needed.</p>",
     buttons: [
         {
             text: "Example Button 1",
-            url: "https://example.com/1",
-            _id: ObjectId("EXAMPLE_BUTTON_ID_1") // Replace with a valid ObjectId
+            url: "https://example.com/1"
         },
         {
             text: "Example Button 2",
-            url: "https://example.com/2",
-            _id: ObjectId("EXAMPLE_BUTTON_ID_2") // Replace with a valid ObjectId
+            url: "https://example.com/2"
         }
     ],
-    order: 1,                         
-    createdAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
-    updatedAt: new Date("2025-01-01T00:00:00Z"), // Replace with your example date
+    order: 1,
 });
