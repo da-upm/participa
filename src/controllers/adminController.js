@@ -74,7 +74,10 @@ const getProposal = async (req, res, next) => {
         proposal.affiliations = await proposal.getAffiliationList();
         proposal.centres = await proposal.getCentreList();
 
-        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal });
+        const schoolRestricted = await helpers.retrieveSchoolRestricted();
+        
+
+        res.status(200).render('fragments/admin/proposalDetailModal', { layout: false, proposal, schoolRestricted });
     } catch (error) {
         console.error("Error admin/getProposals:", error);
         return next(new InternalServerError("Ha ocurrido un error al realizar la búsqueda."));
@@ -218,7 +221,10 @@ const getRejectForm = async (req, res, next) => {
 
         const proponent = await User.findById(proposal.usersDrafting[0]);
 
-        res.status(200).render('fragments/admin/proposalRejectForm', { layout: false, proposal, proponent });
+        const schoolRestricted = await helpers.retrieveSchoolRestricted();
+        
+
+        res.status(200).render('fragments/admin/proposalRejectForm', { layout: false, proposal, proponent, schoolRestricted });
     } catch (error) {
         console.error("Error admin/getRejectForm:", error);
         return next(new InternalServerError("Ha ocurrido un error al obtener el formulario."));

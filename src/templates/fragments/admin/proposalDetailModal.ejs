@@ -41,7 +41,7 @@
                 </p>
                 <% } %>
 
-                    <% if (proposal.centres && proposal.centres.length> 0) { %>
+                    <% if (!schoolRestricted && proposal.centres && proposal.centres.length> 0) { %>
                         <p><strong>Escuelas desde las que se propone:</strong> <span id="proposalSupportingCandidates">
                                 <%= proposal.centres.map(c=> centres[c]).join(', ') %>
                             </span></p>

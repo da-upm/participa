@@ -98,7 +98,9 @@ const getProposal = async (req, res, next) => {
         proposal.centres = await proposal.getCentreList();
         proposal.candidatesSupporters = await proposal.getCandidatesSupporters();
 
-        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal });
+        const schoolRestricted = await helpers.retrieveSchoolRestricted();
+
+        res.status(200).render('fragments/proposalDetailModal', { layout: false, proposal, schoolRestricted });
     } catch (error) {
         console.error("Error en proposal/getProposal:", error);
         return next(new InternalServerError("Ha ocurrido un error al obtener la propuesta."));

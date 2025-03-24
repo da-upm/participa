@@ -30,6 +30,11 @@ module.exports.retrieveAffiliations = async () => {
     return result.affiliations;
 }
 
+module.exports.retrieveSchoolRestricted = async () => {
+    const result = await Parameter.findOne({ schoolRestricted: { $exists: true } });
+    return result.schoolRestricted;
+}
+
 module.exports.retrieveCentres = async () => {
     const result = await Parameter.findOne({ centres: { $exists: true } });
     return result.centres;
