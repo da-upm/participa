@@ -508,6 +508,51 @@ const changeCandidate = async (req, res, next) => {
     }
 };
 
+const uploadCommitmentsDocument = async (req, res, next) => {
+    try {
+        const candidateId = req.body._id;
+        if (!candidateId) {
+            return next(new BadRequestError('No se ha proporcionado el ID del candidato.'));
+        }
+
+        // Verificar si hay archivos en la solicitud
+        if (!req.files || !req.files.fileUpload) {
+            return next(new BadRequestError('No se ha proporcionado ningún archivo PDF.'));
+        }
+
+        const pdfFile = req.files.fileUpload;
+        
+        // Validar que el archivo es un PDF
+        if (pdfFile.mimetype !== 'application/pdf') {
+            return next(new BadRequestError('El archivo debe ser un PDF.'));
+        }
+
+        // Leer el archivo como buffer
+        const pdfBuffer = pdfFile.data;
+
+        // Actualizar el documento en la base de datos
+        const updatedCandidate = await Candidate.findByIdAndUpdate(
+            candidateId,
+            { signedCommitmentsDoc: pdfBuffer },
+            { new: true }
+        );
+
+        if (!updatedCandidate) {
+            return next(new NotFoundError('No se ha encontrado el candidato.'));
+        }
+
+        req.toastr.success(`Documento de compromisos actualizado correctamente.`);
+        return res.status(200).render('fragments/admin/candidateForms/candidateForm', {
+            candidate: updatedCandidate,
+            layout: false
+        });
+
+    } catch (error) {
+        console.error('Error en uploadCommitmentsDocument:', error);
+        return next(new InternalServerError('Error al subir el documento de compromisos.'));
+    }
+};
+
 const createNewCandidate = async (req, res, next) => {
     try {
         const newCandidate = new Candidate({
@@ -774,6 +819,7 @@ module.exports = {
     changeColors,
     changeText,
     changeCandidate,
+    uploadCommitmentsDocument,
     createNewCandidate,
     deleteCandidate,
     changeResult,
