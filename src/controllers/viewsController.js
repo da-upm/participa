@@ -29,6 +29,10 @@ const getCandidates = async (req, res, next) => {
     res.status(200).render('candidates', {page: 'candidates'})
 }
 
+const getResults = async (req, res, next) => {
+    res.status(200).render('results', {page: 'results'})
+}
+
 const getQuestions = async (req, res, next) => {
     const user = req.session.user;
     res.render('questions');
@@ -173,6 +177,7 @@ module.exports = {
     getProcess,
     getTimeline,
     getCandidates,
+    getResults,
     getCommitments,
     getCandidateCommitments,
     getAdmin,

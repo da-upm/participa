@@ -1,0 +1,238 @@
+<div class="container text-center mt-5 mb-5">
+  <h1>Resultados del escrutinio</h1>
+
+  <div id="pieChartsView" class="chart-container">
+    <div class="chart-wrapper">
+      <h2>Grupo A</h2>
+      <canvas id="chartA"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h2>Grupo B</h2>
+      <canvas id="chartB"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h2>Grupo C</h2>
+      <canvas id="chartC"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h2>Grupo D</h2>
+      <canvas id="chartD"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h2>Total</h2>
+      <canvas id="chartTotal"></canvas>
+    </div>
+  </div>
+
+  <div id="stackedChart">
+    <h2>Resultados por grupo</h2>
+    <canvas id="stackedBarChart"></canvas>
+  </div>
+
+  <button id="toggleView" class="toggle-btn">Cambiar a gráfico de barras</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Election data
+    const electionData = {
+      groupA: {
+        'Álvaro Araujo': 25,
+        'Jesús Grajal': 45,
+        'Manuel Sierra': 20,
+        'En blanco': 5
+      },
+      groupB: {
+        'Álvaro Araujo': 40,
+        'Jesús Grajal': 30,
+        'Manuel Sierra': 15,
+        'En blanco': 5
+      },
+      groupC: {
+        'Álvaro Araujo': 30,
+        'Jesús Grajal': 20,
+        'Manuel Sierra': 40,
+        'En blanco': 5
+      },
+      groupD: {
+        'Álvaro Araujo': 30,
+        'Jesús Grajal': 35,
+        'Manuel Sierra': 25,
+        'En blanco': 5
+      }
+    };
+
+    // Calculate totals
+    const totalResults = {
+      'Álvaro Araujo': 0,
+      'Jesús Grajal': 0,
+      'Manuel Sierra': 0,
+      'En blanco': 0
+    };
+
+    for (const group in electionData) {
+      for (const candidate in electionData[group]) {
+        totalResults[candidate] += electionData[group][candidate];
+      }
+    }
+
+    // Chart colors
+    const colors = {
+      'Álvaro Araujo': 'rgb(246, 85, 85)',
+      'Jesús Grajal': 'rgb(249, 145, 67)',
+      'Manuel Sierra': 'rgb(252, 207, 49)',
+      'En blanco': 'rgb(113, 114, 119)'
+    };
+
+    // Create pie charts
+    function createPieChart(canvasId, data) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      // Calculate total votes for percentage calculation
+      const totalVotes = Object.values(data).reduce((sum, value) => sum + value, 0);
+
+      return new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data),
+          datasets: [{
+            data: Object.values(data),
+            backgroundColor: Object.keys(data).map(key => colors[key]),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const percentage = ((value / totalVotes) * 100).toFixed(1);
+                  return `${label}: ${value} votos (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Create stacked bar chart
+    function createStackedBarChart() {
+      const ctx = document.getElementById('stackedBarChart').getContext('2d');
+      const candidates = Object.keys(totalResults);
+
+      // Calculate total votes for each group
+      const groupTotals = {
+        groupA: Object.values(electionData.groupA).reduce((a, b) => a + b, 0),
+        groupB: Object.values(electionData.groupB).reduce((a, b) => a + b, 0),
+        groupC: Object.values(electionData.groupC).reduce((a, b) => a + b, 0),
+        groupD: Object.values(electionData.groupD).reduce((a, b) => a + b, 0),
+        total: Object.values(totalResults).reduce((a, b) => a + b, 0)
+      };
+
+      const datasets = candidates.map(candidate => {
+        return {
+          label: candidate,
+          data: [
+            (electionData.groupA[candidate] / groupTotals.groupA) * 100,
+            (electionData.groupB[candidate] / groupTotals.groupB) * 100,
+            (electionData.groupC[candidate] / groupTotals.groupC) * 100,
+            (electionData.groupD[candidate] / groupTotals.groupD) * 100,
+            (totalResults[candidate] / groupTotals.total) * 100
+          ],
+          backgroundColor: colors[candidate],
+          // Store raw votes for tooltip
+          rawVotes: [
+            electionData.groupA[candidate],
+            electionData.groupB[candidate],
+            electionData.groupC[candidate],
+            electionData.groupD[candidate],
+            totalResults[candidate]
+          ]
+        };
+      });
+
+      return new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Grupo A', 'Grupo B', 'Grupo C', 'Grupo D', 'Total'],
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: true,
+              max: 100,
+              ticks: {
+                callback: value => value + '%'
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const percentage = context.raw.toFixed(1);
+                  const votes = context.dataset.rawVotes[context.dataIndex];
+                  return `${context.dataset.label}: ${votes} votos (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Initialize charts
+    const chartA = createPieChart('chartA', electionData.groupA);
+    const chartB = createPieChart('chartB', electionData.groupB);
+    const chartC = createPieChart('chartC', electionData.groupC);
+    const chartD = createPieChart('chartD', electionData.groupD);
+    const chartTotal = createPieChart('chartTotal', totalResults);
+    const stackedBarChart = createStackedBarChart();
+
+    // Toggle between chart views
+    const toggleBtn = document.getElementById('toggleView');
+    const pieChartsView = document.getElementById('pieChartsView');
+    const stackedChartView = document.getElementById('stackedChart');
+
+    // Toggle between chart views
+    toggleBtn.addEventListener('click', function () {
+      if (pieChartsView.style.display === 'none') {
+        pieChartsView.style.display = 'flex';
+        stackedChartView.style.display = 'none';
+        toggleBtn.textContent = 'Cambiar a gráfico de barras';
+        localStorage.setItem('chartView', 'pie');
+      } else {
+        pieChartsView.style.display = 'none';
+        stackedChartView.style.display = 'block';
+        toggleBtn.textContent = 'Cambiar a gráficos circulares';
+        localStorage.setItem('chartView', 'bar');
+      }
+    });
+
+    // Load saved preference on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedView = localStorage.getItem('chartView');
+      if (savedView === 'bar') {
+        pieChartsView.style.display = 'none';
+        stackedChartView.style.display = 'block';
+        toggleBtn.textContent = 'Cambiar a gráficos circulares';
+      } else {
+        // Default to pie charts if no preference or 'pie' is saved
+        pieChartsView.style.display = 'flex';
+        stackedChartView.style.display = 'none';
+        toggleBtn.textContent = 'Cambiar a gráfico de barras';
+      }
+    });
+  </script>
+</div>
