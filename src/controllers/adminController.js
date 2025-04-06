@@ -577,10 +577,10 @@ const changeResult = async (req, res, next) => {
             name: sanitizeHtml(req.body.name || 'En blanco', { allowedTags: [], allowedAttributes: {} }),
             color: sanitizeHtml(req.body.color || 'rgb(113, 114, 119)', { allowedTags: [], allowedAttributes: {} }),
             votes: {
-            groupA: parseInt(req.body.votes?.groupA) || 0,
-            groupB: parseInt(req.body.votes?.groupB) || 0, 
-            groupC: parseInt(req.body.votes?.groupC) || 0,
-            groupD: parseInt(req.body.votes?.groupD) || 0
+            groupA: parseInt(req.body.groupA) || 0,
+            groupB: parseInt(req.body.groupB) || 0, 
+            groupC: parseInt(req.body.groupC) || 0,
+            groupD: parseInt(req.body.groupD) || 0
             }
         };
 
