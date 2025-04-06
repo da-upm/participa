@@ -32,7 +32,25 @@ const getCandidates = async (req, res, next) => {
 }
 
 const getResults = async (req, res, next) => {
-    res.status(200).render('results', {page: 'results'})
+    const weighings = await helpers.retrieveWeighings();
+    const results = await Result.find();
+
+    const transformedResults = results.reduce((acc, result) => {
+        // Initialize if not exists
+        ['groupA', 'groupB', 'groupC', 'groupD'].forEach(group => {
+            if (!acc[group]) acc[group] = {};
+            acc[group][result.name] = result.votes[group];
+        });
+        
+        // Calculate weighted total for this result
+        if (!acc.total) acc.total = {};
+        acc.total[result.name] = ['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
+            return sum + (result.votes[group] * weighings[group]);
+        }, 0);
+        
+        return acc;
+    }, {});
+    res.status(200).render('results', {page: 'results', results: transformedResults})
 }
 
 const getQuestions = async (req, res, next) => {

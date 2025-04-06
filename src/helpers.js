@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const config = require('./config.json');
 
 const Parameter = require('./models/parameter');
+const Result = require('./models/result');
 const TimelineSection = require('./models/timelineSection');
 
 // Función para eliminar acentos
@@ -131,3 +132,13 @@ module.exports.retrieveTimelineSections = async (req, res, next) => {
 			return undefined;
 		}
 };
+
+module.exports.retrieveWeighings = async () => {
+	try {
+		const result = await Parameter.findOne({ weighings: { $exists: true } });
+		return result.weighings;
+	} catch (error) {
+		console.error('Error getting weighings:', error);
+		return undefined;
+	}
+}

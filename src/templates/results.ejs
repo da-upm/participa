@@ -35,46 +35,10 @@
 
   <script>
     // Election data
-    const electionData = {
-      groupA: {
-        'Álvaro Araujo': 25,
-        'Jesús Grajal': 45,
-        'Manuel Sierra': 20,
-        'En blanco': 5
-      },
-      groupB: {
-        'Álvaro Araujo': 40,
-        'Jesús Grajal': 30,
-        'Manuel Sierra': 15,
-        'En blanco': 5
-      },
-      groupC: {
-        'Álvaro Araujo': 30,
-        'Jesús Grajal': 20,
-        'Manuel Sierra': 40,
-        'En blanco': 5
-      },
-      groupD: {
-        'Álvaro Araujo': 30,
-        'Jesús Grajal': 35,
-        'Manuel Sierra': 25,
-        'En blanco': 5
-      }
-    };
+    const electionData = <%- JSON.stringify(results) %>;
 
-    // Calculate totals
-    const totalResults = {
-      'Álvaro Araujo': 0,
-      'Jesús Grajal': 0,
-      'Manuel Sierra': 0,
-      'En blanco': 0
-    };
-
-    for (const group in electionData) {
-      for (const candidate in electionData[group]) {
-        totalResults[candidate] += electionData[group][candidate];
-      }
-    }
+    // Get totals from electionData
+    const totalResults = electionData.total;
 
     // Chart colors
     const colors = {
