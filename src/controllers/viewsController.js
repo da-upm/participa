@@ -44,13 +44,26 @@ const getResults = async (req, res, next) => {
         
         // Calculate weighted total for this result
         if (!acc.total) acc.total = {};
-        acc.total[result.name] = ['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
+        acc.total[result.name] = Number(['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
             return sum + (result.votes[group] * weighings[group]);
-        }, 0);
+        }, 0).toFixed(2));
         
         return acc;
     }, {});
-    res.status(200).render('results', {page: 'results', results: transformedResults})
+
+    const colors = {};
+    const hexToRgb = hex => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgb(${r},${g},${b})`;
+    };
+
+    results.forEach(result => {
+        colors[result.name] = hexToRgb(result.color);
+    });
+    
+    res.status(200).render('results', {page: 'results', results: transformedResults, resultColors: colors})
 }
 
 const getQuestions = async (req, res, next) => {

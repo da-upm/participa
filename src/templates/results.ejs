@@ -41,12 +41,7 @@
     const totalResults = electionData.total;
 
     // Chart colors
-    const colors = {
-      'Álvaro Araujo': 'rgb(246, 85, 85)',
-      'Jesús Grajal': 'rgb(249, 145, 67)',
-      'Manuel Sierra': 'rgb(252, 207, 49)',
-      'En blanco': 'rgb(113, 114, 119)'
-    };
+    const colors = <%- JSON.stringify(resultColors) %>;
 
     // Create pie charts
     function createPieChart(canvasId, data) {
