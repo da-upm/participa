@@ -5,6 +5,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const { BadRequestError, NotFoundError, InternalServerError } = require('../errors');
 
 const Proposal = require('../models/proposal');
+const Result = require('../models/result');
 const User = require('../models/user');
 const Question = require('../models/question');
 
@@ -565,6 +566,96 @@ const deleteCandidate = async (req, res, next) => {
     }
 };
 
+const changeResult = async (req, res, next) => {
+    try {
+        const resultId = req.body._id;
+        if (!resultId) {
+            return next(new BadRequestError('No se ha proporcionado el ID del resultado.'));
+        }
+
+        const updateData = {
+            name: sanitizeHtml(req.body.name || 'En blanco', { allowedTags: [], allowedAttributes: {} }),
+            color: sanitizeHtml(req.body.color || 'rgb(113, 114, 119)', { allowedTags: [], allowedAttributes: {} }),
+            votes: {
+            groupA: parseInt(req.body.votes?.groupA) || 0,
+            groupB: parseInt(req.body.votes?.groupB) || 0, 
+            groupC: parseInt(req.body.votes?.groupC) || 0,
+            groupD: parseInt(req.body.votes?.groupD) || 0
+            }
+        };
+
+        const updatedResult = await Result.findByIdAndUpdate(
+            resultId,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedResult) {
+            return next(new NotFoundError('No se ha encontrado el resultado.'));
+        }
+
+        req.toastr.success(`Resultado "${updatedResult.name}" actualizado correctamente.`);
+        return res.status(200).render('fragments/admin/resultForms/resultForm', {
+            result: updatedResult,
+            layout: false
+        });
+
+    } catch (error) {
+        console.error('Error en changeCandidate:', error);
+        return next(new InternalServerError('Error al actualizar el candidato.'));
+    }
+};
+
+const createNewResult = async (req, res, next) => {
+    try {
+        const newResult = new Result({
+            "name": "En blanco",
+            "color": "rgb(113, 114, 119)",
+            "votes": {
+                "groupA": 0,
+                "groupB": 0,
+                "groupC": 0,
+                "groupD": 0
+            }
+        });
+
+        const savedResult = await newResult.save();
+
+        if (!savedResult) {
+            return next(new InternalServerError('Error al guardar el resultado en la base de datos'));
+        }
+        return res.render('fragments/admin/resultForms/resultForm', {
+            result: savedResult,
+            layout: false,
+        });
+    } catch (error) {
+        console.error('Error en createNewResult:', error);
+        return next(new InternalServerError('Error al crear el nuevo resultado'));
+    }
+};
+
+const deleteResult = async (req, res, next) => {
+    try {
+        const resultId = req.query._id;
+        if (!resultId) {
+            return next(new BadRequestError('No se ha proporcionado el ID del resultado.'));
+        }
+
+        const deletedResult = await Result.findByIdAndDelete(resultId);
+
+        if (!deletedResult) {
+            return next(new NotFoundError('No se ha encontrado el resultado.'));
+        }
+
+        req.toastr.success(`Resultado "${deletedResult.name}" eliminado correctamente.`);
+        return res.status(200).send('');
+
+    } catch (error) {
+        console.error('Error en deleteResult:', error);
+        return next(new InternalServerError('Error al eliminar el candidato.'));
+    }
+};
+
 const createTimelineSection = async (req, res, next) => {
     try {
         const newSection = new TimelineSection({
@@ -685,6 +776,9 @@ module.exports = {
     changeCandidate,
     createNewCandidate,
     deleteCandidate,
+    changeResult,
+    createNewResult,
+    deleteResult,
     createTimelineSection,
     changeTimelineSection,
     deleteTimelineSection,

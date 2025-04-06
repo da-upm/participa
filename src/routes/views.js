@@ -20,6 +20,7 @@ router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsCo
 router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);
 router.get('/aesthetics', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAesthetics);
 router.get('/candidatesAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getCandidatesAdmin);
+router.get('/resultsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getResultsAdmin);
 router.get('/proposalsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsAdmin);
 router.get('/timelineAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getTimelineAdmin);
 

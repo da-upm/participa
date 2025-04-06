@@ -2,6 +2,8 @@ const Proposal = require('../models/proposal');
 const User = require('../models/user');
 const Candidate = require('../models/candidate');
 const Question = require('../models/question');
+const Result = require('../models/result');
+
 
 const helpers = require('../helpers');
 
@@ -168,6 +170,13 @@ const getCandidatesAdmin = async (req, res, next) => {
     res.status(200).render('admin/candidatesAdmin', {page: 'candidates'})
 }
 
+
+const getResultsAdmin = async (req, res, next) => {
+    const results = await Result.find();
+
+    res.status(200).render('admin/resultsAdmin', {page: 'results', results})
+}
+
 const getTimelineAdmin = async (req, res, next) => {
     res.status(200).render('admin/timelineAdmin', {page: 'timelineSections'})
 }
@@ -187,5 +196,6 @@ module.exports = {
     getAesthetics,
     getProposalsAdmin,
     getCandidatesAdmin,
+    getResultsAdmin,
     getTimelineAdmin
 }
