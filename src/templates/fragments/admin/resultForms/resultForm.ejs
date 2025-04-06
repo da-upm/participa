@@ -1,4 +1,3 @@
-
 <div class="col-md-6" id="resultForm-<%= result._id %>">
     <div class="card">
         <div class="card-body">
@@ -7,11 +6,11 @@
             </h5>
             <form id="resultForm-<%= result._id %>">
                 <input type="hidden" name="_id" value="<%= result._id %>">
-               
+
                 <div class="m-3"></div>
-                    <label for="name" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="name" name="name" value="<%= result.name %>">
-                </div>
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" value="<%= result.name %>">
+
 
                 <div class="m-3">
                     <label for="color" class="form-label">Color</label>
@@ -38,28 +37,20 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary m-3" 
-                        hx-post="/api/admin/result/change" 
-                        hx-trigger="click"
-                        hx-target="#resultForm-<%= result._id %>" 
-                        hx-include="#resultForm-<%= result._id %>"
-                        hx-swap="outerHTML" 
-                        hx-target-error="#toastr-container">
+                <button type="button" class="btn btn-primary m-3" hx-post="/api/admin/result/change" hx-trigger="click"
+                    hx-target="#resultForm-<%= result._id %>" hx-include="#resultForm-<%= result._id %>"
+                    hx-swap="outerHTML" hx-target-error="#toastr-container">
                     Guardar resultado
                 </button>
 
-                
+
             </form>
-            <button type="button" class="btn btn-danger m-3" 
-                    hx-delete="/api/admin/result/delete"
-                    hx-trigger="click"
-                    hx-vals='{"_id": "<%= result._id %>"}'
-                    hx-target="#resultForm-<%= result._id %>" 
-                    hx-swap="outerHTML" 
-                    hx-confirm="¿Estás seguro de que deseas eliminar el resultado <%= result.name %>?"
-                    hx-target-error="#toastr-container">
-                    <i class="bi bi-trash"></i> Eliminar
-                </button>
+            <button type="button" class="btn btn-danger m-3" hx-delete="/api/admin/result/delete" hx-trigger="click"
+                hx-vals='{"_id": "<%= result._id %>"}' hx-target="#resultForm-<%= result._id %>" hx-swap="outerHTML"
+                hx-confirm="¿Estás seguro de que deseas eliminar el resultado <%= result.name %>?"
+                hx-target-error="#toastr-container">
+                <i class="bi bi-trash"></i> Eliminar
+            </button>
         </div>
     </div>
 </div>
