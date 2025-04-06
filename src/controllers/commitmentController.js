@@ -228,13 +228,13 @@ const signCommitments = async (req, res, next) => {
                 };
             })
         );
-
+        
         const latexContent = (await Promise.all(proposals.map(async p =>
-            `\\titulillo{${(await convertText(p.title)).replace(/\s{2,}/g, ' ')}}
+            `\\titulillo{${(await convertText(p.title)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}
 
-            \\cuerpo{${(await convertText(p.description)).replace(/\s{2,}/g, ' ')}}
+            \\cuerpo{${(await convertText(p.description)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}
 
-            \\resaltado{${(await convertText(p.commitment)).replace(/\s{2,}/g, ' ')}}\n\\vspace{0.25cm}`
+            \\resaltado{${(await convertText(p.commitment)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}\n\\vspace{0.25cm}`
         ))).join('\n\n');
 
         const modifiedStream = input.pipe(
