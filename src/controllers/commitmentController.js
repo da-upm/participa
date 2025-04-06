@@ -200,6 +200,7 @@ const signCommitments = async (req, res, next) => {
         const outputPath = __dirname + `/../output/${req.session.candidate.username}.pdf`;
         const output = fs.createWriteStream(outputPath);
         
+        
         if (!req.query.proposalIds) {
             console.error('Error en commitment/signCommitments:');
             console.error(`El candidato ${req.session.user.id} ha intentado firmar compromisos sin especificarlos.`);
@@ -263,8 +264,18 @@ const signCommitments = async (req, res, next) => {
 
         // Wait for file to be fully written
         await new Promise((resolve, reject) => {
-            output.on('error', reject);
-            output.on('finish', resolve);
+            if (output.writableFinished) {
+                console.log('File already written to disk!');
+                return resolve();
+            }
+            output.on('error', () => {
+                console.error('Error writing file to disk!');
+                reject();
+            });
+            output.on('finish', () => {
+                console.log('File written to disk!');
+                resolve();
+            });
         });
 
         // Read file and update candidate
@@ -273,6 +284,7 @@ const signCommitments = async (req, res, next) => {
             { username: req.session.candidate.username },
             { unsignedCommitmentsDoc: pdfBuffer }
         );
+        console.log('Candidate updated with unsigned commitments document!');
 
         // Clean up and send response
         fs.unlinkSync(outputPath);
