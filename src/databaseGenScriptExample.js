@@ -115,6 +115,12 @@ db.parameters.insertOne({
         ptgas: 'PTGAS',
         none: 'Otros'
     },
+    "weighing": {
+        "groupA": 0.57,
+        "groupB": 0.10,
+        "groupC": 0.25,
+        "groupD": 0.08
+    },
     centres: {
         '1': 'ETSIA',
         '3': 'ETSAM',
@@ -150,7 +156,8 @@ db.parameters.insertOne({
         'questions': true,
         'candidates': true,
         'process': true,
-        'timeline': true
+        'timeline': true,
+        'results': true,
     },
     // schoolRestricted: 61, Only enable if you want to restrict the school to the number of the center.
     text: {
