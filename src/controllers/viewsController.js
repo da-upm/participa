@@ -42,10 +42,15 @@ const getResults = async (req, res, next) => {
             acc[group][result.name] = result.votes[group];
         });
         
-        // Calculate weighted total for this result
+        // Calculate weighted total based on percentage of votes in each group
         if (!acc.total) acc.total = {};
         acc.total[result.name] = Number(['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
-            return sum + (result.votes[group] * weighings[group]);
+            // Calculate total votes in this group
+            const groupTotal = results.reduce((total, r) => total + r.votes[group], 0);
+            // Calculate percentage of votes for this candidate in this group
+            const percentage = groupTotal > 0 ? (result.votes[group] / groupTotal) * 100 : 0;
+            // Add weighted percentage to sum
+            return sum + (percentage * weighings[group]);
         }, 0).toFixed(2));
         
         return acc;

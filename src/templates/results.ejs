@@ -70,7 +70,7 @@
                 label: function (context) {
                   const label = context.label || '';
                   const value = context.raw || 0;
-                  const percentage = ((value / totalVotes) * 100).toFixed(1);
+                  const percentage = ((value / totalVotes) * 100).toFixed(2);
                   return `${label}: ${value} votos (${percentage}%)`;
                 }
               }
@@ -140,7 +140,7 @@
             tooltip: {
               callbacks: {
                 label: function (context) {
-                  const percentage = context.raw.toFixed(1);
+                  const percentage = context.raw.toFixed(2);
                   const votes = context.dataset.rawVotes[context.dataIndex];
                   return `${context.dataset.label}: ${votes} votos (${percentage}%)`;
                 }
