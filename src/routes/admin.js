@@ -25,6 +25,7 @@ router.post('/colors', adminController.changeColors);
 router.post('/text', adminController.changeText);
 
 router.post('/candidate/change', adminController.changeCandidate);
+router.post('/candidate/upload', adminController.uploadCommitmentsDocument);
 router.get('/candidate/new', adminController.createNewCandidate);
 router.delete('/candidate/delete', adminController.deleteCandidate);
 

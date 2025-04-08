@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const passport = require('passport');
 const flash = require('connect-flash');
 const toastr = require('express-toastr');
+const fileUpload = require('express-fileupload');
 
 const { Issuer, Strategy } = require('openid-client');
 
@@ -53,6 +54,12 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(fileUpload({
+    limits: { fileSize: 10 * 1024 * 1024 }, // Limitar a 10MB
+    abortOnLimit: true,
+    responseOnLimit: 'El archivo es demasiado grande'
+}));
 
 // Serve the frontend files.
 app.use(express.static(path.join(__dirname, 'templates/static')));
