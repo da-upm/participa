@@ -200,6 +200,7 @@ const signCommitments = async (req, res, next) => {
         const outputPath = __dirname + `/../output/${req.session.candidate.username}.pdf`;
         const output = fs.createWriteStream(outputPath);
         
+        
         if (!req.query.proposalIds) {
             console.error('Error en commitment/signCommitments:');
             console.error(`El candidato ${req.session.user.id} ha intentado firmar compromisos sin especificarlos.`);
@@ -227,13 +228,13 @@ const signCommitments = async (req, res, next) => {
                 };
             })
         );
-
+        
         const latexContent = (await Promise.all(proposals.map(async p =>
-            `\\titulillo{${(await convertText(p.title)).replace(/\s{2,}/g, ' ')}}
+            `\\titulillo{${(await convertText(p.title)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}
 
-            \\cuerpo{${(await convertText(p.description)).replace(/\s{2,}/g, ' ')}}
+            \\cuerpo{${(await convertText(p.description)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}
 
-            \\resaltado{${(await convertText(p.commitment)).replace(/\s{2,}/g, ' ')}}\n\\vspace{0.25cm}`
+            \\resaltado{${(await convertText(p.commitment)).replace(/\s{2,}/g, ' ').replace(/"(.*?)"/g, `\`\`$1\'\'`)}}\n\\vspace{0.25cm}`
         ))).join('\n\n');
 
         const modifiedStream = input.pipe(
@@ -263,8 +264,18 @@ const signCommitments = async (req, res, next) => {
 
         // Wait for file to be fully written
         await new Promise((resolve, reject) => {
-            output.on('error', reject);
-            output.on('finish', resolve);
+            if (output.writableFinished) {
+                console.log('File already written to disk!');
+                return resolve();
+            }
+            output.on('error', () => {
+                console.error('Error writing file to disk!');
+                reject();
+            });
+            output.on('finish', () => {
+                console.log('File written to disk!');
+                resolve();
+            });
         });
 
         // Read file and update candidate
@@ -273,6 +284,7 @@ const signCommitments = async (req, res, next) => {
             { username: req.session.candidate.username },
             { unsignedCommitmentsDoc: pdfBuffer }
         );
+        console.log('Candidate updated with unsigned commitments document!');
 
         // Clean up and send response
         fs.unlinkSync(outputPath);

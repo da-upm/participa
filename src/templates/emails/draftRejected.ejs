@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family: 'Comfortaa', sans-serif;
+            font-family: 'Alte Haas Grotesk', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
@@ -55,7 +55,7 @@
         .footer {
             text-align: center;
             padding: 20px;
-            background: var(--primary-color);
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color)) !important;
             color: #ffffff;
         }
 
@@ -101,8 +101,8 @@
             <p><strong>Motivo:</strong> <%- reason %></p>
         </div>
         <div class="footer">
-            <p>Atentamente,<br>Delegación de Alumnos UPM</p>
-            <img src="https://da.upm.es/wp-content/uploads/2022/08/LOGO-DAUPM_MANCHETA_Neg-1024x198.png" alt="Delegación de Alumnos">
+            <p>Atentamente,<br><%= texts.delegationName %></p>
+            <img src="<%= serverUrl %>/img/logo_WH.png" alt="<%= texts.delegationName %>">
         </div>
     </div>
 </body>
