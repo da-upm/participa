@@ -37,7 +37,7 @@
                     </span></p>
                 <% } %>
 
-                    <% if (proponent.centre && proponent.centre.length> 0) { %>
+                    <% if (!schoolRestricted && proponent.centre && proponent.centre.length> 0) { %>
                         <p><strong>Centro(s):</strong> <span>
                                 <%= proponent.centre.map(c=> centres[c]).join(', ') %>
                             </span></p>

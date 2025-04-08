@@ -28,6 +28,10 @@ router.post('/candidate/change', adminController.changeCandidate);
 router.get('/candidate/new', adminController.createNewCandidate);
 router.delete('/candidate/delete', adminController.deleteCandidate);
 
+router.post('/result/change', adminController.changeResult);
+router.get('/result/new', adminController.createNewResult);
+router.delete('/result/delete', adminController.deleteResult);
+
 router.get('/timelineAdmin/new', adminController.createTimelineSection);
 router.post('/timelineAdmin/change', adminController.changeTimelineSection);
 router.delete('/timelineAdmin/delete', adminController.deleteTimelineSection);

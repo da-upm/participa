@@ -1,0 +1,12 @@
+<div class="container mt-5 text-center ">
+    <h1>Configuración de resultados</h1>
+    <p class="lead">Edita la información del escrutinio de votos desde esta página.</p>
+</div>
+
+<%- include('../fragments/admin/resultForms/newResultButton') %>
+
+<div class="container settings-container row justify-content-center" id="resultsContainer">
+        <% for (const result of results) { %>
+            <%- include('../fragments/admin/resultForms/resultForm', {result}) %>
+        <% } %>
+</div>

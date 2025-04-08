@@ -18,9 +18,30 @@ const registerUser = async (userInfo) => {
 			username: userInfo.preferred_username,
 			email: userInfo.email,
 			UPMClassifCodes: userInfo.upmClassifCode,
-			affiliation: 
+			affiliation:
 			(() => {
-				const employeeTypes = userInfo.employeeType;
+				const restrictedSchool = helpers.retrieveSchoolRestricted();
+
+				let employeeTypes = [];
+
+			if (restrictedSchool) {
+				const affiliations = userInfo.upmClassifCode.filter(code => code.startsWith('CentroPerfil:'));
+				if (affiliations && affiliations.length > 0) {
+					for (const affiliation of affiliations) {
+						const schoolCode = affiliation.split(':')[1];
+						if (
+							restrictedSchool.toString() === schoolCode ||
+							(restrictedSchool < 10 && 
+							 (schoolCode === restrictedSchool.toString() || 
+							  schoolCode === "0" + restrictedSchool.toString()))
+						) {
+							employeeTypes.append(affiliation.split(':')[2]);
+						}
+					}
+				}
+
+			} else employeeTypes = userInfo.employeeType;
+
 				let affiliation = 'none'; // Default to 'none' if no match is found
 
 				if (employeeTypes.some(type => affiliationCodes.pdi.includes(type))) {

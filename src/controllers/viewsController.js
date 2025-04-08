@@ -2,6 +2,8 @@ const Proposal = require('../models/proposal');
 const User = require('../models/user');
 const Candidate = require('../models/candidate');
 const Question = require('../models/question');
+const Result = require('../models/result');
+
 
 const helpers = require('../helpers');
 
@@ -27,6 +29,51 @@ const getTimeline = async (req, res, next) => {
 
 const getCandidates = async (req, res, next) => {
     res.status(200).render('candidates', {page: 'candidates'})
+}
+
+const getResults = async (req, res, next) => {
+    const weighings = await helpers.retrieveWeighings();
+    const results = await Result.find();
+    const showTotalResults = await helpers.retrieveShowTotalResults();
+
+    const transformedResults = results.reduce((acc, result) => {
+        // Initialize if not exists
+        ['groupA', 'groupB', 'groupC', 'groupD'].forEach(group => {
+            if (!acc[group]) acc[group] = {};
+            acc[group][result.name] = result.votes[group];
+        });
+        
+        // Calculate weighted total based on percentage of votes in each group
+        if (!acc.total) acc.total = {};
+        if (req.session.user?.isAdmin || showTotalResults) {
+            acc.total[result.name] = Number(['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
+            // Calculate total votes in this group
+            const groupTotal = results.reduce((total, r) => total + r.votes[group], 0);
+            // Calculate percentage of votes for this candidate in this group
+            const percentage = groupTotal > 0 ? (result.votes[group] / groupTotal) * 100 : 0;
+            // Add weighted percentage to sum
+            return sum + (percentage * weighings[group]);
+            }, 0).toFixed(2));
+        } else {
+            acc.total[result.name] = 0;
+        }
+        
+        return acc;
+    }, {});
+
+    const colors = {};
+    const hexToRgb = hex => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgb(${r},${g},${b})`;
+    };
+
+    results.forEach(result => {
+        colors[result.name] = hexToRgb(result.color);
+    });
+    
+    res.status(200).render('results', {page: 'results', results: transformedResults, resultColors: colors})
 }
 
 const getQuestions = async (req, res, next) => {
@@ -164,6 +211,13 @@ const getCandidatesAdmin = async (req, res, next) => {
     res.status(200).render('admin/candidatesAdmin', {page: 'candidates'})
 }
 
+
+const getResultsAdmin = async (req, res, next) => {
+    const results = await Result.find();
+
+    res.status(200).render('admin/resultsAdmin', {page: 'results', results})
+}
+
 const getTimelineAdmin = async (req, res, next) => {
     res.status(200).render('admin/timelineAdmin', {page: 'timelineSections'})
 }
@@ -203,6 +257,7 @@ module.exports = {
     getProcess,
     getTimeline,
     getCandidates,
+    getResults,
     getCommitments,
     getCandidateCommitments,
     getAdmin,
@@ -213,5 +268,6 @@ module.exports = {
     getProposalsAdmin,
     getCandidatesAdmin,
     getTimelineAdmin,
-    getProposalsRanking
+    getProposalsRanking,
+    getResultsAdmin
 }

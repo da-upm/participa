@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const config = require('./config.json');
 
 const Parameter = require('./models/parameter');
+const Result = require('./models/result');
 const TimelineSection = require('./models/timelineSection');
 
 // Función para eliminar acentos
@@ -28,6 +29,11 @@ module.exports.retrieveAffiliationCodes = async () => {
 module.exports.retrieveAffiliations = async () => {
     const result = await Parameter.findOne({ affiliations: { $exists: true } });
     return result.affiliations;
+}
+
+module.exports.retrieveSchoolRestricted = async () => {
+    const result = await Parameter.findOne({ schoolRestricted: { $exists: true } });
+    return result.schoolRestricted;
 }
 
 module.exports.retrieveCentres = async () => {
@@ -126,3 +132,23 @@ module.exports.retrieveTimelineSections = async (req, res, next) => {
 			return undefined;
 		}
 };
+
+module.exports.retrieveWeighings = async () => {
+	try {
+		const result = await Parameter.findOne({ weighings: { $exists: true } });
+		return result.weighings;
+	} catch (error) {
+		console.error('Error getting weighings:', error);
+		return undefined;
+	}
+}
+
+module.exports.retrieveShowTotalResults = async () => {
+	try {
+		const result = await Parameter.findOne({ featureFlags: { $exists: true } });
+		return result.featureFlags.showTotalResults;
+	} catch (error) {
+		console.error('Error getting showTotalResults:', error);
+		return undefined;
+	}
+}
