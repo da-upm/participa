@@ -4,9 +4,9 @@ const viewsController = require('../controllers/viewsController');
 const middlewares = require('../middlewares');
 
 router.get('/', viewsController.getIndex);
-router.get('/process', middlewares.checkLogin, middlewares.checkFeatureEnabled('process'), middlewares.checkSchoolRestriction, viewsController.getProcess);
-router.get('/timeline', middlewares.checkLogin, middlewares.checkFeatureEnabled('timeline'), middlewares.checkSchoolRestriction, viewsController.getTimeline);
-router.get('/candidates', middlewares.checkLogin, middlewares.checkFeatureEnabled('candidates'), middlewares.checkSchoolRestriction, viewsController.getCandidates);
+router.get('/process', middlewares.checkFeatureEnabled('process'), viewsController.getProcess);
+router.get('/timeline', middlewares.checkFeatureEnabled('timeline'), viewsController.getTimeline);
+router.get('/candidates', middlewares.checkFeatureEnabled('candidates'), viewsController.getCandidates);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
 router.get('/questions', middlewares.checkLogin, middlewares.checkFeatureEnabled('questions'), middlewares.checkSchoolRestriction, viewsController.getQuestions);
 router.get('/commitments', middlewares.checkLogin, middlewares.checkCandidate, viewsController.getCommitments);

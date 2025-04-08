@@ -54,8 +54,11 @@ const smtpTransport = nodemailer.createTransport({
 });
 
 module.exports.sendDraftApprovedMail = async (to, htmlBody) => {
+	const textParams = await Parameter.findOne({ text: { $exists: true } });
+	const delegationName = textParams?.text?.delegationName || 'Delegación de Alumnos';
+
 	const mailOptions = {
-		from: `Delegación de Alumnos UPM <${config.email.user}>`,
+		from: `${delegationName} <${config.email.user}>`,
 		to,
 		subject: 'Tu propuesta se ha publicado',
 		html: htmlBody,
@@ -68,12 +71,14 @@ module.exports.sendDraftApprovedMail = async (to, htmlBody) => {
 };
 
 module.exports.sendDraftRejectedMail = async (to, htmlBody) => {
+	const textParams = await Parameter.findOne({ text: { $exists: true } });
+	const delegationName = textParams?.text?.delegationName || 'Delegación de Alumnos';
+
 	const mailOptions = {
-		from: `Delegación de Alumnos UPM <${config.email.user}>`,
+		from: `${delegationName} <${config.email.user}>`,
 		to,
 		subject: 'Tu propuesta ha sido rechazada',
-		html: htmlBody,
-		bcc: 'da.elecciones@upm.es',
+		html: htmlBody
 	};
 	try {
 		await smtpTransport.sendMail(mailOptions);
