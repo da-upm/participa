@@ -7,6 +7,7 @@ router.get('/', viewsController.getIndex);
 router.get('/process', middlewares.checkFeatureEnabled('process'), viewsController.getProcess);
 router.get('/timeline', middlewares.checkFeatureEnabled('timeline'), viewsController.getTimeline);
 router.get('/candidates', middlewares.checkFeatureEnabled('candidates'), viewsController.getCandidates);
+router.get('/results', middlewares.checkFeatureEnabled('results'), viewsController.getResults);
 router.get('/error', (req, res, next) => res.status(500).render('error'));
 router.get('/questions', middlewares.checkLogin, middlewares.checkFeatureEnabled('questions'), middlewares.checkSchoolRestriction, viewsController.getQuestions);
 router.get('/commitments', middlewares.checkLogin, middlewares.checkCandidate, viewsController.getCommitments);
@@ -19,6 +20,7 @@ router.get('/admin', middlewares.checkLogin, middlewares.restrictAdmins, viewsCo
 router.get('/stats', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getStats);
 router.get('/aesthetics', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getAesthetics);
 router.get('/candidatesAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getCandidatesAdmin);
+router.get('/resultsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getResultsAdmin);
 router.get('/proposalsAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsAdmin);
 router.get('/timelineAdmin', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getTimelineAdmin);
 router.get('/proposalsRanking', middlewares.checkLogin, middlewares.restrictAdmins, viewsController.getProposalsRanking);

@@ -34,4 +34,11 @@
                 href="/questions">Preguntas</a>
         </li>
     <% } %>
+    <% if (featureFlags.results) { %>
+        <li class="nav-item">
+            <a class="nav-link <%= (currentPage === 'results') ? 'active' : '' %>"
+                aria-current="<%= (currentPage === 'results') ? 'page' : '' %>"
+                href="/results">Escrutinio</a>
+        </li>
+    <% } %>
 </ul>
