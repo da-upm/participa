@@ -115,12 +115,13 @@ db.parameters.insertOne({
         ptgas: 'PTGAS',
         none: 'Otros'
     },
-    "weighing": {
+    "weighings": {
         "groupA": 0.57,
         "groupB": 0.10,
         "groupC": 0.25,
         "groupD": 0.08
     },
+    "showTotalResults": true,
     centres: {
         '1': 'ETSIA',
         '3': 'ETSAM',

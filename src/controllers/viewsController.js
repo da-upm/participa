@@ -34,6 +34,7 @@ const getCandidates = async (req, res, next) => {
 const getResults = async (req, res, next) => {
     const weighings = await helpers.retrieveWeighings();
     const results = await Result.find();
+    const showTotalResults = await helpers.retrieveShowTotalResults();
 
     const transformedResults = results.reduce((acc, result) => {
         // Initialize if not exists
@@ -44,14 +45,18 @@ const getResults = async (req, res, next) => {
         
         // Calculate weighted total based on percentage of votes in each group
         if (!acc.total) acc.total = {};
-        acc.total[result.name] = Number(['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
+        if (req.session.user?.isAdmin || showTotalResults) {
+            acc.total[result.name] = Number(['groupA', 'groupB', 'groupC', 'groupD'].reduce((sum, group) => {
             // Calculate total votes in this group
             const groupTotal = results.reduce((total, r) => total + r.votes[group], 0);
             // Calculate percentage of votes for this candidate in this group
             const percentage = groupTotal > 0 ? (result.votes[group] / groupTotal) * 100 : 0;
             // Add weighted percentage to sum
             return sum + (percentage * weighings[group]);
-        }, 0).toFixed(2));
+            }, 0).toFixed(2));
+        } else {
+            acc.total[result.name] = 0;
+        }
         
         return acc;
     }, {});

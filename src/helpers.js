@@ -142,3 +142,13 @@ module.exports.retrieveWeighings = async () => {
 		return undefined;
 	}
 }
+
+module.exports.retrieveShowTotalResults = async () => {
+	try {
+		const result = await Parameter.findOne({ featureFlags: { $exists: true } });
+		return result.featureFlags.showTotalResults;
+	} catch (error) {
+		console.error('Error getting showTotalResults:', error);
+		return undefined;
+	}
+}
